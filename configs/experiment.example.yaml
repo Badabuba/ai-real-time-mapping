@@ -1,0 +1,52 @@
+experiment:
+  id: tum_f1xyz_smoke_p1_global
+  seed: 0
+
+dataset:
+  name: tum_rgbd
+  root: ${DATA_ROOT}
+  sequence: rgbd_dataset_freiburg1_xyz
+  frame_start: 0
+  frame_end: 200
+  rgb_only_for_pipeline: true
+
+slam:
+  backend: pyslam
+  mode: monocular
+  upstream_revision: TODO
+  config_path: TODO
+
+geometry_model:
+  backend: depth_anything_3_metric
+  upstream_revision: TODO
+  checkpoint: TODO
+  device: cuda
+  dtype: float16
+  input_long_side: TODO
+
+alignment:
+  mode: scalar_scale
+  estimator: robust_median
+  min_inliers: 30
+  confidence_threshold: TODO
+  max_reprojection_error_px: TODO
+
+fusion:
+  keyframe_interval: 5
+  min_depth_m: 0.1
+  max_depth_m: 8.0
+  voxel_size_m: 0.02
+
+evaluation:
+  use_ground_truth_only_here: true
+  trajectory_alignment_modes:
+    - sim3
+    - se3_after_scale_recovery
+  map_fscore_thresholds_m:
+    - 0.02
+    - 0.05
+    - 0.10
+
+runtime:
+  warmup_frames: 10
+  save_intermediate_artifacts: true

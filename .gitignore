@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets / local settings
+.env
+.env.*
+!.env.example
+
+# Datasets and model weights
+data/raw/
+data/processed/
+checkpoints/
+models/
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+
+# Generated artifacts
+results/runs/
+outputs/
+logs/
+*.ply
+*.pcd
+*.glb
+*.mp4
+
+# Build
+build/
+dist/
+*.egg-info/
