@@ -114,15 +114,15 @@ Raw metric depth оцінюємо без median scaling. Окремий scale-al
 
 | Experiment | Smoke | Dev | Selection | Held-out | Owner |
 |---|---:|---:|---:|---:|---|
-| B0 pySLAM | required | required | required | required | Ярополк |
-| B1 oracle depth fusion | optional | required | optional | required | Ярополк + Юліан |
-| model spike (2 candidates) | required | — | required | — | Назар |
-| P1-raw | required | required | required | required | Назар + Юліан |
-| P1-global | required | required | required | required | Юліан |
-| P1-window | — | required | optional | required if dev improves | Юліан |
-| confidence ablation | — | required | required | best config only | Назар + Юліан |
-| keyframe interval ablation | — | required | — | best config only | Назар + Ярополк |
-| P2 geometry | optional | optional | optional | optional | Назар |
+| B0 pySLAM | required | required | required | required | Ярополк (дубєнь) |
+| B1 oracle depth fusion | optional | required | optional | required | Ярополк (дубєнь) + Юліан (піндос) |
+| model spike (2 candidates) | required | — | required | — | Назар (бос) |
+| P1-raw | required | required | required | required | Назар (бос) + Юліан (піндос) |
+| P1-global | required | required | required | required | Юліан (піндос) |
+| P1-window | — | required | optional | required if dev improves | Юліан (піндос) |
+| confidence ablation | — | required | required | best config only | Назар (бос) + Юліан (піндос) |
+| keyframe interval ablation | — | required | — | best config only | Назар (бос) + Ярополк (дубєнь) |
+| P2 geometry | optional | optional | optional | optional | Назар (бос) |
 
 Спочатку один seed/end-to-end run. Повтори додаємо після усунення deterministic bugs. Для stochastic component бажано 3 seeds із mean ± std.
 

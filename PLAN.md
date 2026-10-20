@@ -31,25 +31,25 @@
 
 | Учасник | Основна зона | Додаткова відповідальність |
 |---|---|---|
-| **Назар** | dataset + foundation-model inference | координатор, scope/release, інтеграція model adapter |
-| **Ярополк** | pySLAM baseline + trajectory metrics | reproducible environment, performance logging |
-| **Юліан** | sparse–dense alignment + fusion | coordinate contracts, synthetic geometry tests |
+| **Назар (бос)** | dataset + foundation-model inference | координатор, scope/release, інтеграція model adapter |
+| **Ярополк (дубєнь)** | pySLAM baseline + trajectory metrics | reproducible environment, performance logging |
+| **Юліан (піндос)** | sparse–dense alignment + fusion | coordinate contracts, synthetic geometry tests |
 
-Owner відповідає за результат і документацію; reviewer має відтворити хоча б smoke run. Назар координує, але integration PR не вважається готовим без review Ярополка або Юліана.
+Owner відповідає за результат і документацію; reviewer має відтворити хоча б smoke run. Назар (бос) координує, але integration PR не вважається готовим без review Ярополка (дубєнь) або Юліана (піндос).
 
 | WP | Owner | Reviewer | Deliverable | Критерій готовності |
 |---|---|---|---|---|
-| WP0. Репозиторій і протокол | усі; координатор Назар | Ярополк | структура, конфіги, frozen sequence list | новий клон відтворює setup |
-| WP1. Dataset + foundation inference | Назар | Юліан | loader, inference adapter, depth/point-map export, timing | 20+ кадрів, валідні units/shapes, збережені метрики |
-| WP2. SLAM baseline | Ярополк | Назар | pySLAM config, trajectory, sparse PLY, timing, ATE/RPE | одна TUM sequence завершується й має числовий звіт |
-| WP3. Sparse-dense alignment | Юліан | Ярополк | correspondence builder, robust scale/Sim(3), diagnostics | synthetic test + одна реальна пара з residual plot |
-| WP4. Fusion та інтеграція | Юліан (integration), Назар/Ярополк (adapters) | усі | end-to-end command, fused cloud | один конфіг створює всі артефакти без ручних кроків |
-| WP5. Benchmark і ablations | Ярополк (metrics), Назар (models), Юліан (alignment) | усі | CSV/JSON + таблиці/графіки | baseline і proposed на тому самому split/hardware |
+| WP0. Репозиторій і протокол | усі; координатор Назар (бос) | Ярополк (дубєнь) | структура, конфіги, frozen sequence list | новий клон відтворює setup |
+| WP1. Dataset + foundation inference | Назар (бос) | Юліан (піндос) | loader, inference adapter, depth/point-map export, timing | 20+ кадрів, валідні units/shapes, збережені метрики |
+| WP2. SLAM baseline | Ярополк (дубєнь) | Назар (бос) | pySLAM config, trajectory, sparse PLY, timing, ATE/RPE | одна TUM sequence завершується й має числовий звіт |
+| WP3. Sparse-dense alignment | Юліан (піндос) | Ярополк (дубєнь) | correspondence builder, robust scale/Sim(3), diagnostics | synthetic test + одна реальна пара з residual plot |
+| WP4. Fusion та інтеграція | Юліан (піндос) — integration; Назар (бос) і Ярополк (дубєнь) — adapters | усі | end-to-end command, fused cloud | один конфіг створює всі артефакти без ручних кроків |
+| WP5. Benchmark і ablations | Ярополк (дубєнь) — metrics; Назар (бос) — models; Юліан (піндос) — alignment | усі | CSV/JSON + таблиці/графіки | baseline і proposed на тому самому split/hardware |
 | WP6. Demo і презентація | усі | усі | demo capture, slides, contribution table | rehearsal вкладається в ліміт часу |
 
 ### Конкретний розподіл
 
-**Назар — foundation model, дані та координація**
+**Назар (бос) — foundation model, дані та координація**
 
 - завантажити тільки зафіксований піднабір TUM RGB-D;
 - зробити однаковий inference adapter для Depth Anything 3 Metric та одного fallback-кандидата;
@@ -57,7 +57,7 @@ Owner відповідає за результат і документацію; 
 - провести model-selection spike, а не інтегрувати всі моделі;
 - описати checkpoint, commit/tag, license, VRAM і preprocessing.
 
-**Ярополк — SLAM baseline**
+**Ярополк (дубєнь) — SLAM baseline**
 
 - підняти pySLAM в окремому environment/container;
 - зафіксувати monocular configuration і seed, де можливо;
@@ -65,7 +65,7 @@ Owner відповідає за результат і документацію; 
 - порахувати ATE/RPE; зафіксувати tracking failures;
 - не змінювати SLAM і модель одночасно до отримання baseline.
 
-**Юліан — alignment і fusion**
+**Юліан (піндос) — alignment і fusion**
 
 - спочатку реалізувати synthetic scale/Sim(3) test;
 - будувати 2D-3D correspondences через пікселі sparse feature observations;
@@ -84,7 +84,7 @@ Owner відповідає за результат і документацію; 
 
 Це kickoff gate, а не повний milestone. Мета — якомога раніше перевірити три найбільші технічні ризики незалежно.
 
-| До коли | Назар | Ярополк | Юліан | Спільний gate |
+| До коли | Назар (бос) | Ярополк (дубєнь) | Юліан (піндос) | Спільний gate |
 |---|---|---|---|---|
 | День 1 | записує hardware; фіксує TUM smoke sequence і manifest | записує hardware; обирає Linux/WSL2/Docker шлях для pySLAM | створює synthetic inputs і conventions для scale/Sim(3) | погоджені paths, K, T_wc, units і run_id |
 | День 2 | запускає один офіційний metric-depth checkpoint на 20 кадрах | отримує першу trajectory або documented setup blocker | відновлює known scale та Sim(3) у synthetic test | три окремі artifacts або три відтворювані blocker logs |
@@ -160,6 +160,6 @@ Plan B вважається успішним академічним резуль
 - Вибір моделі пояснений однаковими критеріями, а не популярністю.
 - Таблиця прогресу розрізняє done / in progress / blocked / planned.
 - Для кожного failure є симптом, evidence, причина/гіпотеза і наступна дія.
-- На слайді contribution видно роботу Назара, Ярополка і Юліана з посиланнями на PR/commit/artifact.
+- На слайді contribution видно роботу Назара (бос), Ярополка (дубєнь) і Юліана (піндос) з посиланнями на PR/commit/artifact.
 - Є календар, Plan B і next steps after success.
 - Репетиція має запас щонайменше 60 секунд до ліміту виступу.

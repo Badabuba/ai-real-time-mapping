@@ -78,7 +78,7 @@ dense metric map + trajectory + benchmark report
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — контракти модулів та alignment design.
 - [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) — датасети, протокол, метрики й матриця експериментів.
 - [docs/MODEL_SELECTION.md](docs/MODEL_SELECTION.md) — обґрунтування моделей і правила вибору.
-- [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) — чесний журнал фактичного прогресу та внеску Назара, Ярополка і Юліана.
+- [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) — чесний журнал фактичного прогресу та внеску Назара (бос), Ярополка (дубєнь) і Юліана (піндос).
 - [docs/INTERIM_REVIEW.md](docs/INTERIM_REVIEW.md) — чекліст на 15 балів і каркас короткої презентації.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Git workflow та Definition of Done.
 

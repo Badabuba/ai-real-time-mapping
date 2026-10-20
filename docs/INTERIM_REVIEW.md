@@ -19,7 +19,7 @@
 | Питання | Доказ |
 |---|---|
 | Що з proposal виконано? | status table: done/in progress/blocked/planned + посилання |
-| Хто що робив? | contribution table для Назара, Ярополка і Юліана з PR/commit/run, а не лише майбутні ролі |
+| Хто що робив? | contribution table для Назара (бос), Ярополка (дубєнь) і Юліана (піндос) з PR/commit/run, а не лише майбутні ролі |
 | Що не вийшло? | 1–3 конкретні failures із командою/log/симптомом |
 | Чому не вийшло? | root cause або чітко позначена гіпотеза + перевірка |
 | Чи зрозуміло з презентації? | один progress slide; однакова легенда статусів |
@@ -42,7 +42,7 @@
 3. **Baseline** — dataset/config, sparse map/trajectory, ATE/RPE/FPS. Потрібні реальні числа.
 4. **Dense model selection** — candidates, критерії, виміряний trade-off і остаточний вибір.
 5. **Поточний результат** — aligned/fused visualization + quantitative diagnostics; якщо інтеграції ще немає, чесно показати окремі модулі.
-6. **Прогрес і внесок** — proposal → status; Назар/Ярополк/Юліан → evidence.
+6. **Прогрес і внесок** — proposal → status; Назар (бос)/Ярополк (дубєнь)/Юліан (піндос) → evidence.
 7. **Що не вийшло / lessons** — симптом, причина/гіпотеза, вже спробоване, рішення.
 8. **План до фіналу** — календар, experiment matrix, Plan B, stretch goal.
 
@@ -80,7 +80,7 @@ Appendix: metric definitions, additional qualitative examples, environment/licen
 - [ ] commit/tag у slides відповідає repo;
 - [ ] baseline command відтворено з чистого environment або другим учасником;
 - [ ] усі числа мають units, dataset, config й alignment mode;
-- [ ] внесок Назара, Ярополка і Юліана підтверджений evidence;
+- [ ] внесок Назара (бос), Ярополка (дубєнь) і Юліана (піндос) підтверджений evidence;
 - [ ] known failures і Plan B сформульовані конкретно;
 - [ ] live demo має prerecorded fallback;
 - [ ] кожен учасник підтвердив присутність;
