@@ -2,7 +2,7 @@
 
 Навчальний дослідницький проєкт з побудови карти невідомого середовища за монокулярною RGB-послідовністю. Ми порівнюємо класичний feature-based SLAM із гібридним pipeline, у якому SLAM оцінює рух камери та sparse map, а foundation model прогнозує dense geometry/depth. Обидва представлення вирівнюються та об'єднуються в узгоджену 3D-карту.
 
-> Статус на 20 жовтня 2026: підготовлено дизайн системи й експериментів; інференс, baseline та числові результати ще не реалізовані. Документ не видає заплановану роботу за виконану.
+> Статус на 20 жовтня 2026: підготовлено дизайн системи й експериментів; WP1 має відтворюваний DA3 Metric smoke benchmark на 20 TUM кадрах. pySLAM baseline, alignment та end-to-end pipeline ще не реалізовані.
 
 ## Дослідницьке питання
 
@@ -74,6 +74,7 @@ dense metric map + trajectory + benchmark report
 ## Документи
 
 - [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) — структурований опис початкового proposal та уточнення scope.
+- [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) — перевірений WP1 setup, hardware і відомі dependency issues.
 - [PLAN.md](PLAN.md) — scope, ролі, календар, ризики, Plan B і критерії готовності.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — контракти модулів та alignment design.
 - [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) — датасети, протокол, метрики й матриця експериментів.
@@ -82,8 +83,13 @@ dense metric map + trajectory + benchmark report
 - [docs/INTERIM_REVIEW.md](docs/INTERIM_REVIEW.md) — чекліст на 15 балів і каркас короткої презентації.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Git workflow та Definition of Done.
 
-## Найближчий запуск
+## Перший відтворюваний WP1 запуск
 
-Після підтвердження GPU/OS кожен учасник створює короткий environment report. Перший технічний milestone — один і той самий короткий TUM sequence проходить через: (1) pySLAM baseline, (2) один depth model, (3) offline alignment. Лише після цього модулі з'єднуються в streaming pipeline.
+Після setup з [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md):
 
-Команди запуску будуть додані тоді, коли відповідні entry points реально існуватимуть; вигаданих команд у README немає.
+```powershell
+.venv\Scripts\python.exe scripts\check_wp1_environment.py
+.venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --process-res 384
+```
+
+Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — та сама TUM sequence проходить через pySLAM baseline та offline alignment.

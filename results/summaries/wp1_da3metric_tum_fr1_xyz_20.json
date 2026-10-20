@@ -1,0 +1,41 @@
+{
+  "status": "ok",
+  "scope": "smoke benchmark; 20 consecutive frames, not the final evaluation split",
+  "run_date": "2026-10-20",
+  "owner": "Назар (бос)",
+  "model_id": "depth-anything/DA3METRIC-LARGE",
+  "dataset": "TUM RGB-D rgbd_dataset_freiburg1_xyz",
+  "dataset_archive_sha256": "A0236D97B8C30CD93B653656D2B6C293FF7C982A4130EF2A1A8BEECDB124EF98",
+  "frames": 20,
+  "stride": 1,
+  "process_res": 384,
+  "processed_shape": [294, 378],
+  "association_max_delta_seconds": 0.02,
+  "metric_conversion": "processed mean focal * raw prediction / 300",
+  "metrics_mean": {
+    "abs_rel": 0.1050640978,
+    "rmse_m": 0.1751510963,
+    "mae_m": 0.1298732650,
+    "delta1": 0.9674527892
+  },
+  "timing_seconds": {
+    "first_frame_cold": 0.8538589000,
+    "all_frames_mean": 0.1357437350,
+    "all_frames_median": 0.0856687500,
+    "warm_frames_mean": 0.0979482000,
+    "warm_frames_median": 0.0852764000,
+    "warm_fps_from_mean": 10.2094780710
+  },
+  "peak_vram_gb": 1.425,
+  "environment": {
+    "python": "3.11.16",
+    "torch": "2.11.0+cu128",
+    "cuda_runtime": "12.8",
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU"
+  },
+  "limitations": [
+    "Frames are consecutive and highly correlated.",
+    "Checkpoint returned no confidence map; exported confidence is an all-ones fallback.",
+    "Timing covers model inference API but not the future SLAM, alignment, or fusion pipeline."
+  ]
+}
