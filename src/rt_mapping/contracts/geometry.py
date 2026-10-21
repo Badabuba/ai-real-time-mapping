@@ -11,10 +11,13 @@ import json
 import math
 import zipfile
 from dataclasses import dataclass
-from pathlib import Path, PureWindowsPath
+from pathlib import Path
 from typing import Any
 
 import numpy as np
+
+from rt_mapping.contracts._validation import check_json_value as _check_json_value
+from rt_mapping.contracts._validation import is_absolute_path as _is_absolute_path
 
 SCHEMA = "rt_mapping.geometry_prediction/v1"
 
@@ -25,39 +28,6 @@ _ZIP_DATE_TIME = (1980, 1, 1, 0, 0, 0)
 _ZIP_CREATE_SYSTEM = 3  # unix; the default depends on the host OS
 _ZIP_EXTERNAL_ATTR = 0o644 << 16
 _ZIP_COMPRESSLEVEL = 6
-
-
-def _is_absolute_path(text: str) -> bool:
-    """True for POSIX/Windows absolute or rooted paths, drive paths and ~ paths."""
-    windows = PureWindowsPath(text)
-    return bool(windows.drive or windows.root) or text.startswith("~")
-
-
-def _check_json_value(value: Any, where: str) -> None:
-    """Recursively require JSON-compatible, finite values with string keys."""
-    if value is None or isinstance(value, bool):
-        return
-    if isinstance(value, str):
-        if _is_absolute_path(value):
-            raise ValueError(f"{where} must not contain an absolute path, got {value!r}")
-        return
-    if isinstance(value, int):
-        return
-    if isinstance(value, float):
-        if not math.isfinite(value):
-            raise ValueError(f"{where} must be finite, got {value!r}")
-        return
-    if isinstance(value, list):
-        for i, item in enumerate(value):
-            _check_json_value(item, f"{where}[{i}]")
-        return
-    if isinstance(value, dict):
-        for key, item in value.items():
-            if not isinstance(key, str):
-                raise ValueError(f"{where} keys must be strings, got {key!r}")
-            _check_json_value(item, f"{where}[{key!r}]")
-        return
-    raise ValueError(f"{where} has a non-JSON value of type {type(value).__name__}")
 
 
 def _readonly(array: np.ndarray) -> np.ndarray:
