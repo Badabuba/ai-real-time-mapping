@@ -65,6 +65,10 @@ Ground-truth trajectory/depth не можна використовувати д�
 
 Raw metric depth оцінюємо без median scaling. Окремий scale-aligned score дозволений тільки як diagnostic і має так називатися.
 
+Реалізація: `rt_mapping.evaluation.depth` (C4). GT-valid = finite і > 0; evaluated = GT-valid ∩ `prediction.valid_mask`; також MAE [m]; valid coverage = evaluated / GT-valid; кадр без evaluated pixels — помилка. Середнє по кадрах — незважене (`frame_mean`). GT до сітки prediction зводиться лише nearest-neighbour з цілими центрами pixels: x_src = ⌊(x' + 0.5)·W/W'⌋ (так само для рядків); на 20 кадрах fr1/xyz це побітово збігається з Pillow NEAREST, який використовував runner.
+
+Timing (§4.4) — `rt_mapping.evaluation.timing`: окремо cold start (перший sample), warm-up samples виключені з mean/median/p95; p95 = `numpy.percentile(..., method="linear")`; FPS із per-stage latency не виводиться.
+
 ### 4.3 Map geometry
 
 Після voxel downsample обох clouds до однакового voxel size:
@@ -93,22 +97,30 @@ Raw metric depth оцінюємо без median scaling. Окремий scale-al
 
 ```json
 {
+  "schema": "rt_mapping.run_manifest/v1",
   "run_id": "2026-10-XX_tum_f1desk_p1_global_seed0",
-  "git_commit": "TODO",
+  "git_commit": "<40 hex>",
   "dirty_worktree": false,
-  "dataset": {"name": "TUM-RGBD", "sequence": "TODO", "checksum": "TODO"},
+  "dataset": {"name": "TUM-RGBD", "sequence": "rgbd_dataset_freiburg1_desk", "split": "development",
+              "checksum": "<64 lowercase hex, як archive_sha256 у data manifest>", "manifest": "data/manifests/<...>.json"},
   "method": "P1-global",
-  "model": {"repo_revision": "TODO", "checkpoint": "TODO", "dtype": "TODO"},
-  "slam": {"repo_revision": "TODO", "config": "TODO"},
+  "model": {"repo": "TODO", "revision": "TODO", "checkpoint": "TODO", "dtype": "float32"},
+  "slam": {"repo": "TODO", "revision": "TODO", "config": "TODO", "pose_convention": "T_wc"},
   "alignment": {"method": "TODO", "thresholds": {}},
+  "config": {"process_res": 384, "batch": 1, "keyframe_interval": 1},
   "hardware": {"gpu": "TODO", "cpu": "TODO", "ram_gb": null},
+  "environment": {"python": "3.11.16"},
   "seed": 0,
-  "started_at": "TODO",
-  "status": "planned"
+  "started_at": "2026-10-XXT10:00:00Z",
+  "status": "planned",
+  "reason": null,
+  "artifacts": {"metrics": "metrics.json"}
 }
 ```
 
-Не редагувати finished run.json заднім числом; нова конфігурація = новий run_id.
+Контракт і валідація: `rt_mapping.contracts.run_manifest` (C4). Усі ключі обов'язкові, невідомі ключі відхиляються. `method` ∈ B0, B1, P1-raw, P1-global, P1-window, P2, model-spike; `split` ∈ smoke, development, selection, held-out; `status` ∈ planned, running, ok, degraded, failed, skipped. `model` = null лише для B0/B1; `slam` обов'язковий для B0/B1/P1-*, null для model-spike; `alignment` обов'язковий для P1-global/P1-window/P2, інакше null; `reason` обов'язковий для degraded/failed/skipped. Заборонені NaN/Inf, absolute paths і ключі на кшталт password/token/api_key.
+
+Не редагувати finished run.json заднім числом; нова конфігурація = новий run_id. `write_run_manifest` відмовляється перезаписувати run.json зі статусом ok/degraded/failed/skipped.
 
 ## 6. Мінімальна матриця
 

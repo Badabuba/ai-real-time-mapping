@@ -24,6 +24,13 @@ rt_mapping/
 - `geometry/adapter.py` — protocol `GeometryAdapter.predict(frame: FrameRecord) -> GeometryPrediction`;
 - `geometry/intrinsics.py` — `resize_intrinsics` (anisotropic) і `crop_intrinsics`, центри pixels мають цілі координати; distortion не моделюється.
 
+Реалізовано (C4, WP1):
+
+- `evaluation/depth.py` — `evaluate_depth` (AbsRel, RMSE, MAE, δ1, counts, valid coverage; GT передається окремо від `GeometryPrediction`), `mean_depth_metrics`, `resize_depth_nearest` (nearest-neighbour з цілими центрами pixels);
+- `evaluation/timing.py` — `summarize_timings`: cold start окремо, warm-up виключено, median і p95 (`numpy` linear), без FPS;
+- `contracts/run_manifest.py` — валідований `run.json` v1 (docs/EXPERIMENTS.md §5): build/validate/dump/load/write, захист finished run.json від перезапису;
+- `contracts/_validation.py` — спільна перевірка JSON-значень і absolute paths для `geometry.py` та `run_manifest.py`.
+
 Решта модулів — planned.
 
 Починати реалізацію слід із contracts і synthetic geometry tests. Не імпортувати pySLAM або конкретну foundation model у generic contracts/alignment modules.
