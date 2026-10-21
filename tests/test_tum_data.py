@@ -85,7 +85,7 @@ def test_frame_record_validates_and_freezes_k() -> None:
         FrameRecord("seq", 0, float("nan"), "rgb/a.png", 640, 480, np.eye(3))
 
 
-@pytest.mark.parametrize("package", ["contracts", "data"])
+@pytest.mark.parametrize("package", ["contracts", "data", "geometry"])
 def test_generic_modules_do_not_import_models(package: str) -> None:
     forbidden = {"torch", "depth_anything_3", "pyslam", "unidepth"}
     for path in (SRC / package).rglob("*.py"):
