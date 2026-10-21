@@ -39,6 +39,17 @@ uv pip install --python .venv\Scripts\python.exe -r requirements\wp1-da3.txt
 .venv\Scripts\python.exe scripts\check_wp1_environment.py
 ```
 
+## Тести
+
+CPU-тести пакета `src/rt_mapping` (GPU і датасет не потрібні). pytest 9.1.1 встановлено 21 жовтня 2026:
+
+```powershell
+uv pip install --python .venv\Scripts\python.exe pytest
+.venv\Scripts\python.exe -m pytest tests -q
+```
+
+`pyproject.toml` додає `src` у `pythonpath` для pytest, тому editable install пакета поки не потрібен.
+
 ## Відомі особливості
 
 1. Системний Python 3.14 не використовуємо: офіційний DA3 package декларує Python <=3.13.

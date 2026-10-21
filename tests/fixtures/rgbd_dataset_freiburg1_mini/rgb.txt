@@ -1,0 +1,7 @@
+# color images
+# timestamp filename
+1.000 rgb/1.000.png
+1.030 rgb/1.030.png
+
+1.100 rgb/1.100.png
+1.200 rgb/1.200.png

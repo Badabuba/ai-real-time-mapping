@@ -2,7 +2,7 @@
 
 Це single source of truth для відповідей «що зроблено?», «хто робив?» і «що не вийшло?». Оновлювати наприкінці кожного робочого session/PR. Planned не дорівнює done.
 
-Останнє оновлення: 20 жовтня 2026.
+Останнє оновлення: 21 жовтня 2026.
 
 ## 1. Snapshot
 
@@ -14,6 +14,7 @@
 | pySLAM baseline | planned | — | Ярополк (дубєнь) | environment + smoke run |
 | WP1 environment + DA3 import | done | docs/ENVIRONMENT.md; scripts/check_wp1_environment.py | Назар (бос) | model-load та one-frame inference smoke |
 | Dense model inference | smoke done | scripts/run_tum_da3_metric.py; results/summaries/wp1_da3metric_tum_fr1_xyz_20.json | Назар (бос) | selection split із часовим stride + fallback model |
+| TUM loader + FrameRecord (WP1 C1) | implemented, review pending (не закомічено) | src/rt_mapping/data/tum.py; src/rt_mapping/contracts/frame.py; tests/test_tum_data.py — 12 passed; association збігається з runner на 792/792 кадрах fr1/xyz | Назар (бос) | review; C2 dataset manifest |
 | Synthetic alignment test | planned | — | Юліан (піндос) | scale + Sim(3) unit tests |
 | Real sparse–dense alignment | planned | — | Юліан (піндос) | потребує WP1 і WP2 artifacts |
 | End-to-end pipeline | planned | — | Назар (бос) + Ярополк (дубєнь) + Юліан (піндос) | після окремих smoke runs |

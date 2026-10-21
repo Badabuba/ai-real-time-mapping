@@ -1,0 +1,6 @@
+# depth maps
+# timestamp filename
+0.995 depth/0.995.png
+1.012 depth/1.012.png extra_column
+1.150 depth/1.150.png
+1.205 depth/1.205.png
