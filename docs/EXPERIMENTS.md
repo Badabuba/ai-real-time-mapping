@@ -19,7 +19,7 @@ Primary dataset: TUM RGB-D. Pipeline отримує лише monocular RGB та 
 
 | Split | Sequence | Призначення |
 |---|---|---|
-| smoke | freiburg1_xyz, перші 200 RGB frames | setup, shapes, timestamps, швидкий CI-like run |
+| smoke | freiburg1_xyz, перші 200 асоційованих RGB-depth кадрів (data/manifests/tum_fr1_xyz.json) | setup, shapes, timestamps, швидкий CI-like run |
 | development | freiburg1_desk | налагодження alignment/fusion і thresholds |
 | selection | freiburg2_desk | вибір dense model/config; не для фінального headline |
 | held-out evaluation | freiburg3_long_office_household | основний звіт після freeze |

@@ -10,11 +10,12 @@
 |---|---|---|---|---|
 | GitHub repository | done | origin налаштований; initial commit існує | команда | надати викладачу доступ, якщо repo private |
 | Project scope / architecture / plan | draft done | README, PLAN, docs/* | Назар (бос) | Ярополк (дубєнь) і Юліан (піндос) переглядають і погоджують |
-| Dataset downloaded/frozen | smoke subset done | TUM fr1/xyz; SHA-256 у docs/ENVIRONMENT.md | Назар (бос) | заморозити ширший evaluation split після smoke |
+| Dataset downloaded/frozen | smoke subset done | TUM fr1/xyz; SHA-256 у docs/ENVIRONMENT.md; manifest data/manifests/tum_fr1_xyz.json | Назар (бос) | заморозити ширший evaluation split після smoke |
 | pySLAM baseline | planned | — | Ярополк (дубєнь) | environment + smoke run |
 | WP1 environment + DA3 import | done | docs/ENVIRONMENT.md; scripts/check_wp1_environment.py | Назар (бос) | model-load та one-frame inference smoke |
 | Dense model inference | smoke done | scripts/run_tum_da3_metric.py; results/summaries/wp1_da3metric_tum_fr1_xyz_20.json | Назар (бос) | selection split із часовим stride + fallback model |
-| TUM loader + FrameRecord (WP1 C1) | implemented, review pending (не закомічено) | src/rt_mapping/data/tum.py; src/rt_mapping/contracts/frame.py; tests/test_tum_data.py — 12 passed; association збігається з runner на 792/792 кадрах fr1/xyz | Назар (бос) | review; C2 dataset manifest |
+| TUM loader + FrameRecord (WP1 C1) | committed (8abb331), review pending | src/rt_mapping/data/tum.py; src/rt_mapping/contracts/frame.py; tests/test_tum_data.py — 12 passed; association збігається з runner на 792/792 кадрах fr1/xyz | Назар (бос) | review |
+| TUM fr1/xyz dataset manifest (WP1 C2) | implemented, review pending (не закомічено) | src/rt_mapping/data/manifest.py; scripts/build_tum_manifest.py; data/manifests/tum_fr1_xyz.json — SHA-256 збігається з docs/ENVIRONMENT.md, 792 associations, smoke = перші 200; `--check` відтворює файл байт-у-байт; tests/test_tum_manifest.py — 5 passed. Archive URL не перевірено онлайн (TUM server 503 під час перевірки) | Назар (бос) | review; підтвердити archive URL |
 | Synthetic alignment test | planned | — | Юліан (піндос) | scale + Sim(3) unit tests |
 | Real sparse–dense alignment | planned | — | Юліан (піндос) | потребує WP1 і WP2 artifacts |
 | End-to-end pipeline | planned | — | Назар (бос) + Ярополк (дубєнь) + Юліан (піндос) | після окремих smoke runs |
