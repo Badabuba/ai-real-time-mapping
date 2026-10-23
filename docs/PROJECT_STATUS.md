@@ -2,7 +2,11 @@
 
 Це single source of truth для відповідей «що зроблено?», «хто робив?» і «що не вийшло?». Оновлювати наприкінці кожного робочого session/PR. Planned не дорівнює done.
 
-Останнє оновлення: 21 жовтня 2026.
+Останнє оновлення: 23 жовтня 2026.
+
+WP2 sparse handoff (local/uncommitted, branch `yaropolk-sparse-observation-export`): реальний run `yaropolk_b0_fr1_xyz_200_sparse_20261023_03` завершив 200 frames / 197 final poses / 0 LOST і зберіг **1,205 landmarks, 19 retained keyframes, 7,595 pixel observations**. `--export-sparse` додає NPZ, CSV, PLY та metadata/checksums після original `Slam.quit`; upstream source/algorithm не змінювали. Read-back validation, native API check і CPU suite (325 passed, 1 skipped; native skipped check окремо пройшов) успішні. Evidence: [WP2_SPARSE_EXPORT.md](WP2_SPARSE_EXPORT.md), `results/summaries/wp2_sparse_fr1_xyz_200_20261023.json`. Для alignment використовувати poses із `keyframes.npz` того самого snapshot; units ще не metric. Next: normalized all-frame states/timing, automated recorded ATE/RPE та ширший benchmark. Failed attempts `_01` (launcher variable, fixed) / `_02` (sandbox OpenMP SHM, own workers stopped) збережено; попередні результати не перезаписували.
+
+Візуальна перевірка WP2 (local/uncommitted, branch `yaropolk-trajectory-visualization`): `scripts/visualize_wp2_trajectory.py` читає наявний успішний run `_02` без повторного SLAM. 3D trajectory, camera axes та XY/XZ/YZ plots перевірено візуально; guide і SHA-256 вихідних artifacts — `results/visualizations/yaropolk_b0_fr1_xyz_200_20261023_02/20261023T131917_285206Z/`. 198 poses / 6.735943 s, monocular scale невідомий; accuracy не оцінювалася. Sparse map був у пам'яті, але координати/system state не збережені. Native map viewer додатково потребує відсутній `pypangolin`; GUI не перевірено.
 
 ## 1. Snapshot
 
@@ -11,7 +15,7 @@
 | GitHub repository | done | origin налаштований; initial commit існує | команда | надати викладачу доступ, якщо repo private |
 | Project scope / architecture / plan | draft done | README, PLAN, docs/* | Назар (бос) | Ярополк (дубєнь) і Юліан (піндос) переглядають і погоджують |
 | Dataset downloaded/frozen | smoke subset done | TUM fr1/xyz; SHA-256 у docs/ENVIRONMENT.md; manifest data/manifests/tum_fr1_xyz.json | Назар (бос) | заморозити ширший evaluation split після smoke |
-| pySLAM baseline | planned | — | Ярополк (дубєнь) | environment + smoke run |
+| pySLAM baseline | native setup + real smoke + sparse handoff done; full WP2 incomplete | docs/WP2_SETUP.md; docs/WP2_SPARSE_EXPORT.md; scripts/run_wp2_pyslam.py. Initial run `_02`: 200 frames / 198 poses / 0 LOST. New `yaropolk_b0_fr1_xyz_200_sparse_20261023_03`: 200 frames / 197 poses / 0 LOST; 1,205 landmarks / 19 retained keyframes / 7,595 observations. Evidence: results/summaries/wp2_sparse_fr1_xyz_200_20261023.json. Native macOS arm64, upstream 96019cf, Python core, ORB2/DBOW3, -O; no GT input; code uncommitted / dirty=true | Ярополк (дубєнь) | normalized all-frame trajectory/states/timing; automated recorded ATE/RPE; wider benchmark |
 | WP1 environment + DA3 import | done | docs/ENVIRONMENT.md; scripts/check_wp1_environment.py | Назар (бос) | model-load та one-frame inference smoke |
 | Dense model inference | smoke done | scripts/run_tum_da3_metric.py; results/summaries/wp1_da3metric_tum_fr1_xyz_20.json | Назар (бос) | selection split із часовим stride + fallback model |
 | TUM loader + FrameRecord (WP1 C1) | committed (8abb331), review pending | src/rt_mapping/data/tum.py; src/rt_mapping/contracts/frame.py; tests/test_tum_data.py — 12 passed; association збігається з runner на 792/792 кадрах fr1/xyz | Назар (бос) | review |
@@ -33,8 +37,9 @@
 - Роботу розкладено між Назаром (бос), Ярополком (дубєнь) і Юліаном (піндос) з integration gates.
 - Завантажено й перевірено TUM `freiburg1_xyz`; запущено DA3METRIC-LARGE на 20 асоційованих RGB-D кадрах.
 - Перший smoke результат: AbsRel 0.1051, RMSE 0.1752 m, δ1 0.9675; warm mean 0.098 s/frame (10.2 FPS), peak VRAM 1.425 GB.
+- WP2 (23 жовтня): pySLAM native macOS setup та реальний RGB-only monocular smoke на 200 кадрах; 198 final poses, 0 LOST за upstream counters. Details і limitations — docs/WP2_SETUP.md; це не ATE/RPE benchmark або real-time claim.
 
-Ще **не виконано**: повний model-selection benchmark, запуск pySLAM, alignment, fusion, end-to-end benchmark і demo. 20 послідовних кадрів є smoke-перевіркою, а не достатнім evaluation split; 10.2 warm FPS не дає підстав називати весь pipeline real-time.
+Ще **не виконано**: повний model-selection benchmark, normalized SLAM exports/ATE/RPE, alignment, fusion, end-to-end benchmark і demo. 20 послідовних DA3 кадрів є smoke-перевіркою, а не достатнім evaluation split; 10.2 warm FPS не дає підстав називати весь pipeline real-time.
 
 ## 3. Внесок учасників
 
@@ -43,7 +48,7 @@
 | Учасник | Фактичний внесок | Evidence (PR/commit/file/run) | Дата |
 |---|---|---|---|
 | Назар (бос) | постановка вимог і координування; documentation scaffold; WP1 Windows/CUDA environment; TUM fr1/xyz data verification; DA3 Metric 20-frame smoke benchmark | README, PLAN, docs/*, scripts/run_tum_da3_metric.py, results/summaries/* | 2026-10-20 |
-| Ярополк (дубєнь) | розподілено WP2; фактичний технічний внесок ще не записаний | — | — |
+| Ярополк (дубєнь) | Dataset verification; isolated native runtime/build recipe; recorded B0 smoke; trajectory visualization; retained sparse landmarks/poses/pixel links + PLY; validation tests і docs | branches yaropolk-pyslam-baseline → yaropolk-pyslam-smoke-run → yaropolk-trajectory-visualization → yaropolk-sparse-observation-export (local, uncommitted); docs/WP2_SETUP.md, docs/WP2_SPARSE_EXPORT.md; results/summaries/wp2_sparse_fr1_xyz_200_20261023.json; tests/test_wp2_setup.py, tests/test_slam_smoke.py, tests/test_slam_sparse.py, tests/test_pyslam_sparse_native.py | 2026-10-23 |
 | Юліан (піндос) | розподілено WP3; фактичний технічний внесок ще не записаний | — | — |
 
 Після review записати, хто перевірив і змінив кожне рішення. Авторство технічних результатів підтверджується PR/commit/run, а не лише цією таблицею.
@@ -55,6 +60,8 @@
 | 2026-10-20 | Назар (бос) | перший synthetic runner падав під час читання `prediction.is_metric` | local traceback; виправлення у runner | DA3 повертає auto-created empty Addict Dict для відсутнього поля | додано safe scalar conversion | пройдено synthetic і real TUM run | resolved |
 | 2026-10-20 | Назар (бос) | DA3 standalone metric output не повернув intrinsics | run manifest/API inspection | API додає processed K до prediction лише в окремих pose-alignment умовах | K передано в model; transformed K отримано власним DA3 preprocessor | використовувати processed mean focal у формулі DA3 | resolved |
 | 2026-10-20 | Назар (бос) | `prediction.conf` дорівнює None | first TUM frame traceback | цей checkpoint не повертає confidence map | fallback mask із одиниць | confidence ablation відкласти або взяти іншу confidence proxy | resolved with limitation |
+| 2026-10-23 | Ярополк (дубєнь) | runtime probe втрачав venv packages | src/rt_mapping/slam/setup.py; regression test test_runtime_probe_preserves_virtual_environment_interpreter | resolve() на Python symlink запускав base interpreter | probe зберігає absolute venv path без dereference | native imports реально пройшли у .venv-pyslam | resolved |
+| 2026-10-23 | Ярополк (дубєнь) | B0 run `_01`: assertion на frame 3, remove_frame_view | results/runs/yaropolk_b0_fr1_xyz_200_20261023_01/upstream.log; docs/WP2_SETUP.md | launcher не відтворював shebang upstream python3 -O; underlying debug assertion condition не виправлено | stopped only own failed process group; new run ID, explicit python_optimization=1 | `_02` завершив 200 frames; debug-mode issue лишається upstream limitation | accepted with limitation |
 
 Правило: якщо причина не доведена, писати «гіпотеза», а не подавати її як факт. Log/trace зберігати текстом або посиланням на issue; screenshot alone недостатній.
 

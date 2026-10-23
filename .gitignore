@@ -7,6 +7,10 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.venv-wp2/
+.venv-pyslam/
+.local/
+external/
 venv/
 
 # IDE / OS
@@ -32,6 +36,7 @@ models/
 
 # Generated artifacts
 results/runs/
+results/visualizations/
 outputs/
 logs/
 *.ply

@@ -85,6 +85,8 @@ dense metric map + trajectory + benchmark report
 
 ## Перший відтворюваний WP1 запуск
 
+WP2 (Ярополк): [native setup і запуск](docs/WP2_SETUP.md) перевірено на macOS arm64. Перший monocular pySLAM smoke: 200 frames, 198 final poses, 0 LOST за upstream counters; [звіт](results/summaries/wp2_b0_fr1_xyz_200_20261023.json). ATE/RPE, normalized sparse exports, alignment/fusion ще не реалізовані.
+
 Після setup з [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md):
 
 ```powershell
@@ -92,4 +94,4 @@ dense metric map + trajectory + benchmark report
 .venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --process-res 384
 ```
 
-Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — та сама TUM sequence проходить через pySLAM baseline та offline alignment.
+Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — normalized SLAM exports для offline alignment на тій самій TUM sequence.

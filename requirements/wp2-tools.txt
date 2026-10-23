@@ -1,0 +1,5 @@
+# Lightweight WP2 verification/configuration tools; NOT a complete pySLAM runtime.
+numpy==1.26.4
+Pillow==11.3.0
+PyYAML==6.0.2
+pytest==8.3.5
