@@ -94,3 +94,13 @@ pySLAM не є конкурентом depth model: він дає baseline trajec
 - MASt3R і semantics не входять у MVP.
 
 Це не остаточний «переможець». Назар (бос) оновлює цей розділ таблицею результатів і ADR після spike; commit із числовими доказами фіксує вибір.
+
+## 8. DA3METRIC-LARGE adapter (C5): перевірені факти
+
+Перевірено в коді `depth_anything_3` (git `3d835ec1`) і на локальному checkpoint; не є результатом selection spike.
+
+- Checkpoint: `depth-anything/DA3METRIC-LARGE`, HF revision `4010e39f3634a45bc60553321fb49fb760bd594e`, файл `model.safetensors`, SHA-256 `bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776`. Adapter визначає файл і hash із локального cache під час завантаження і пише їх у run.json.
+- dtype: ваги float32; `DepthAnything3.forward` сам вмикає autocast bfloat16 (якщо GPU підтримує), інакше float16. Тому `--dtype` приймає лише bfloat16/float16 і має збігатися з тим, що вибере DA3; float32 inference без обходу API неможливий (поза C5).
+- Config має лише backbone + DPT head, без camera encoder/decoder: input intrinsics ігноруються, API не повертає intrinsics, confidence (`conf = None`) і `is_metric`. Metric depth = raw · mean(fx, fy) / 300 з K_processed (DA3 README).
+- Preprocessing `upper_bound_resize`: longest side → process_res, потім кожна сторона → найближче кратне 14 (два `cv2.resize`). K_processed — див. ARCHITECTURE §3 і D008.
+- Hard gates із §4 для 20 кадрів fr1/xyz: NaN/Inf немає, shape стабільна (294×378), K_processed коректний, latency і peak VRAM збираються (run `c5_parity_f20_20261021`). На ~0.01% pixels окремих кадрів inference недетермінований між запусками (PROJECT_STATUS, failure log).

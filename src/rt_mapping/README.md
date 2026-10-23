@@ -31,6 +31,13 @@ rt_mapping/
 - `contracts/run_manifest.py` — валідований `run.json` v1 (docs/EXPERIMENTS.md §5): build/validate/dump/load/write, захист finished run.json від перезапису;
 - `contracts/_validation.py` — спільна перевірка JSON-значень і absolute paths для `geometry.py` та `run_manifest.py`.
 
+Реалізовано (C5, WP1):
+
+- `adapters/da3_metric.py` — `Da3MetricAdapter` (DA3METRIC-LARGE за `GeometryAdapter`): модель завантажується один раз, torch/DA3 імпортуються лише під час завантаження; K_processed через `geometry/intrinsics.py` на кожен resize DA3; confidence = None, якщо модель її не дає; NaN/Inf/≤0 → `GeometryAdapterError`. Пакет названо `adapters`, бо `.gitignore` ігнорує `models/` (ваги);
+- `runs/geometry_run.py` — model-agnostic run: перевірка датасету проти C2 manifest, predict → C3 NPZ, оцінка C4, timing, run.json (`running` → `ok`/`failed`), наявний run dir ніколи не перезаписується;
+- `evaluation/tum_depth.py` — читання TUM depth PNG у метрах (лише evaluation);
+- `geometry/adapter.py` — додано `GeometryAdapterError(reason, message)`.
+
 Решта модулів — planned.
 
 Починати реалізацію слід із contracts і synthetic geometry tests. Не імпортувати pySLAM або конкретну foundation model у generic contracts/alignment modules.

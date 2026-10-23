@@ -2,7 +2,7 @@
 
 Навчальний дослідницький проєкт з побудови карти невідомого середовища за монокулярною RGB-послідовністю. Ми порівнюємо класичний feature-based SLAM із гібридним pipeline, у якому SLAM оцінює рух камери та sparse map, а foundation model прогнозує dense geometry/depth. Обидва представлення вирівнюються та об'єднуються в узгоджену 3D-карту.
 
-> Статус на 20 жовтня 2026: підготовлено дизайн системи й експериментів; WP1 має відтворюваний DA3 Metric smoke benchmark на 20 TUM кадрах. pySLAM baseline, alignment та end-to-end pipeline ще не реалізовані.
+> Статус на 23 жовтня 2026: реалізовано DA3 Metric adapter/runner (WP1 C1–C5) та pySLAM baseline зі sparse export (WP2). Є окремі smoke results: DA3 — 20 кадрів; SLAM — 200 кадрів, 1,205 landmarks та 7,595 observations. Alignment, fusion, end-to-end pipeline і повний benchmark ще не реалізовані. Деталі та залишок по owners — [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
 
 ## Дослідницьке питання
 
@@ -80,12 +80,13 @@ dense metric map + trajectory + benchmark report
 - [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) — датасети, протокол, метрики й матриця експериментів.
 - [docs/MODEL_SELECTION.md](docs/MODEL_SELECTION.md) — обґрунтування моделей і правила вибору.
 - [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) — чесний журнал фактичного прогресу та внеску Назара (бос), Ярополка (дубєнь) і Юліана (піндос).
+- [docs/INTEGRATION_STATUS.md](docs/INTEGRATION_STATUS.md) — що вже інтегровано з WP1/WP2, що лишається кожному owner та які artifacts передати Юліану.
 - [docs/INTERIM_REVIEW.md](docs/INTERIM_REVIEW.md) — чекліст на 15 балів і каркас короткої презентації.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Git workflow та Definition of Done.
 
 ## Перший відтворюваний WP1 запуск
 
-WP2 (Ярополк): [native setup і запуск](docs/WP2_SETUP.md) перевірено на macOS arm64. Перший monocular pySLAM smoke: 200 frames, 198 final poses, 0 LOST за upstream counters; [звіт](results/summaries/wp2_b0_fr1_xyz_200_20261023.json). ATE/RPE, normalized sparse exports, alignment/fusion ще не реалізовані.
+WP2 (Ярополк): [native setup і запуск](docs/WP2_SETUP.md) перевірено на macOS arm64. [Sparse handoff](docs/WP2_SPARSE_EXPORT.md): 200 frames, 197 final poses, 0 LOST, 1,205 landmarks / 19 keyframes / 7,595 observations; [звіт](results/summaries/wp2_sparse_fr1_xyz_200_20261023.json), [preview](results/plots/wp2_sparse_map.png). Залишаються normalized all-frame states/timing, automated recorded ATE/RPE та ширший benchmark. PLY/NPZ/CSV повного run локальні, не передаються через Git.
 
 Після setup з [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md):
 
@@ -94,4 +95,6 @@ WP2 (Ярополк): [native setup і запуск](docs/WP2_SETUP.md) пере
 .venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --process-res 384
 ```
 
-Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — normalized SLAM exports для offline alignment на тій самій TUM sequence.
+Кожен запуск пише новий `results/runs/<run_id>/` (run.json, predictions, metrics.json, timing.json; див. docs/EXPERIMENTS.md §5.1) і не перезаписує наявні runs.
+
+Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — DA3 predictions для matching SLAM keyframes → robust scale alignment → fused metric cloud. Це WP3 Юліана за участі Назара/Ярополка для adapters і спільного benchmark.
