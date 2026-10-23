@@ -1,0 +1,261 @@
+"""WP2 dataset verification and isolated pySLAM readiness checks.
+
+These checks do not run SLAM, install packages, or modify the input dataset.
+The lightweight tools environment is deliberately separate from upstream's
+native runtime. A successful dataset check does not imply SLAM is installed.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import os
+import platform
+import struct
+import subprocess
+import tarfile
+from pathlib import Path
+from typing import Any
+
+from rt_mapping.data.manifest import build_tum_manifest, sha256_file
+from rt_mapping.data.tum import load_sequence, read_index
+
+
+def load_setup_config(path: Path) -> dict[str, Any]:
+    config = json.loads(path.read_text(encoding="utf-8"))
+    if config["schema"] != "rt_mapping.wp2_setup/v1":
+        raise ValueError("unsupported WP2 setup schema")
+    if config["sensor_type"] != "mono":
+        raise ValueError("WP2 B0 must use monocular RGB")
+    optimization = config.get("python_optimization", 1)
+    if type(optimization) is not int or optimization not in (0, 1):
+        raise ValueError("python_optimization must be 0 or 1")
+    return config
+
+
+def verify_extracted_archive(archive: Path, sequence_dir: Path) -> int:
+    """Compare every regular archive member with its extracted file; never extract.
+
+    Refuse links and paths outside the named sequence. Reads decompressed content
+    in bounded chunks rather than keeping the entire dataset in memory.
+    """
+    count = 0
+    with tarfile.open(archive, "r:gz") as source:
+        for member in source:
+            parts = Path(member.name).parts
+            if not parts or parts[0] != sequence_dir.name or ".." in parts:
+                raise ValueError(f"unsafe archive member: {member.name}")
+            if member.isdir():
+                continue
+            if not member.isfile():
+                raise ValueError(f"unsupported archive member: {member.name}")
+            local = sequence_dir.joinpath(*parts[1:])
+            if not local.resolve().is_relative_to(sequence_dir.resolve()):
+                raise ValueError(f"archive member resolves outside sequence: {member.name}")
+            if not local.is_file() or local.stat().st_size != member.size:
+                raise ValueError(f"missing or wrong-size extracted file: {member.name}")
+            digest = hashlib.sha256()
+            with source.extractfile(member) as stream:
+                for chunk in iter(lambda: stream.read(1 << 20), b""):
+                    digest.update(chunk)
+            if sha256_file(local) != digest.hexdigest():
+                raise ValueError(f"extracted contents differ: {member.name}")
+            count += 1
+    return count
+
+
+def _check_png(path: Path, width: int, height: int, bit_depth: int) -> None:
+    with path.open("rb") as image:
+        header = image.read(29)
+    if len(header) < 29 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError(f"not a PNG: {path.name}")
+    if struct.unpack(">II", header[16:24]) != (width, height) or header[24] != bit_depth:
+        raise ValueError(f"unexpected dimensions or bit depth: {path.name}")
+
+
+def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = False) -> dict[str, Any]:
+    """Verify archive/index hashes, frozen manifest, images, timestamps and GT poses.
+
+    Ground truth is inspected here only as evaluation data, never used for fitting.
+    TUM quaternion components are rounded to four decimals; squared norm tolerance
+    5e-4 accommodates that precision. Evaluation should normalize before use.
+    """
+    seq = repo_root / config["sequence_dir"]
+    archive = repo_root / config["archive"]
+    manifest = json.loads((repo_root / config["dataset_manifest"]).read_text(encoding="utf-8"))
+    rebuilt = build_tum_manifest(
+        seq, archive, repo_root, manifest["source"]["archive_url"],
+        smoke_frames=manifest["splits"]["smoke"]["num_frames"],
+        max_delta_s=manifest["association"]["max_delta_s"],
+    )
+    if rebuilt != manifest:
+        raise ValueError("local archive/indexes do not reproduce the frozen dataset manifest")
+    counts = {}
+    for name, depth in (("rgb.txt", 8), ("depth.txt", 16)):
+        rows = read_index(seq / name)
+        stamps = [row.timestamp_s for row in rows]
+        if not all(math.isfinite(t) for t in stamps) or any(a >= b for a, b in zip(stamps, stamps[1:])):
+            raise ValueError(f"{name}: timestamps must be finite and strictly increasing")
+        for row in rows:
+            path = seq / row.relative_path
+            if not path.resolve().is_relative_to(seq.resolve()):
+                raise ValueError(f"{name}: image path outside sequence")
+            _check_png(path, manifest["image"]["width"], manifest["image"]["height"], depth)
+        counts[name] = len(rows)
+    gt = []
+    for line in (seq / "groundtruth.txt").read_text(encoding="utf-8").splitlines():
+        if line.strip() and not line.lstrip().startswith("#"):
+            row = list(map(float, line.split()))
+            if len(row) != 8 or not all(map(math.isfinite, row)):
+                raise ValueError("invalid groundtruth row")
+            if abs(sum(v * v for v in row[4:]) - 1.0) > 5e-4:
+                raise ValueError("groundtruth quaternion exceeds rounding tolerance")
+            gt.append(row)
+    if not gt or any(a[0] >= b[0] for a, b in zip(gt, gt[1:])):
+        raise ValueError("groundtruth timestamps must be nonempty and increasing")
+    frames = load_sequence(seq)
+    if gt[0][0] > frames[0].frame.timestamp_s or gt[-1][0] < frames[-1].frame.timestamp_s:
+        raise ValueError("groundtruth time range does not cover associated RGB frames")
+    return {
+        "status": "ok", "sequence": manifest["sequence_id"],
+        "archive_sha256": rebuilt["source"]["archive_sha256"],
+        "archive_size_bytes": rebuilt["source"]["archive_size_bytes"],
+        "rgb_frames": counts["rgb.txt"], "depth_frames": counts["depth.txt"],
+        "associations": len(frames), "smoke_frames": len(manifest["splits"]["smoke"]["frames"]),
+        "groundtruth_poses": len(gt), "quaternion_norm_squared_tolerance": 5e-4,
+        "extracted_files_verified": verify_extracted_archive(archive, seq) if full else None,
+        "checks": ["frozen_manifest", "archive_sha256", "index_sha256", "PNG_headers", "timestamps", "evaluation_GT"],
+        "limitations": [] if full else ["PNG headers checked; extracted bytes not compared with archive (use --full)."],
+    }
+
+
+def inspect_source(source: Path, revision: str) -> dict[str, Any]:
+    if not (source / ".git").exists():
+        return {"status": "missing", "reason": "external pySLAM checkout not found"}
+    try:
+        def git(*args: str) -> str:
+            return subprocess.check_output(["git", *args], cwd=source, text=True, stderr=subprocess.STDOUT, timeout=30).strip()
+        actual = git("rev-parse", "HEAD")
+        # Upstream's own installer creates auxiliary source/build directories
+        # (e.g. thirdparty/gtsam_local). Check tracked source changes separately.
+        dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
+        untracked = git("ls-files", "--others", "--exclude-standard").splitlines()
+        sparse = subprocess.run(["git", "config", "--bool", "core.sparseCheckout"], cwd=source, capture_output=True, text=True).stdout.strip() == "true"
+        missing = [p for p in ("main_slam.py", "pyslam/config.py", "settings/TUM1.yaml", "thirdparty/g2opy") if not (source / p).exists()]
+        return {"status": "ok" if actual == revision and not dirty and not missing else "incomplete",
+                "revision": actual, "revision_matches": actual == revision, "dirty": dirty,
+                "untracked_file_count": len(untracked),
+                "sparse_checkout": sparse, "missing_paths": missing}
+    except (OSError, subprocess.SubprocessError) as exc:
+        return {"status": "failed", "reason": str(exc)}
+
+
+def probe_runtime(python: Path, source: Path, *, timeout_s: int = 180) -> dict[str, Any]:
+    """Import actual upstream entry-point dependencies in a child process, without running main.
+
+    Success proves imports only, not tracking or map quality. Output is retained
+    as diagnostics; no upstream source is edited.
+    """
+    code = "import runpy,sys; print('WP2_PYTHON',sys.version.split()[0],flush=True); runpy.run_path('main_slam.py',run_name='wp2_import_probe')"
+    try:
+        done = subprocess.run(
+            # Preserve the venv executable path: resolve() follows its symlink
+            # to the base interpreter and silently loses the venv site-packages.
+            [str(python.absolute()), "-c", code], cwd=source,
+            env={**os.environ, "PYSLAM_USE_CPP": "false", "PYTHONDONTWRITEBYTECODE": "1",
+                 "MPLCONFIGDIR": os.environ.get("MPLCONFIGDIR", str(source.absolute() / ".cache/wp2/matplotlib")),
+                 "XDG_CACHE_HOME": os.environ.get("XDG_CACHE_HOME", str(source.absolute() / ".cache/wp2")),
+                 "QT_QPA_PLATFORM": "offscreen", "PYTHONUNBUFFERED": "1"},
+            capture_output=True, text=True, timeout=timeout_s,
+        )
+        return {"status": "ok" if done.returncode == 0 else "failed", "exit_code": done.returncode,
+                "scope": "upstream entry-point imports only", "stdout": done.stdout[-12000:], "stderr": done.stderr[-12000:]}
+    except subprocess.TimeoutExpired as exc:
+        def readable(value):
+            return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
+        return {"status": "failed", "reason": str(exc), "stdout": readable(exc.stdout)[-12000:], "stderr": readable(exc.stderr)[-12000:]}
+    except OSError as exc:
+        return {"status": "failed", "reason": str(exc)}
+
+
+def host_report(repo_root: Path) -> dict[str, Any]:
+    import shutil
+    return {"system": platform.system(), "machine": platform.machine(), "python": platform.python_version(),
+            "free_disk_gib": round(shutil.disk_usage(repo_root).free / 1024**3, 1),
+            "tools": {name: shutil.which(name) is not None for name in ("git", "cmake", "clang", "brew", "docker")}}
+
+
+def prepare_baseline(
+    repo_root: Path, source: Path, output: Path, config: dict[str, Any], *, frames: int,
+) -> dict[str, Any]:
+    """Prepare an RGB-only frozen smoke input and upstream YAML; does not run SLAM.
+
+    Files go into a new ignored output directory. Neither the original dataset
+    nor the external upstream checkout is edited. Original shared frame IDs and
+    timestamps are recorded alongside the view. No depth/GT is exposed to SLAM.
+    """
+    import yaml
+
+    if isinstance(frames, bool) or not isinstance(frames, int) or frames < 2:
+        raise ValueError("baseline preparation requires at least two frames")
+    if output.exists():
+        raise ValueError("output already exists; choose a new preparation directory")
+    seq = repo_root / config["sequence_dir"]
+    if output.resolve().is_relative_to(seq.resolve()) or output.resolve().is_relative_to(source.resolve()):
+        raise ValueError("output must be outside the dataset and external source")
+    state = inspect_source(source, config["upstream"]["revision"])
+    if not state.get("revision_matches") or state.get("dirty"):
+        raise ValueError("source must be a clean checkout of the pinned pySLAM revision")
+    manifest = json.loads((repo_root / config["dataset_manifest"]).read_text(encoding="utf-8"))
+    selected = manifest["splits"][config["split"]]["frames"][:frames]
+    if len(selected) != frames:
+        raise ValueError("requested frames exceed the frozen split")
+    for item in selected:
+        path = seq / item["rgb_path"]
+        if not path.resolve().is_relative_to(seq.resolve()) or not path.is_file():
+            raise ValueError("missing RGB input or input outside sequence")
+    settings = yaml.safe_load((source / "settings/TUM1.yaml").read_text(encoding="utf-8"))
+    # The shared WP1 calibration is authoritative; keep upstream TUM1 distortion.
+    intr = manifest["intrinsics"]
+    for key in ("fx", "fy", "cx", "cy"):
+        settings[f"Camera.{key}"] = intr[key]
+    settings.update({"Viewer.on": 0, "FeatureTrackerConfig.name": config["feature_tracker"],
+                     "FeatureTrackerConfig.nFeatures": config["num_features"],
+                     "LoopDetectionConfig.name": config["loop_detector"], "Camera.RGB": 0})
+    # FolderDataset uses cv2.imread -> BGR, hence Camera.RGB=0.
+    output = output.resolve()
+    view = output / "input"
+    yaml_path = output / "pyslam.yaml"
+    upstream_config = {
+        "DATASET": {"type": "FOLDER_DATASET"},
+        "FOLDER_DATASET": {"type": "folder", "sensor_type": "mono", "base_path": str(view),
+                           "name": "*.png", "settings": str(output / "camera.yaml"),
+                           "timestamps": "times.txt", "fps": 30},
+        "SYSTEM_STATE": {"load_state": False, "folder_path": os.path.relpath(output / "slam_state", source)},
+        "SAVE_TRAJECTORY": {"save_trajectory": True, "format_type": "tum",
+                            "output_folder": str(output / "trajectory"), "basename": "trajectory"},
+        "GLOBAL_PARAMETERS": {"USE_CPP_CORE": config["use_cpp_core"], "kUseLoopClosing": True,
+                              "kDoVolumetricIntegration": False,
+                              "kUseDepthEstimatorInFrontEnd": False,
+                              "kDoSparseSemanticMappingAndSegmentation": False,
+                              "kLogsFolder": str(output / "logs")},
+    }
+    # JSON is valid YAML and avoids interpolating host paths into shell commands.
+    plan = {"schema": "rt_mapping.wp2_preparation/v1", "status": "prepared_not_run",
+            "upstream": config["upstream"], "seed": config["seed"], "frames": selected,
+            "dataset_archive_sha256": manifest["source"]["archive_sha256"],
+            "environment": {"PYSLAM_USE_CPP": "false"},
+            "python_flags": ["-O"] if config.get("python_optimization", 1) == 1 else [],
+            "argv_after_python": [str(source.resolve() / "main_slam.py"), "--config_path", str(yaml_path), "--headless", "--no_output_date"],
+            "cwd": str(source.resolve()),
+            "limitations": ["Native runtime not validated by preparation.",
+                            "Preparation alone does not seed execution; upstream threaded ORB2/SLAM determinism is not guaranteed.",
+                            "No trajectory normalization, sparse export, ATE/RPE or run.json yet."]}
+    view.mkdir(parents=True, exist_ok=False)
+    for index, item in enumerate(selected):
+        (view / f"{index:06d}.png").symlink_to((seq / item["rgb_path"]).resolve())
+    (view / "times.txt").write_text("".join(f"{item['rgb_timestamp_s']:.9f}\n" for item in selected), encoding="utf-8")
+    for path, data in ((output / "camera.yaml", settings), (yaml_path, upstream_config), (output / "setup.json", plan)):
+        path.write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return plan

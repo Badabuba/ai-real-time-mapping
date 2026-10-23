@@ -11,8 +11,9 @@ UCU course project "Real-time Mapping with Foundation Models": monocular RGB →
 
 ## Current state (verify in PROJECT_STATUS before relying on this)
 - Merged in `develop`: C1 TUM loader + FrameRecord, C2 dataset manifest, C3 GeometryPrediction/adapter protocol/intrinsics, C4 depth eval + timing + run.json contract.
-- C5 (branch `feature/nazar-da3-adapter`, review pending): `src/rt_mapping/adapters/da3_metric.py` (DA3 adapter), `src/rt_mapping/runs/geometry_run.py` (run orchestration); `scripts/run_tum_da3_metric.py` is now a thin CLI over them. Historical 20-frame result stays in `results/summaries/`.
-- Not implemented: pySLAM baseline, alignment, fusion, end-to-end pipeline, CI, lint config.
+- C5 DA3 adapter/runner (PR #4 merged into develop) and WP2 baseline/sparse export are combined on `yaropolk-wp1-wp2-integration`. `scripts/run_tum_da3_metric.py` is a thin CLI; historical GPU results remain unchanged. GPU evidence is Nazar's; CPU integration checks run locally on macOS.
+- WP2 native setup/smoke/export is implemented: `src/rt_mapping/slam/`, `docs/WP2_SETUP.md`, `docs/WP2_SPARSE_EXPORT.md`. The new 200-frame run exported 1,205 landmarks / 19 keyframes / 7,595 observations. Full artifacts remain local/ignored; previews and summaries are versioned.
+- Still incomplete: WP2 normalized all-frame states/timing and automated trajectory evaluation; WP1 broader selection/benchmark; alignment/fusion, end-to-end pipeline, CI, lint config. Do not claim only WP3 remains.
 - `.gitignore` ignores any `models/` directory: never name a source package `models`.
 
 ## Environment (Windows, PowerShell, from repo root)
