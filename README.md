@@ -92,4 +92,6 @@ dense metric map + trajectory + benchmark report
 .venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --process-res 384
 ```
 
+Кожен запуск пише новий `results/runs/<run_id>/` (run.json, predictions, metrics.json, timing.json; див. docs/EXPERIMENTS.md §5.1) і не перезаписує наявні runs.
+
 Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — та сама TUM sequence проходить через pySLAM baseline та offline alignment.

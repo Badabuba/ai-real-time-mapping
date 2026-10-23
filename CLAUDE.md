@@ -10,14 +10,15 @@ UCU course project "Real-time Mapping with Foundation Models": monocular RGB →
 - `docs/MODEL_SELECTION.md`, `docs/ENVIRONMENT.md`, `CONTRIBUTING.md`, per-directory READMEs.
 
 ## Current state (verify in PROJECT_STATUS before relying on this)
-- Implemented: WP1 env check + DA3METRIC-LARGE inference scripts in `scripts/`; 20-frame TUM fr1_xyz smoke result in `results/summaries/`.
-- Implemented (uncommitted, review pending): `src/rt_mapping/contracts/frame.py` (FrameRecord) and `src/rt_mapping/data/tum.py` (TUM loader) with `tests/test_tum_data.py`. The runner still uses its own copy of the loader until C5.
-- Not implemented: pySLAM baseline, alignment, fusion, end-to-end pipeline, the rest of `src/rt_mapping/`, CI, lint config.
+- Merged in `develop`: C1 TUM loader + FrameRecord, C2 dataset manifest, C3 GeometryPrediction/adapter protocol/intrinsics, C4 depth eval + timing + run.json contract.
+- C5 (branch `feature/nazar-da3-adapter`, review pending): `src/rt_mapping/adapters/da3_metric.py` (DA3 adapter), `src/rt_mapping/runs/geometry_run.py` (run orchestration); `scripts/run_tum_da3_metric.py` is now a thin CLI over them. Historical 20-frame result stays in `results/summaries/`.
+- Not implemented: pySLAM baseline, alignment, fusion, end-to-end pipeline, CI, lint config.
+- `.gitignore` ignores any `models/` directory: never name a source package `models`.
 
 ## Environment (Windows, PowerShell, from repo root)
 - Python 3.11 `.venv` via uv; do not use system Python 3.14. Setup commands: `docs/ENVIRONMENT.md`.
 - `.venv\Scripts\python.exe scripts\check_wp1_environment.py`
-- `.venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --process-res 384` (CUDA required; writes `results/runs/tum_fr1_xyz_da3metric/`)
+- `.venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --warmup 1` (CUDA + cached checkpoint required, never downloads; writes a new `results/runs/<run_id>/`, refuses an existing one)
 - Tests (CPU only): `.venv\Scripts\python.exe -m pytest tests -q`. No lint or format command exists yet.
 
 ## Rules

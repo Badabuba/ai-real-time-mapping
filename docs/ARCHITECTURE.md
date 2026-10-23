@@ -56,6 +56,8 @@ SlamExport + GeometryPrediction ─> Alignment
 | preprocess | object | resize/crop/normalization/dtype |
 | inference_ms | float | тільки model call після warm-up |
 
+Перша реалізація — `rt_mapping.adapters.da3_metric.Da3MetricAdapter` (C5): модель завантажується один раз; torch/DA3 імпортуються лише під час завантаження; `confidence=None`, бо DA3METRIC-LARGE її не повертає (одиниці не підставляються); depth із NaN/Inf/≤0 або несподіваною shape → помилка, а не тиха маска. На диску prediction — детермінований NPZ (`save_prediction`) без ground truth.
+
 Якщо модель видає relative depth, adapter не має називати поле depth_m. Використовується окреме поле inverse_depth_relative, а metric conversion стає явним кроком alignment.
 
 ### SlamExport
@@ -88,6 +90,7 @@ SlamExport + GeometryPrediction ─> Alignment
 - Основне представлення pose: T_wc, перетворення точки з camera frame у world frame. Якщо backend повертає T_cw, adapter інвертує його і зберігає обидві назви в metadata.
 - Quaternion order у CSV: qx, qy, qz, qw.
 - Resize/crop завжди оновлює K_processed; не можна back-project depth зі старими intrinsics.
+- DA3 (`upper_bound_resize`, process_res 384): два `cv2.resize` (640×480 → 384×288 → 378×294); adapter застосовує `resize_intrinsics` на кожен крок, тож K_processed описує сітку збереженої depth. Власне оновлення K у DA3 (cx·sx) і historical run відрізняються на −0.205 / −0.194 px (decision D008 у PROJECT_STATUS).
 
 Unit test має перевіряти, що projection(back_projection(pixel, depth)) повертає той самий pixel із похибкою < 1e-4 у synthetic case.
 
@@ -142,3 +145,5 @@ TSDF або Gaussian representation — розширення. Спочатку �
 ## 7. Failure states
 
 Кожен модуль повертає машинозчитуваний status: ok, skipped, degraded або failed, а також reason. Обов'язкові причини: tracking_lost, insufficient_correspondences, invalid_scale, model_oom, timestamp_mismatch, missing_intrinsics та non_finite_output. Silent fallback заборонений.
+
+Geometry adapters кидають `GeometryAdapterError(reason, message)` (`rt_mapping.geometry.adapter`); додаткові reasons: missing_input, unexpected_input, unsupported_config, cuda_unavailable, model_load_failed, unexpected_model_output. Runner (`rt_mapping.runs.geometry_run`) записує їх у run.json як `status=failed`, `reason="<code>: <message>"`; власні reasons runner-а — dataset_mismatch, evaluation_failed, internal_error.

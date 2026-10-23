@@ -122,6 +122,20 @@ Timing (§4.4) — `rt_mapping.evaluation.timing`: окремо cold start (пе
 
 Не редагувати finished run.json заднім числом; нова конфігурація = новий run_id. `write_run_manifest` відмовляється перезаписувати run.json зі статусом ok/degraded/failed/skipped.
 
+### 5.1 Depth-only geometry run (C5)
+
+`scripts/run_tum_da3_metric.py` → `rt_mapping.runs.geometry_run`. `method = model-spike` (model обов'язковий, slam/alignment = null). Порядок: preflight без запису (run dir уже існує → відмова, exit 2) → run.json `running` → перевірка датасету проти C2 manifest (SHA-256 rgb.txt/depth.txt, associations, кадри split; archive SHA-256, якщо не `--skip-archive-hash`) → модель завантажується один раз → для кожного кадру predict → NPZ → GT лише для evaluation → run.json `ok` або `failed` із reason (exit 1).
+
+```text
+results/runs/<run_id>/
+├── run.json
+├── predictions/frame_000000.npz   # C3 NPZ: depth_m, valid_mask, K_processed, meta.json; без GT і без confidence, якщо модель її не дає
+├── metrics.json                   # протокол, per-frame DepthMetrics, frame_mean
+└── timing.json                    # model_inference TimingSummary, per-frame ms, model_load_s, peak_vram_gb, finished_at, wall_clock_s
+```
+
+`inference_ms` = один виклик DA3 `inference()` (preprocess + forward + postprocess) з CUDA synchronize; декодування PNG — поза таймером. Усі кадри оцінюються; `--warmup N` лише виключає перші N samples зі warm statistics. run.json не має поля finished_at, тому воно в timing.json. `model.checkpoint` = `<файл ваг>@sha256:<hash>` з локального HF cache; downloads вимкнені.
+
 ## 6. Мінімальна матриця
 
 | Experiment | Smoke | Dev | Selection | Held-out | Owner |

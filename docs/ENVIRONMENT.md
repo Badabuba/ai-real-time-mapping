@@ -62,7 +62,7 @@ uv pip install --python .venv\Scripts\python.exe pytest
 
 `depth-anything/DA3METRIC-LARGE`: 0.35B parameters, monocular metric-depth checkpoint. Починаємо з batch size 1 і process_res 384 через 8 GB VRAM. Важкий nested checkpoint 1.4B не входить у перший smoke run.
 
-За офіційним DA3 FAQ standalone metric checkpoint потребує перетворення `depth_m = focal_px * raw_depth / 300`. Smoke runner робить це явно, коли API не позначає output як уже метричний, і записує джерело scale в manifest.
+За офіційним DA3 FAQ standalone metric checkpoint потребує перетворення `depth_m = focal_px * raw_depth / 300`. Adapter робить це явно, коли API не позначає output як уже метричний, і записує спосіб перетворення в `preprocess` кожного prediction.
 
 ## Зафіксований smoke dataset
 
@@ -73,4 +73,13 @@ uv pip install --python .venv\Scripts\python.exe pytest
 - RGB calibration: fx=517.3, fy=516.5, cx=318.6, cy=255.3.
 - Ground-truth PNG depth factor: 5000 units per meter.
 
-`scripts/run_tum_da3_metric.py` асоціює RGB/depth timestamps у межах 20 ms, передає raw intrinsics у DA3 і використовує DA3 preprocessor для точного перерахунку focal length після resize. Ground-truth depth використовується лише для оцінювання, не подається моделі.
+`scripts/run_tum_da3_metric.py` (з C5) — тонкий CLI: кадри бере C1 loader і перевіряє проти `data/manifests/tum_fr1_xyz.json`, модель працює через `Da3MetricAdapter`, метрики/timing/run.json — C4. Модель береться лише з локального cache `checkpoints/huggingface` на зафіксованій revision `4010e39f3634a45bc60553321fb49fb760bd594e` (downloads вимкнені). Ground-truth depth використовується лише для оцінювання, не подається моделі.
+
+```powershell
+# one-frame GPU smoke
+.venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 1 --warmup 0 --run-id <new_run_id>
+# 20-frame run; default run_id = <UTC time>_freiburg1_xyz_da3metric_f20_r384
+.venv\Scripts\python.exe scripts\run_tum_da3_metric.py --frames 20 --warmup 1
+```
+
+Ключі: `--device cuda[:N]` (CPU fallback немає), `--dtype bfloat16|float16` (має збігатися з autocast DA3 на цьому GPU), `--process-res`, `--seed`, `--output-root`, `--skip-archive-hash`. Наявний run dir ніколи не перезаписується. Exit codes: 0 ok, 1 failed (причина в run.json), 2 відмова до запису. Torch/DA3 друкують попередження про triton/gsplat — вони не впливають на depth inference.
