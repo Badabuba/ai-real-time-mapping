@@ -12,6 +12,7 @@ import json
 import math
 import os
 import platform
+import shutil
 import struct
 import subprocess
 import tarfile
@@ -254,7 +255,17 @@ def prepare_baseline(
                             "No trajectory normalization, sparse export, ATE/RPE or run.json yet."]}
     view.mkdir(parents=True, exist_ok=False)
     for index, item in enumerate(selected):
-        (view / f"{index:06d}.png").symlink_to((seq / item["rgb_path"]).resolve())
+        target = (seq / item["rgb_path"]).resolve()
+        destination = view / f"{index:06d}.png"
+        try:
+            destination.symlink_to(target)
+        except OSError as exc:
+            if os.name != "nt" or getattr(exc, "winerror", None) != 1314:
+                raise
+            # Windows commonly forbids symlinks without Developer Mode/admin.
+            # A byte-preserving copy keeps the input view usable without it.
+            shutil.copyfile(target, destination)
+    plan["input_view_storage"] = "symlinks_or_byte_identical_copies"
     (view / "times.txt").write_text("".join(f"{item['rgb_timestamp_s']:.9f}\n" for item in selected), encoding="utf-8")
     for path, data in ((output / "camera.yaml", settings), (yaml_path, upstream_config), (output / "setup.json", plan)):
         path.write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")

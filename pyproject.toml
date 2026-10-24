@@ -7,10 +7,12 @@ name = "rt-mapping"
 version = "0.0.1"
 description = "Real-time mapping with foundation models (UCU course project)"
 requires-python = ">=3.11,<3.14"
-dependencies = ["numpy"]
+dependencies = ["numpy", "Pillow"]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "PyYAML"]
+plots = ["matplotlib", "scipy"]
+filtering = ["scipy"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

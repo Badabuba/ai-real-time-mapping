@@ -1,6 +1,6 @@
-# WP1 + WP2 integration — 23 жовтня 2026
+# Integration — 25 жовтня 2026
 
-Назарів DA3 Metric adapter/runner (C5, PR #4) та Ярополків pySLAM baseline/sparse export інтегруються у `develop`. `main` не є integration target цього кроку. Це **готові окремі компоненти**, а не завершений end-to-end проєкт або всі work packages.
+Назарів DA3 Metric adapter/runner (C5, PR #4) та Ярополків pySLAM baseline/sparse export (PR #5) merged у `develop`; [PR #6](https://github.com/Badabuba/ai-real-time-mapping/pull/6) переніс усю історію в `main` (`36ed781`). WP3/WP4 тепер мають synthetic-verified alignment/fusion та offline artifact CLI. Real-data benchmark і запуск усіх native/GPU adapters однією командою ще не завершені. Аудит і поточні команди: [YULIAN_HANDOFF.md](YULIAN_HANDOFF.md).
 
 ## Перевірено
 
@@ -15,12 +15,12 @@
 |---|---|
 | Ярополк | Normalized all-frame trajectory/tracking states/timing; automatic timestamp-associated ATE/RPE із numeric reports; ширший baseline/performance benchmark. Наявні manual Sim(3) diagnostics не замінюють evaluator. |
 | Назар | DA3 predictions на matching SLAM frames/keyframes (нинішній доказ — лише 20 frames, SLAM — 200); ширша selection/evaluation перевірка, resource profiling та integration support. CUDA/checkpoint потрібні на його машині. |
-| Юліан | Synthetic scale/Sim(3) correctness tests; pixel correspondence builder; robust scale/inlier diagnostics; metric dense fusion і PLY export. Фактичного WP3 code у fetched branches поки немає. |
+| Юліан | Код scale/Sim(3), correspondences, diagnostics, metric fusion/PLY та artifact runner реалізовано й перевірено synthetic tests. Потрібні full real source runs для реального alignment/residual plot/fused cloud, потім WP5 ablations. |
 | Команда | Єдина end-to-end команда/config; B0/B1/P1 на однаковому frozen split; accuracy/latency/memory report; review, demo та presentation. |
 
 ## Handoff Юліану
 
-1. Отримати актуальний `develop` без перезапису власних незбережених змін.
+1. Отримати актуальний `main` із WP1/WP2 (PR #6) та WP3/WP4 implementation без перезапису власних змін.
 2. Прочитати `docs/WP2_SPARSE_EXPORT.md` та `docs/ARCHITECTURE.md`.
 3. Отримати **повну** папку `results/runs/yaropolk_b0_fr1_xyz_200_sparse_20261023_03/` від Ярополка або відтворити новий run. Git містить summaries/previews, але **не** NPZ/CSV/PLY цього run. Повний run дає manifest/config provenance, а папка `sparse/` — handoff artifacts.
 4. Використовувати `keyframes.npz::T_wc` із того самого snapshot, що й landmarks. Не підставляти раніший `trajectory_final.txt`. Coordinates поки що в SLAM units, не метрах.

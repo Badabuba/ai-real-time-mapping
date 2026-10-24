@@ -4,7 +4,7 @@
 
 **Native runtime встановлений. Перший реальний monocular B0 smoke пройдено.**
 
-- Поточний branch: `yaropolk-sparse-observation-export`; перший smoke був на `yaropolk-pyslam-smoke-run`, setup починався на `yaropolk-pyslam-baseline` від `origin/develop` (`31cfd29`). Зміни локальні, uncommitted; run чесно записує `dirty_worktree=true`.
+- Поточний branch: `yaropolk-sparse-observation-export`; перший smoke був на `yaropolk-pyslam-smoke-run`, setup починався на `yaropolk-pyslam-baseline` від `origin/develop` (`31cfd29`). На момент історичного run зміни були uncommitted (`dirty_worktree=true`); code тепер merged через PR #5 та PR #6. Native setup перевірено на macOS; Windows helper fixes не є native Windows validation.
 - Run: `yaropolk_b0_fr1_xyz_200_20261023_02`, status `ok`.
 - 200 RGB frames оброблено; 198 final poses; 0 frames зі станом LOST за upstream counters. Перші два кадри — initialization.
 - Wall clock із startup: 86.6969 s. Це **не** real-time claim або stage-latency benchmark.

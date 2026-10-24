@@ -2,7 +2,7 @@
 
 Навчальний дослідницький проєкт з побудови карти невідомого середовища за монокулярною RGB-послідовністю. Ми порівнюємо класичний feature-based SLAM із гібридним pipeline, у якому SLAM оцінює рух камери та sparse map, а foundation model прогнозує dense geometry/depth. Обидва представлення вирівнюються та об'єднуються в узгоджену 3D-карту.
 
-> Статус на 23 жовтня 2026: реалізовано DA3 Metric adapter/runner (WP1 C1–C5) та pySLAM baseline зі sparse export (WP2). Є окремі smoke results: DA3 — 20 кадрів; SLAM — 200 кадрів, 1,205 landmarks та 7,595 observations. Alignment, fusion, end-to-end pipeline і повний benchmark ще не реалізовані. Деталі та залишок по owners — [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
+> Статус на 25 жовтня 2026: WP1 C1–C5 та WP2 sparse baseline інтегровані в main (PR #6). Реалізовано WP3 scale/Sim(3), correspondences та WP4 offline artifact fusion із synthetic smoke. Real alignment/fusion потребує повних SLAM/DA3 runs; input-to-output launcher і benchmark ще не завершені. Деталі — [docs/YULIAN_HANDOFF.md](docs/YULIAN_HANDOFF.md).
 
 ## Дослідницьке питання
 
@@ -66,8 +66,8 @@ dense metric map + trajectory + benchmark report
 ├── data/                    # інструкція; датасети не комітяться
 ├── docs/                    # дизайн, експерименти, статус, проміжна перевірка
 ├── results/                 # формат малих відтворюваних результатів
-├── scripts/                 # майбутні CLI entry points
-├── src/rt_mapping/          # майбутні модулі pipeline
+├── scripts/                 # CLI entry points
+├── src/rt_mapping/          # contracts, adapters, alignment, fusion, evaluation
 └── tests/                   # unit та integration tests
 ```
 
@@ -81,6 +81,7 @@ dense metric map + trajectory + benchmark report
 - [docs/MODEL_SELECTION.md](docs/MODEL_SELECTION.md) — обґрунтування моделей і правила вибору.
 - [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) — чесний журнал фактичного прогресу та внеску Назара (бос), Ярополка (дубєнь) і Юліана (піндос).
 - [docs/INTEGRATION_STATUS.md](docs/INTEGRATION_STATUS.md) — що вже інтегровано з WP1/WP2, що лишається кожному owner та які artifacts передати Юліану.
+- [docs/YULIAN_HANDOFF.md](docs/YULIAN_HANDOFF.md) — аудит, WP3/WP4 реалізація, команди та remaining tasks Юліана.
 - [docs/INTERIM_REVIEW.md](docs/INTERIM_REVIEW.md) — чекліст на 15 балів і каркас короткої презентації.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Git workflow та Definition of Done.
 
@@ -98,3 +99,14 @@ WP2 (Ярополк): [native setup і запуск](docs/WP2_SETUP.md) пере
 Кожен запуск пише новий `results/runs/<run_id>/` (run.json, predictions, metrics.json, timing.json; див. docs/EXPERIMENTS.md §5.1) і не перезаписує наявні runs.
 
 Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — DA3 predictions для matching SLAM keyframes → robust scale alignment → fused metric cloud. Це WP3 Юліана за участі Назара/Ярополка для adapters і спільного benchmark.
+
+## CPU alignment/fusion smoke (Юліан)
+
+У Python environment із встановленими project dependencies:
+
+```powershell
+python -m pytest tests -q
+python scripts/run_alignment_smoke.py
+```
+
+Synthetic scale 2.5 відновлюється з outliers; команда створює metric PLY/NPZ, keyframe trajectory, residual diagnostics і run.json. Для plots: встановити `.[plots]` та додати `--plot`. Це correctness fixture, не TUM benchmark. Real запуск `run_offline_mapping.py` та input runs описані у [handoff](docs/YULIAN_HANDOFF.md).

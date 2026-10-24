@@ -62,7 +62,6 @@ def test_process_exit_is_preserved(tmp_path):
                                 cwd=tmp_path, env=None, output=output, timeout_s=5) == 7
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="POSIX process group cleanup")
 def test_timeout_stops_upstream_worker_group(tmp_path):
     with (tmp_path / "log").open("w") as output:
         with pytest.raises(subprocess.TimeoutExpired):

@@ -146,4 +146,10 @@ TSDF або Gaussian representation — розширення. Спочатку �
 
 Кожен модуль повертає машинозчитуваний status: ok, skipped, degraded або failed, а також reason. Обов'язкові причини: tracking_lost, insufficient_correspondences, invalid_scale, model_oom, timestamp_mismatch, missing_intrinsics та non_finite_output. Silent fallback заборонений.
 
+## 8. Реалізований offline alignment/fusion (25 жовтня)
+
+`scripts/run_offline_mapping.py` споживає completed B0/model-spike runs і виконує Case A без GT. Resize/crop replay перевіряє K_processed; raw distorted pixels лишаються raw для depth sampling, а Brown distortion інвертується для dense rays. Scale recovery множить SLAM translation/landmarks, не depth або rotation. Calibration та withheld split розділено за landmark ID; acceptance перевіряє inlier count/ratio і pooled 4×4 image coverage.
+
+Sim(3) Case B реалізовано окремим API `estimate_sim3` із synthetic outlier/degeneracy tests. DA3 CLI використовує scalar Case A. ICP/sliding-window ще не ввімкнено. Fusion повертає equal-weight voxel centroids у метрах; optional statistical filtering задається явно. Observation count — pixel contributions, не distinct views. Export trajectory має лише retained keyframes того самого snapshot. Деталі: [YULIAN_HANDOFF.md](YULIAN_HANDOFF.md).
+
 Geometry adapters кидають `GeometryAdapterError(reason, message)` (`rt_mapping.geometry.adapter`); додаткові reasons: missing_input, unexpected_input, unsupported_config, cuda_unavailable, model_load_failed, unexpected_model_output. Runner (`rt_mapping.runs.geometry_run`) записує їх у run.json як `status=failed`, `reason="<code>: <message>"`; власні reasons runner-а — dataset_mismatch, evaluation_failed, internal_error.

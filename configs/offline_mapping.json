@@ -1,0 +1,20 @@
+{
+  "seed": 0,
+  "residual_threshold_m": 0.1,
+  "min_inliers": 30,
+  "min_inlier_ratio": 0.5,
+  "min_coverage_bins": 4,
+  "validation_fraction": 0.2,
+  "max_reprojection_error_px": 3.0,
+  "confidence_threshold": null,
+  "min_depth_m": 0.1,
+  "max_depth_m": 8.0,
+  "voxel_size_m": 0.02,
+  "pixel_stride": 2,
+  "keyframe_interval": 1,
+  "max_voxels": 2000000,
+  "min_voxel_observations": 1,
+  "statistical_neighbors": 0,
+  "statistical_std_ratio": 2.0,
+  "plot": false
+}
