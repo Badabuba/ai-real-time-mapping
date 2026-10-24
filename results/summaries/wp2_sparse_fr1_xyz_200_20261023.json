@@ -1,0 +1,110 @@
+{
+  "schema": "rt_mapping.wp2_sparse_evidence/v1",
+  "date": "2026-10-23",
+  "owner": "Yaropolk",
+  "branch": "yaropolk-sparse-observation-export",
+  "run_id": "yaropolk_b0_fr1_xyz_200_sparse_20261023_03",
+  "status": "ok",
+  "dirty_worktree": true,
+  "upstream_revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+  "metrics": {
+    "input_frames": 200,
+    "processed_frames": 200,
+    "lost_frames": 0,
+    "lost_fraction": 0.0,
+    "final_pose_count": 197,
+    "final_pose_fraction": 0.985,
+    "first_pose_timestamp_s": 1305031102.311267,
+    "last_pose_timestamp_s": 1305031109.011269,
+    "trajectory_units": "monocular SLAM units; metric scale not recovered",
+    "trajectory_alignment": "none",
+    "ate_rpe": "not evaluated",
+    "note": "Final pose fraction is not tracking success; initialization/lost-state handling differs.",
+    "sparse_export": {
+      "landmarks": 1205,
+      "keyframes": 19,
+      "observations": 7595
+    },
+    "wall_clock_seconds_including_startup": 82.06947287500952
+  },
+  "sparse_export": {
+    "snapshot_stage": "after original Slam.quit stops workers, before forced process exit; not a convergence guarantee",
+    "world_frame": "first upstream keyframe camera frame at snapshot time",
+    "T_export_world_from_upstream_world": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "reference_upstream_frame_id": 0,
+    "reference_timestamp_s": 1305031102.175304,
+    "input_frame_count": 200,
+    "skipped": {},
+    "keyframe_pose_source": "keyframes.npz; use these poses with these landmarks",
+    "limitations": [
+      "Not all-frame tracking observations or timing.",
+      "Upstream trajectory_final.txt predates this snapshot; do not assume identical optimization state.",
+      "Export is a handoff, not a reloadable pySLAM system state; PLY has geometry only."
+    ],
+    "schema": "rt_mapping.sparse_export/v1",
+    "status": "ok",
+    "pose_convention": "T_wc",
+    "units": "arbitrary monocular SLAM units; not meters",
+    "observation_scope": "retained keyframes only; not all tracked frames",
+    "pixel_convention": "u right, v down; integer pixel centers; original distorted image grid",
+    "reprojection_error_convention": "Euclidean pixel residual against undistorted keypoints using K",
+    "counts": {
+      "landmarks": 1205,
+      "keyframes": 19,
+      "observations": 7595
+    },
+    "sha256": {
+      "landmarks.npz": "977ef370cb0791a37c2ea713c2f40d36e206bed7c1c83caf977b5554fbbdab52",
+      "keyframes.npz": "a4a7cfb30e63f822819eb750aa71b9cd7bfb6a48adfcf3d8d3071fd0edb5d85a",
+      "observations.csv": "d0d0a73d00f337cd7ad450b2de3ebc09be8d7773fe8fb786e6cabeee498a2107",
+      "sparse_map.ply": "81197158ec0fefe42bc9bcb20e66283c1abd66881f5e16de48149fc0ec71f2a3"
+    }
+  },
+  "reprojection_error_undistorted_px": {
+    "median": 0.9302599472194013,
+    "p95": 3.167992607850606,
+    "max": 8.752581140499212
+  },
+  "preview": "results/visualizations/yaropolk_b0_fr1_xyz_200_sparse_20261023_03/20261023T142031_442564Z/sparse_map_preview.png",
+  "validation": {
+    "cpu_suite": "325 passed, 1 skipped",
+    "installed_native_api": "1 unittest passed",
+    "real_sparse_export": "read-back validated; workers stopped"
+  },
+  "attempts": {
+    "_01": "launcher NameError before upstream start; fixed with runner regression tests",
+    "_02": "sandbox OpenMP shared-memory failure before tracking; task worker group stopped",
+    "_03": "successful short run with local shared-memory access"
+  },
+  "implementation_sha256": {
+    "src/rt_mapping/slam/sparse.py": "04b4bd5b4dc6447dea039bac247194a7d1173e9ffef2a8dbe15b9f341837c22b",
+    "src/rt_mapping/slam/pyslam_export.py": "a6fb0c17f8e7ed100814aa98692ba69852eb2de4247b16cb275086355878a04e",
+    "src/rt_mapping/slam/smoke.py": "622c6dc6331ca5737cdefbfa24d4067006c737d2cfd4e5b860a272fe7151ae67",
+    "scripts/run_wp2_pyslam.py": "ee9047777159cec11bc255d134bb318a4a69d4a1ff6f4feac7d13ad3444dfe75"
+  }
+}

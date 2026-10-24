@@ -1,0 +1,89 @@
+{
+  "schema": "rt_mapping.wp2_smoke_evidence/v1",
+  "date": "2026-10-23",
+  "owner": "Ярополк",
+  "branch": "yaropolk-pyslam-smoke-run",
+  "run_id": "yaropolk_b0_fr1_xyz_200_20261023_02",
+  "status": "ok",
+  "git_commit": "31cfd293bb0b9797b1eff26f599ad245fae729de",
+  "dirty_worktree": true,
+  "scope": "first real monocular B0 smoke; not held-out evaluation or a real-time claim",
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "slam": {
+    "config": "configs/wp2_pyslam_baseline.json",
+    "pose_convention": "T_wc",
+    "repo": "https://github.com/luigifreda/pyslam.git",
+    "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+  },
+  "environment": {
+    "numpy": "1.26.4",
+    "opencv_python": "4.11.0.86",
+    "python": "3.11.16",
+    "torch": "2.6.0"
+  },
+  "hardware": {
+    "cpu": "arm64",
+    "gpu": null,
+    "ram_gb": 32.0
+  },
+  "metrics": {
+    "input_frames": 200,
+    "processed_frames": 200,
+    "lost_frames": 0,
+    "lost_fraction": 0.0,
+    "final_pose_count": 198,
+    "final_pose_fraction": 0.99,
+    "first_pose_timestamp_s": 1305031102.275326,
+    "last_pose_timestamp_s": 1305031109.011269,
+    "trajectory_units": "monocular SLAM units; metric scale not recovered",
+    "trajectory_alignment": "none",
+    "ate_rpe": "not evaluated",
+    "note": "Final pose fraction is not tracking success; initialization/lost-state handling differs.",
+    "wall_clock_seconds_including_startup": 86.69691279200197
+  },
+  "native": {
+    "gtsam_revision": "c57988fe554e7213c77fe379c1d7c483de26ad33",
+    "gtsam_patch_sha256": "2dee743250fc55260378c2eadf464d68b1e2bad0d710fa7c63c4c692aa734df5",
+    "homebrew_versions": [
+      "boost 1.90.0_1 1.92.0",
+      "cmake 4.1.1",
+      "eigen 5.0.1",
+      "libusb 1.0.30",
+      "opencv@4 4.14.0_11",
+      "suite-sparse 7.14.1",
+      "tbb 2022.3.0 2023.1.0"
+    ],
+    "runtime_lock": "requirements/wp2-pyslam-macos-arm64.txt",
+    "runtime_lock_sha256": "79fdb22c4f3abc127c541a044d2b0ed4cd8756ee4bcb7dc542823acbcc8b968a",
+    "orb_vocabulary": "external/pyslam/data/ORBvoc.txt",
+    "orb_vocabulary_sha256": "f8dd027f7a6cb88129821341194d7f2c75b77b3394257ddd0d2229863d1a3570",
+    "python_optimization": 1,
+    "core": "Python sparse core; native g2o/features/utilities"
+  },
+  "verification": {
+    "entry_point_import": "passed (runtime-probe-08)",
+    "trajectory_sha256": "986e42fa50367aee07294d592deebd23f895a644f46658d498650504fd55299f",
+    "run_json_sha256": "0c004da874c8e6ac2e15edf983c9a7bd809dfc6d4ac89dab86479d31de52bbe0",
+    "upstream_log_sha256": "7fabbad5a331380d4023cb7c6257211411d24148b981b463791b3d724b1b53f9"
+  },
+  "previous_attempt": {
+    "run_id": "yaropolk_b0_fr1_xyz_200_20261023_01",
+    "status": "failed",
+    "cause": "upstream Python-core assertion at frame 3 without -O; then stopped own worker group",
+    "change": "match official main_slam.py shebang (python3 -O), explicit config in run 02"
+  },
+  "limitations": [
+    "Monocular scale remains arbitrary; ATE/RPE not evaluated.",
+    "No normalized per-frame tracking/timing or sparse landmark/observation exports yet.",
+    "Code was uncommitted during the run; dirty_worktree=true is preserved.",
+    "Threaded execution remains potentially nondeterministic despite parent RNG seeds.",
+    "Upstream reported duplicate OpenCV Objective-C classes and cleaned up 46 leaked semaphore objects on shutdown; exit code was 0.",
+    "Upstream writes final trajectory before stopping local mapping; this is its exported snapshot, not a claim of fully converged mapping."
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "rt_mapping.wp2_setup_evidence/v1",
+  "date": "2026-10-23",
+  "owner": "Ярополк",
+  "branch": "yaropolk-pyslam-baseline",
+  "base_commit": "31cfd293bb0b9797b1eff26f599ad245fae729de",
+  "scope": "dataset verification and baseline preparation; no SLAM inference or benchmark",
+  "status": "native_runtime_not_installed",
+  "dataset": {
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "archive_sha256": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "archive_size_bytes": 448204271,
+    "extracted_files_matching_archive": 1600,
+    "rgb_frames": 798,
+    "depth_frames": 798,
+    "associations": 792,
+    "smoke_frames": 200,
+    "groundtruth_poses": 3000,
+    "manifest_check": "byte-identical rebuild"
+  },
+  "host": {"os": "macOS 26.6.2", "architecture": "arm64", "tools_python": "3.11.16", "free_disk_gib_after_setup": 18.1},
+  "upstream_revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+  "preparation": {"status": "prepared_not_run", "frames": 200, "path": "outputs/wp2/fr1_xyz_smoke_200/setup.json"},
+  "runtime_probe": {"status": "failed", "interpreter": "WP2 lightweight tools environment", "first_error": "ModuleNotFoundError: No module named 'cv2'"},
+  "tests": {"command": ".venv-wp2/bin/python -m pytest tests -q", "passed": 297},
+  "limitations": [
+    "Local source is an inspection sparse checkout; third-party native sources/extensions are not installed.",
+    "Lightweight tools environment is not the pySLAM runtime.",
+    "Official native installer changes Homebrew/system packages and manages a separate user-level environment; not executed.",
+    "No successful SLAM run, trajectory metrics, sparse map, or real-time claim."
+  ]
+}

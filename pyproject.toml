@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rt-mapping"
+version = "0.0.1"
+description = "Real-time mapping with foundation models (UCU course project)"
+requires-python = ">=3.11,<3.14"
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+# Lets tests import rt_mapping from src/ without installing the package.
+pythonpath = ["src"]
+testpaths = ["tests"]

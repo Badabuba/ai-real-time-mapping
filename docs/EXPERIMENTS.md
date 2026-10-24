@@ -19,7 +19,7 @@ Primary dataset: TUM RGB-D. Pipeline отримує лише monocular RGB та 
 
 | Split | Sequence | Призначення |
 |---|---|---|
-| smoke | freiburg1_xyz, перші 200 RGB frames | setup, shapes, timestamps, швидкий CI-like run |
+| smoke | freiburg1_xyz, перші 200 асоційованих RGB-depth кадрів (data/manifests/tum_fr1_xyz.json) | setup, shapes, timestamps, швидкий CI-like run |
 | development | freiburg1_desk | налагодження alignment/fusion і thresholds |
 | selection | freiburg2_desk | вибір dense model/config; не для фінального headline |
 | held-out evaluation | freiburg3_long_office_household | основний звіт після freeze |
@@ -65,6 +65,10 @@ Ground-truth trajectory/depth не можна використовувати д�
 
 Raw metric depth оцінюємо без median scaling. Окремий scale-aligned score дозволений тільки як diagnostic і має так називатися.
 
+Реалізація: `rt_mapping.evaluation.depth` (C4). GT-valid = finite і > 0; evaluated = GT-valid ∩ `prediction.valid_mask`; також MAE [m]; valid coverage = evaluated / GT-valid; кадр без evaluated pixels — помилка. Середнє по кадрах — незважене (`frame_mean`). GT до сітки prediction зводиться лише nearest-neighbour з цілими центрами pixels: x_src = ⌊(x' + 0.5)·W/W'⌋ (так само для рядків); на 20 кадрах fr1/xyz це побітово збігається з Pillow NEAREST, який використовував runner.
+
+Timing (§4.4) — `rt_mapping.evaluation.timing`: окремо cold start (перший sample), warm-up samples виключені з mean/median/p95; p95 = `numpy.percentile(..., method="linear")`; FPS із per-stage latency не виводиться.
+
 ### 4.3 Map geometry
 
 Після voxel downsample обох clouds до однакового voxel size:
@@ -93,22 +97,44 @@ Raw metric depth оцінюємо без median scaling. Окремий scale-al
 
 ```json
 {
+  "schema": "rt_mapping.run_manifest/v1",
   "run_id": "2026-10-XX_tum_f1desk_p1_global_seed0",
-  "git_commit": "TODO",
+  "git_commit": "<40 hex>",
   "dirty_worktree": false,
-  "dataset": {"name": "TUM-RGBD", "sequence": "TODO", "checksum": "TODO"},
+  "dataset": {"name": "TUM-RGBD", "sequence": "rgbd_dataset_freiburg1_desk", "split": "development",
+              "checksum": "<64 lowercase hex, як archive_sha256 у data manifest>", "manifest": "data/manifests/<...>.json"},
   "method": "P1-global",
-  "model": {"repo_revision": "TODO", "checkpoint": "TODO", "dtype": "TODO"},
-  "slam": {"repo_revision": "TODO", "config": "TODO"},
+  "model": {"repo": "TODO", "revision": "TODO", "checkpoint": "TODO", "dtype": "float32"},
+  "slam": {"repo": "TODO", "revision": "TODO", "config": "TODO", "pose_convention": "T_wc"},
   "alignment": {"method": "TODO", "thresholds": {}},
+  "config": {"process_res": 384, "batch": 1, "keyframe_interval": 1},
   "hardware": {"gpu": "TODO", "cpu": "TODO", "ram_gb": null},
+  "environment": {"python": "3.11.16"},
   "seed": 0,
-  "started_at": "TODO",
-  "status": "planned"
+  "started_at": "2026-10-XXT10:00:00Z",
+  "status": "planned",
+  "reason": null,
+  "artifacts": {"metrics": "metrics.json"}
 }
 ```
 
-Не редагувати finished run.json заднім числом; нова конфігурація = новий run_id.
+Контракт і валідація: `rt_mapping.contracts.run_manifest` (C4). Усі ключі обов'язкові, невідомі ключі відхиляються. `method` ∈ B0, B1, P1-raw, P1-global, P1-window, P2, model-spike; `split` ∈ smoke, development, selection, held-out; `status` ∈ planned, running, ok, degraded, failed, skipped. `model` = null лише для B0/B1; `slam` обов'язковий для B0/B1/P1-*, null для model-spike; `alignment` обов'язковий для P1-global/P1-window/P2, інакше null; `reason` обов'язковий для degraded/failed/skipped. Заборонені NaN/Inf, absolute paths і ключі на кшталт password/token/api_key.
+
+Не редагувати finished run.json заднім числом; нова конфігурація = новий run_id. `write_run_manifest` відмовляється перезаписувати run.json зі статусом ok/degraded/failed/skipped.
+
+### 5.1 Depth-only geometry run (C5)
+
+`scripts/run_tum_da3_metric.py` → `rt_mapping.runs.geometry_run`. `method = model-spike` (model обов'язковий, slam/alignment = null). Порядок: preflight без запису (run dir уже існує → відмова, exit 2) → run.json `running` → перевірка датасету проти C2 manifest (SHA-256 rgb.txt/depth.txt, associations, кадри split; archive SHA-256, якщо не `--skip-archive-hash`) → модель завантажується один раз → для кожного кадру predict → NPZ → GT лише для evaluation → run.json `ok` або `failed` із reason (exit 1).
+
+```text
+results/runs/<run_id>/
+├── run.json
+├── predictions/frame_000000.npz   # C3 NPZ: depth_m, valid_mask, K_processed, meta.json; без GT і без confidence, якщо модель її не дає
+├── metrics.json                   # протокол, per-frame DepthMetrics, frame_mean
+└── timing.json                    # model_inference TimingSummary, per-frame ms, model_load_s, peak_vram_gb, finished_at, wall_clock_s
+```
+
+`inference_ms` = один виклик DA3 `inference()` (preprocess + forward + postprocess) з CUDA synchronize; декодування PNG — поза таймером. Усі кадри оцінюються; `--warmup N` лише виключає перші N samples зі warm statistics. run.json не має поля finished_at, тому воно в timing.json. `model.checkpoint` = `<файл ваг>@sha256:<hash>` з локального HF cache; downloads вимкнені.
 
 ## 6. Мінімальна матриця
 
