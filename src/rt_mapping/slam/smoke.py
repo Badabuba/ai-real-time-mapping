@@ -49,13 +49,22 @@ def execute_upstream(argv, *, cwd, env, output, timeout_s):
     process = subprocess.Popen(argv, cwd=cwd, env=env, stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
     try:
         exit_code = process.wait(timeout=timeout_s)
-        if exit_code:
+        if exit_code and os.name == "posix":
             try:
                 os.killpg(process.pid, signal.SIGTERM)
             except ProcessLookupError:
                 pass
         return exit_code
     except (subprocess.TimeoutExpired, KeyboardInterrupt):
+        if os.name == "nt":
+            # Windows has no killpg. This also targets children of a live
+            # launcher; native pySLAM itself is still validated only on POSIX.
+            subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+            if process.poll() is None:
+                process.kill()
+            process.wait()
+            raise
         try:
             os.killpg(process.pid, signal.SIGTERM)
             process.wait(timeout=5)

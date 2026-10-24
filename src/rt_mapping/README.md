@@ -38,6 +38,17 @@ rt_mapping/
 - `evaluation/tum_depth.py` — читання TUM depth PNG у метрах (лише evaluation);
 - `geometry/adapter.py` — додано `GeometryAdapterError(reason, message)`.
 
-Решта модулів — planned.
+Реалізовано (WP2): `slam/setup.py`, `smoke.py`, `sparse.py`, `pyslam_export.py` — native setup/readiness, recorded baseline та validated retained-keyframe export. `slam/visualization.py` — existing trajectory plots. All-frame normalization та automated ATE/RPE ще planned.
+
+Реалізовано (WP3/WP4, Юліан):
+
+- `alignment/estimators.py`: robust median scalar scale та seeded RANSAC/Umeyama Sim(3), proper rotation, metric residual/inlier gates;
+- `alignment/correspondences.py`: ID/timestamp/calibration/pixel-grid checks, bilinear depth sampling, reprojection/mask/confidence/range filtering;
+- `geometry/projection.py`: camera-z projection/back-projection, Brown distortion та rigid T_wc validation;
+- `fusion/voxel.py`: metric translation scaling, dense points, voxel centroids, capacity limit, optional statistical filtering, PLY;
+- `runs/mapping_run.py`: offline artifact integration, landmark-disjoint validation/coverage, hashes, metric keyframe trajectory, plots/timing та terminal manifests;
+- `runs/synthetic_mapping.py`: reproducible synthetic inputs, окремо від real data.
+
+Real alignment/fusion та baseline/proposed benchmark ще не перевірені: full source runs у Git відсутні. Див. `docs/YULIAN_HANDOFF.md`.
 
 Починати реалізацію слід із contracts і synthetic geometry tests. Не імпортувати pySLAM або конкретну foundation model у generic contracts/alignment modules.

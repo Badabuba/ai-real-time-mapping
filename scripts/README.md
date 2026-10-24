@@ -9,7 +9,6 @@ WP2 (Ярополк), реалізовано: `check_wp2_environment.py` (datase
 - download/verify dataset manifest;
 - run SLAM baseline;
 - run geometry inference;
-- align and fuse artifacts;
 - evaluate one run;
 - aggregate benchmark runs.
 
@@ -19,5 +18,7 @@ WP2 (Ярополк), реалізовано: `check_wp2_environment.py` (datase
 - `build_tum_manifest.py` — побудова або `--check` dataset manifest (C2);
 - `run_tum_da3_metric.py` — DA3 Metric на frozen TUM split → `results/runs/<run_id>/` (C5; логіка в `rt_mapping.adapters.da3_metric` і `rt_mapping.runs.geometry_run`);
 - `run_da3_metric_smoke.py` — ранній synthetic smoke (до C5, не змінювався).
+- `run_alignment_smoke.py` — CPU synthetic WP3/WP4 correctness, без dataset/checkpoints; `--plot` додає діагностику;
+- `run_offline_mapping.py` — WP1/WP2 artifacts → robust scale → metric keyframe trajectory + fused PLY/NPZ. Параметри: [YULIAN_HANDOFF.md](../docs/YULIAN_HANDOFF.md).
 
 Business logic має бути у src/rt_mapping, а scripts лише парсить аргументи/config та викликає модулі. Команди додаються до root README тільки після smoke verification.

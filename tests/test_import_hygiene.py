@@ -15,7 +15,9 @@ sys.path.insert(0, {str(REPO_ROOT / "src")!r})
 for name in ["rt_mapping", "rt_mapping.contracts", "rt_mapping.data", "rt_mapping.data.tum",
              "rt_mapping.data.manifest", "rt_mapping.geometry", "rt_mapping.evaluation",
              "rt_mapping.runs", "rt_mapping.runs.geometry_run", "rt_mapping.adapters",
-             "rt_mapping.adapters.da3_metric"]:
+             "rt_mapping.adapters.da3_metric", "rt_mapping.alignment",
+             "rt_mapping.alignment.correspondences", "rt_mapping.fusion",
+             "rt_mapping.runs.mapping_run"]:
     importlib.import_module(name)
 spec = importlib.util.spec_from_file_location("run_tum_da3_metric", {str(REPO_ROOT / "scripts" / "run_tum_da3_metric.py")!r})
 module = importlib.util.module_from_spec(spec)

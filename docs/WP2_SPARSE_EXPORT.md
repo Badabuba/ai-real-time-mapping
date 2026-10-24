@@ -1,6 +1,6 @@
 # WP2: sparse landmarks та observations для alignment
 
-Owner: Ярополк. Branch: `yaropolk-sparse-observation-export` (local/uncommitted).
+Owner: Ярополк. Historical branch: `yaropolk-sparse-observation-export`; code merged PR #5 → develop та PR #6 → main. Historical run лишається dirty=true.
 
 Цей крок додає opt-in export до Python-core B0 runner. Він не змінює feature matching, tracking, optimization чи upstream source files. Він не завершує весь `SlamExport`: all-frame tracking states, normalized trajectory та stage timing лишаються окремою роботою.
 

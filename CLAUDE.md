@@ -10,10 +10,10 @@ UCU course project "Real-time Mapping with Foundation Models": monocular RGB →
 - `docs/MODEL_SELECTION.md`, `docs/ENVIRONMENT.md`, `CONTRIBUTING.md`, per-directory READMEs.
 
 ## Current state (verify in PROJECT_STATUS before relying on this)
-- Merged in `develop`: C1 TUM loader + FrameRecord, C2 dataset manifest, C3 GeometryPrediction/adapter protocol/intrinsics, C4 depth eval + timing + run.json contract.
-- C5 DA3 adapter/runner (PR #4 merged into develop) and WP2 baseline/sparse export are combined on `yaropolk-wp1-wp2-integration`. `scripts/run_tum_da3_metric.py` is a thin CLI; historical GPU results remain unchanged. GPU evidence is Nazar's; CPU integration checks run locally on macOS.
-- WP2 native setup/smoke/export is implemented: `src/rt_mapping/slam/`, `docs/WP2_SETUP.md`, `docs/WP2_SPARSE_EXPORT.md`. The new 200-frame run exported 1,205 landmarks / 19 keyframes / 7,595 observations. Full artifacts remain local/ignored; previews and summaries are versioned.
-- Still incomplete: WP2 normalized all-frame states/timing and automated trajectory evaluation; WP1 broader selection/benchmark; alignment/fusion, end-to-end pipeline, CI, lint config. Do not claim only WP3 remains.
+- WP1 C1–C5 and WP2 baseline/sparse handoff were merged into develop (PRs #1–#5), then main (PR #6, 36ed781). GPU evidence is Nazar's; native macOS evidence is Yaropolk's.
+- WP3/WP4 now have robust scalar/Sim(3), validated correspondences, Brown-distortion geometry, voxel fusion, and an offline artifact runner. Synthetic smoke: `python scripts/run_alignment_smoke.py`; real handoff: `docs/YULIAN_HANDOFF.md`.
+- Local CPU suite after initial WP3/WP4 implementation: 441 passed, 1 native skip. Windows process/symlink helper failures fixed; this does not establish native Windows SLAM support. CI workflow covers Ubuntu/Windows Python 3.11/3.12.
+- Still incomplete: real alignment/fusion validation (full SLAM export and matching DA3 predictions are absent); WP2 all-frame states/timing/automated ATE/RPE; WP1 broader selection/evaluation; input-to-output orchestration, benchmark and demo.
 - `.gitignore` ignores any `models/` directory: never name a source package `models`.
 
 ## Environment (Windows, PowerShell, from repo root)

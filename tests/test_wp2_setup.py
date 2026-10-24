@@ -105,7 +105,10 @@ def test_prepared_view_preserves_timestamps_ids_and_excludes_gt(dataset, monkeyp
     assert plan["python_flags"] == ["-O"]
     assert [f["frame_id"] for f in plan["frames"]] == [0, 1]
     assert sorted(p.name for p in (output / "input").iterdir()) == ["000000.png", "000001.png", "times.txt"]
-    assert (output / "input/000001.png").resolve() == seq / "rgb/1.png"
+    image = output / "input/000001.png"
+    assert image.read_bytes() == (seq / "rgb/1.png").read_bytes()
+    if image.is_symlink():
+        assert image.resolve() == seq / "rgb/1.png"
     assert [float(s) for s in (output / "input/times.txt").read_text().split()] == [1, 1.1]
     cfg = yaml.safe_load((output / "pyslam.yaml").read_text())
     assert cfg["FOLDER_DATASET"]["sensor_type"] == "mono"
