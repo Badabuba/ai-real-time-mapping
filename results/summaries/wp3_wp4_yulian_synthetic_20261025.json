@@ -1,0 +1,138 @@
+{
+  "absolute_scale_error": 1.6046981121675685e-07,
+  "alignment": {
+    "R": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "all_pairs_median_residual_m": 1.9256377337129038e-07,
+    "calibration_coverage_bins_4x4": 16,
+    "failure_reason": null,
+    "inlier_count": 168,
+    "inlier_ratio": 0.9824561403508771,
+    "median_residual_m": 1.9256377337129038e-07,
+    "method": "robust_median",
+    "number_of_pairs": 171,
+    "p95_residual_m": 9.01667977015741e-07,
+    "rejected_pairs": {},
+    "scale": 2.500000160469811,
+    "scale_application": "SLAM translations/landmarks multiplied by scale; predicted metric depth unchanged",
+    "source_frame": "slam_world",
+    "status": "ok",
+    "t": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "target_frame": "metric_world",
+    "thresholds": {
+      "min_coverage_bins": 4,
+      "min_inlier_ratio": 0.5,
+      "min_inliers": 30,
+      "residual_m": 0.1
+    },
+    "transform_direction": "target = scale * R @ source + t",
+    "withheld_inlier_ratio": 0.9777777777777777,
+    "withheld_landmarks": 15,
+    "withheld_median_residual_m": 1.9256377337129038e-07,
+    "withheld_p95_residual_m": 9.016679771711722e-07,
+    "withheld_pairs": 45
+  },
+  "artifact_sha256": {
+    "alignment.json": "6472f926a50dd4071f49c23dd81b2d1e62cf324f4f40c71d8aadb745db2752a1",
+    "inputs.json": "3cfa953fe37080489dc890a7b85cb8c2f522fffbcf906d3afe53df72b8d4f651",
+    "map.npz": "1ff4c7141605f44607330cd6c8a2d4b47ca4d27083e0d0ab2a4a98ac0bb5bf83",
+    "map.ply": "a3cf44aeb3d797646d0b6ebfd741c0ae26c0fcda99c2eb38a40ae726e710137f",
+    "metrics.json": "8a21e4206d28ade0035d251edc68eb4558ccde467198e724b22bf59b075c61a2",
+    "residuals.csv": "50be108910feddb86751df870756020c591ce14d7098d98119858c0d2eac107b",
+    "residuals.png": "909d2bbe50dacc7b067554739f99d785aa8fdae6c3d90900310bb67b3f1b73c9",
+    "run.json": "a8f2c49eb79eb0578b6bdaa3125f3f00ace70d9dcfe2079c58ddf308f8aeac0b",
+    "timing.json": "995c5acc56e72b37d84fb5c4ef028cfa29f58248788145c6be9b4a74c4afb508",
+    "trajectory_metric.csv": "8a335493db142b001bf2d0f18251c390360d0ac77ad1cf0446ca743ea1e49a3d",
+    "visualization.png": "99324b91040737d2b39e61a3fd19d11b68dc0b33db9dcbb01d532ec1fcd14970"
+  },
+  "cli_verification": {
+    "command": "python scripts/run_offline_mapping.py --slam-run <synthetic_slam> --geometry-run <synthetic_geometry> --run-id yulian_cli_clean_24b16e2",
+    "dirty_worktree": false,
+    "run_id": "yulian_cli_clean_24b16e2",
+    "status": "ok"
+  },
+  "dirty_worktree": false,
+  "environment": {
+    "numpy": "2.2.4",
+    "python": "3.12.8"
+  },
+  "fusion": {
+    "alignment_inliers": 168,
+    "fused_keyframes": 3,
+    "ground_truth_evaluation": "not performed",
+    "input_keyframes": 3,
+    "input_points": 900,
+    "map_points": 900,
+    "per_frame": [
+      {
+        "frame_id": 10,
+        "points": 300
+      },
+      {
+        "frame_id": 27,
+        "points": 300
+      },
+      {
+        "frame_id": 40,
+        "points": 300
+      }
+    ],
+    "real_time_claim": false,
+    "scale": 2.500000160469811,
+    "status": "ok",
+    "trajectory_scope": "retained keyframes only; snapshot matches sparse landmarks",
+    "units": "meters"
+  },
+  "git_commit": "24b16e2317ad15fb09910612dbaee6ba6732f81f",
+  "hardware": {
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "gpu": null,
+    "ram_gb": 39.7
+  },
+  "known_scale": 2.5,
+  "previews": {
+    "map": "results/plots/yulian_synthetic_map.png",
+    "residuals": "results/plots/yulian_synthetic_residuals.png"
+  },
+  "run_id": "yulian_synthetic_clean_24b16e2",
+  "schema": "rt_mapping.wp3_wp4_synthetic_evidence/v1",
+  "scientific_benchmark": false,
+  "started_at": "2026-10-24T21:14:54.725163Z",
+  "synthetic_only": true,
+  "timing": {
+    "alignment_and_input_ms": 785.6817999854684,
+    "fusion_median_ms": 1.4009999576956034,
+    "fusion_p95_ms": 2.2328700055368245,
+    "fusion_per_keyframe_ms": [
+      1.4009999576956034,
+      1.2625000672414899,
+      2.3253000108525157
+    ],
+    "scope": "CPU artifact integration, excluding SLAM/model inference",
+    "wall_clock_s": 0.9634661000454798
+  },
+  "validation": {
+    "local_cpu_suite": "441 passed, 1 skipped (native pySLAM opt-in)",
+    "plots": "residual and fused-map PNGs visually inspected",
+    "real_data": "not available: full WP2 run and matching WP1 keyframe predictions absent"
+  }
+}

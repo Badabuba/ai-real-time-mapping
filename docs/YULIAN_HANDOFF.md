@@ -78,3 +78,5 @@ Placeholder `NAZAR_MATCHING_200_FRAME_RUN` замінити фактичним �
 | Умовно | Sliding-window scale / ICP | Після development comparison; ICP після coarse alignment і лише за покращення withheld residual; не вимога першого scalar MVP |
 
 Організаційно треба підтвердити дати/ліміт презентації та submission, hardware усіх учасників і ліцензію. Репозиторій public; координатор scope/release за PLAN — Назар. GitHub issues та повідомлень teammates від імені Юліана не створювали.
+
+Clean-commit evidence (25 жовтня): `24b16e2`, `dirty_worktree=false`, synthetic smoke та окремий offline CLI run — status ok. Малий [summary](../results/summaries/wp3_wp4_yulian_synthetic_20261025.json); [map preview](../results/plots/yulian_synthetic_map.png), [residuals](../results/plots/yulian_synthetic_residuals.png). Implementation: [PR #7](https://github.com/Badabuba/ai-real-time-mapping/pull/7). Це synthetic evidence, real artifacts усе ще потрібні.
