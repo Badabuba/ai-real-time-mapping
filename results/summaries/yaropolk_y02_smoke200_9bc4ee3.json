@@ -1,0 +1,283 @@
+{
+  "base_commit": "1f1f979fd01a23525d262086825534d2ca69955f",
+  "chunk": "Y-02",
+  "development_failures": [
+    "Initial worktree raw-data symlink rejected by existing verifier before any SLAM run; APFS clone passed.",
+    "Initial local full-suite setup exposed pytest only to parent; 5 existing child-process tests failed to import pytest. Inherited temporary PYTHONPATH resolved it without package changes."
+  ],
+  "evaluation": {
+    "final_trajectory": {
+      "coverage": {
+        "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
+        "gt_associated_poses": 196,
+        "input_frames": 200,
+        "pose_count": 198,
+        "pose_fraction": 0.99,
+        "tracking_success": null,
+        "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success"
+      },
+      "metrics": {
+        "alignment_mode": "sim3",
+        "association_max_actual_delta_s": 0.007564067840576172,
+        "ate_median_m": 0.007673304103802946,
+        "ate_rmse_m": 0.011072990678401468,
+        "evaluation_transform": {
+          "R": [
+            [
+              0.0890390224771754,
+              0.6365313344693931,
+              -0.7660939320441865
+            ],
+            [
+              0.9960262559932042,
+              -0.05540666798392045,
+              0.06972659833291471
+            ],
+            [
+              0.001936452547593197,
+              -0.7692580590293044,
+              -0.6389352774499135
+            ]
+          ],
+          "direction": "reference_world = scale * R @ estimate_world + t",
+          "scale": 1.3800550595540735,
+          "t": [
+            1.3444515465792697,
+            0.6202886273213738,
+            1.6555756519986204
+          ]
+        },
+        "input_poses": 198,
+        "matched_poses": 196,
+        "max_timestamp_delta_s": 0.02,
+        "rpe_delta": 1,
+        "rpe_delta_unit": "matched_pose_rows",
+        "rpe_pairs": 195,
+        "rpe_rotation_rmse_deg": 0.3995359749804605,
+        "rpe_translation_rmse_m": 0.006641437927198205,
+        "scale_fitted_for_evaluation": true
+      },
+      "reason": null,
+      "rpe_scope": "matched pose rows; not gap-aware (Y-03); not input-frame delta",
+      "scale_use": "evaluation-only Sim(3); does not recover metric scale",
+      "scope": "upstream final trajectory; optimized snapshot, not causal all-frame history"
+    },
+    "real_time_claim": false,
+    "resources": {
+      "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+      "cold_start_s": null,
+      "effective_fps": 2.2300987772761856,
+      "effective_fps_reason": null,
+      "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including initialization and startup",
+      "exit_code": 0,
+      "launch_error": null,
+      "peak_rss_bytes": 1703723008,
+      "peak_rss_reason": null,
+      "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+      "platform": "Darwin",
+      "python": "3.11.16",
+      "real_time_claim": false,
+      "requested_frames": 200,
+      "schema": "rt_mapping.slam_resources/v1",
+      "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+      "source_run_sha256": "8fd10fef6b4a5d4616b98763f33188dd07eb9226328017d98ecf6654cb66e932",
+      "source_status": "ok",
+      "status": "ok",
+      "throughput_frames": 200,
+      "wall_clock_s": 89.68212620800477,
+      "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+    },
+    "retained_keyframes": {
+      "coverage": {
+        "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
+        "gt_associated_poses": 19,
+        "input_frames": 200,
+        "pose_count": 20,
+        "pose_fraction": 0.1,
+        "tracking_success": null,
+        "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success"
+      },
+      "metrics": {
+        "alignment_mode": "sim3",
+        "association_max_actual_delta_s": 0.004667043685913086,
+        "ate_median_m": 0.0050362527777324155,
+        "ate_rmse_m": 0.006776287260053055,
+        "evaluation_transform": {
+          "R": [
+            [
+              0.10578151835808951,
+              0.6596974016075736,
+              -0.7440494665585567
+            ],
+            [
+              0.9943082328026459,
+              -0.07973167603885033,
+              0.07066822494526682
+            ],
+            [
+              -0.012704666651914059,
+              -0.7472899023459711,
+              -0.6643766953295485
+            ]
+          ],
+          "direction": "reference_world = scale * R @ estimate_world + t",
+          "scale": 1.3763753729902537,
+          "t": [
+            1.3359411917161144,
+            0.622567156376618,
+            1.659611366188973
+          ]
+        },
+        "input_poses": 20,
+        "matched_poses": 19,
+        "max_timestamp_delta_s": 0.02,
+        "rpe_delta": 1,
+        "rpe_delta_unit": "matched_pose_rows",
+        "rpe_pairs": 18,
+        "rpe_rotation_rmse_deg": 0.7851208072379237,
+        "rpe_translation_rmse_m": 0.014219783573369987,
+        "scale_fitted_for_evaluation": true
+      },
+      "reason": null,
+      "rpe_scope": "matched pose rows; not gap-aware (Y-03); not input-frame delta",
+      "scale_use": "evaluation-only Sim(3); does not recover metric scale",
+      "scope": "stopped retained-keyframe snapshot; separate Sim(3) fit, same evaluator as comparison B0_sim3"
+    },
+    "schema": "rt_mapping.slam_evaluation/v1",
+    "tracking_success": null,
+    "tracking_success_reason": "all-frame states/gaps not evaluated until Y-03"
+  },
+  "evaluation_run": {
+    "alignment": null,
+    "dirty_worktree": false,
+    "git_commit": "9bc4ee3be7bbf208a6ffa38b5e60d204f4c30bb9",
+    "method": "B0",
+    "reason": "Y-02 evaluates final poses only; all-frame tracking success and gap-aware RPE pending Y-03",
+    "run_id": "yaropolk_y02_eval_smoke200_9bc4ee3_01",
+    "status": "degraded"
+  },
+  "failed_real_runs": [],
+  "hashes": {
+    "yaropolk_y02_eval_smoke200_9bc4ee3_01/inputs.json": "ece792161068574e22b3de079bda0a267236c04969c11b24553e6c185c0274f2",
+    "yaropolk_y02_eval_smoke200_9bc4ee3_01/metrics.json": "7c8fc1dd9e456c7b93ff45bf186b7068f216f2fab2e3026738b875117ad70907",
+    "yaropolk_y02_eval_smoke200_9bc4ee3_01/run.json": "cc34ceaa659ca12e58ccb0e9894e45644a2bb5963a003415c160577f40eea0d7",
+    "yaropolk_y02_smoke200_9bc4ee3_01.resources.json": "5e3dd086659e45ea8a7b37a2d2f48f1865e5d4ce3e4a57523b27e019738dd541",
+    "yaropolk_y02_smoke200_9bc4ee3_01/metrics.json": "04300afd32d9a88a0e234087ab279872846bfced24256f9f2908206218e3edc4",
+    "yaropolk_y02_smoke200_9bc4ee3_01/run.json": "8fd10fef6b4a5d4616b98763f33188dd07eb9226328017d98ecf6654cb66e932",
+    "yaropolk_y02_smoke200_9bc4ee3_01/timing.csv": "205e3b1c700b8e38d48bf8e91836b4d8b86599ca75bf7ae0ba406ed9b40a1d37",
+    "yaropolk_y02_smoke200_9bc4ee3_01/tracking_export.json": "df7983adee14393e2188def009a60243ec0f24de587b36822cf51675e1abc33f",
+    "yaropolk_y02_smoke200_9bc4ee3_01/trajectory_all.csv": "82843baacbb6649c69fda9701f30f0aff96dee5a90ba6a2c9bc7bc68bf346dfc"
+  },
+  "implementation_commit": "9bc4ee3be7bbf208a6ffa38b5e60d204f4c30bb9",
+  "limitations": [
+    "Sim(3) scale is fitted only for evaluation; no metric-scale recovery claim.",
+    "Final upstream trajectory and stopped retained-keyframe snapshot have separate gauges/fits.",
+    "RPE uses consecutive matched pose rows; gap-aware state evaluation remains Y-03.",
+    "Peak RSS is the OS-reported maximum individual process; not concurrent process-tree RAM.",
+    "Cold start to first tracked frame is unavailable; null with reason.",
+    "No end-to-end real-time claim; one 200-frame smoke, not wider/held-out benchmark."
+  ],
+  "owner": "Yaropolk (WP2/WP5)",
+  "provenance": {
+    "final_trajectory_sha256": "cec399713f28fd074ffd8b0c0e739c64e10b6520e0445ff5d4e9083bde421e9f",
+    "groundtruth_sha256": "aac0319a6ef4e1cdf61e779d2152b95aa7e9f7b1749d6d18717b43ddabffede2",
+    "groundtruth_use": "evaluation only; user-supplied reference trajectory",
+    "preparation_sha256": "30568a8aa4913c019fb6c8c144b98f13868c3c147fd01119e85af1f16778a26b",
+    "resource_report_sha256": "5e3dd086659e45ea8a7b37a2d2f48f1865e5d4ce3e4a57523b27e019738dd541",
+    "source_dirty_worktree": false,
+    "source_environment": {
+      "numpy": "1.26.4",
+      "opencv_python": "4.11.0.86",
+      "python": "3.11.16",
+      "torch": "2.6.0"
+    },
+    "source_git_commit": "9bc4ee3be7bbf208a6ffa38b5e60d204f4c30bb9",
+    "source_hardware": {
+      "cpu": "arm64",
+      "gpu": null,
+      "ram_gb": 32.0
+    },
+    "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+    "source_run_sha256": "8fd10fef6b4a5d4616b98763f33188dd07eb9226328017d98ecf6654cb66e932",
+    "source_status": "ok",
+    "sparse_export_sha256": "6fff72519c6c558a3dd3362d9fb6395dbaab56dcd24e2c65a4049ad6438c82d9",
+    "sparse_sha256": {
+      "keyframes.npz": "c4b3e25b53a07b5b2b878a9d7dde33d5b3c08a6d006b1533f2eae28183ca1ff6",
+      "landmarks.npz": "48895074e7dfec68a46cce5be2d473233b13da39968bf197e3e05c10fc83d702",
+      "observations.csv": "03b4afd7be79747b2d688415b5765c814b961ca4992a8c7b49bb9821381e07e4",
+      "sparse_map.ply": "2110ac84b3fdb786f73b476bfeca5c1c23f2ff9f050be8fc609dff2970dca444"
+    }
+  },
+  "runtime": "macOS arm64 native; existing pinned pySLAM 96019cf; no installs/downloads",
+  "schema": "rt_mapping.wp2_evaluation_verification/v1",
+  "source_counts": {
+    "ate_rpe": "not evaluated",
+    "final_pose_count": 198,
+    "final_pose_fraction": 0.99,
+    "first_pose_timestamp_s": 1305031102.275326,
+    "input_frames": 200,
+    "last_pose_timestamp_s": 1305031109.011269,
+    "lost_fraction": 0.0,
+    "lost_frames": 0,
+    "note": "Final pose fraction is not tracking success; initialization/lost-state handling differs.",
+    "processed_frames": 200,
+    "sparse_export": {
+      "keyframes": 20,
+      "landmarks": 1282,
+      "observations": 8351
+    },
+    "tracking_export": {
+      "frame_count": 200,
+      "keyframes_created": 51,
+      "observation_errors": 0,
+      "pose_count": 198,
+      "state_counts": {
+        "NOT_INITIALIZED": 2,
+        "OK": 198
+      }
+    },
+    "trajectory_alignment": "none",
+    "trajectory_units": "monocular SLAM units; metric scale not recovered",
+    "wall_clock_seconds_including_startup": 88.49173087500094
+  },
+  "source_run": {
+    "dataset": {
+      "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+      "manifest": "data/manifests/tum_fr1_xyz.json",
+      "name": "TUM RGB-D",
+      "sequence": "rgbd_dataset_freiburg1_xyz",
+      "split": "smoke"
+    },
+    "dirty_worktree": false,
+    "environment": {
+      "numpy": "1.26.4",
+      "opencv_python": "4.11.0.86",
+      "python": "3.11.16",
+      "torch": "2.6.0"
+    },
+    "git_commit": "9bc4ee3be7bbf208a6ffa38b5e60d204f4c30bb9",
+    "hardware": {
+      "cpu": "arm64",
+      "gpu": null,
+      "ram_gb": 32.0
+    },
+    "reason": null,
+    "run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+    "seed": 0,
+    "slam": {
+      "config": "configs/wp2_pyslam_baseline.json",
+      "pose_convention": "T_wc",
+      "repo": "https://github.com/luigifreda/pyslam.git",
+      "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+    },
+    "status": "ok"
+  },
+  "verification": {
+    "local_cpu_suite": "523 passed, 1 native skip",
+    "packages_changed": false,
+    "preflight": "dataset/source/runtime ok",
+    "retained_keyframe_parity": "unit test calls the same unchanged trajectory_metrics(..., alignment=sim3) as comparison B0_sim3",
+    "source_manifest_unchanged": true,
+    "y02_tests": "16 passed"
+  }
+}
