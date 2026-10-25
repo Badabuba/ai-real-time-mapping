@@ -1,0 +1,1212 @@
+{
+  "branch": "feature/yaropolk-tracking-evaluation",
+  "chunk": "Y-03",
+  "deviations": [
+    "Y-02 publication rejected by automatic approval review; Y-03 prepared as a separate local branch atop completed local Y-02 while explicit publication approval is pending.",
+    "Uses own clean Y-02 run with Y-01 telemetry rather than creating an otherwise redundant yaropolk_y01-named SLAM run."
+  ],
+  "evaluation_runs": [
+    {
+      "config": {
+        "max_timestamp_delta_s": 0.02,
+        "plot": true,
+        "pose_convention": "T_wc",
+        "rpe_delta": 1,
+        "runner": "scripts/evaluate_wp2_run.py",
+        "scale_use": "evaluation-only",
+        "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+        "tracking_warmup": 1
+      },
+      "dataset": {
+        "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+        "manifest": "data/manifests/tum_fr1_xyz.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg1_xyz",
+        "split": "smoke"
+      },
+      "dirty_worktree": false,
+      "git_commit": "f7245ff58f90b4e9e9572724d2db520728a841b2",
+      "reason": null,
+      "run_id": "yaropolk_y03_eval_smoke200_f7245ff_01",
+      "status": "ok"
+    },
+    {
+      "config": {
+        "max_timestamp_delta_s": 0.02,
+        "plot": true,
+        "pose_convention": "T_wc",
+        "rpe_delta": 1,
+        "runner": "scripts/evaluate_wp2_run.py",
+        "scale_use": "evaluation-only",
+        "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+        "tracking_warmup": 1
+      },
+      "dataset": {
+        "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+        "manifest": "data/manifests/tum_fr1_xyz.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg1_xyz",
+        "split": "smoke"
+      },
+      "dirty_worktree": false,
+      "git_commit": "f7245ff58f90b4e9e9572724d2db520728a841b2",
+      "reason": null,
+      "run_id": "yaropolk_y03_eval_smoke200_f7245ff_02",
+      "status": "ok"
+    }
+  ],
+  "failed_real_evaluations": [],
+  "final_trajectory": {
+    "coverage": {
+      "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
+      "gt_associated_poses": 196,
+      "input_frames": 200,
+      "pose_count": 198,
+      "pose_fraction": 0.99,
+      "tracking_success": null,
+      "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success"
+    },
+    "metrics": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.007564067840576172,
+      "ate_median_m": 0.007673304103802946,
+      "ate_rmse_m": 0.011072990678401468,
+      "evaluation_transform": {
+        "R": [
+          [
+            0.0890390224771754,
+            0.6365313344693931,
+            -0.7660939320441865
+          ],
+          [
+            0.9960262559932042,
+            -0.05540666798392045,
+            0.06972659833291471
+          ],
+          [
+            0.001936452547593197,
+            -0.7692580590293044,
+            -0.6389352774499135
+          ]
+        ],
+        "direction": "reference_world = scale * R @ estimate_world + t",
+        "scale": 1.3800550595540735,
+        "t": [
+          1.3444515465792697,
+          0.6202886273213738,
+          1.6555756519986204
+        ]
+      },
+      "input_poses": 198,
+      "matched_poses": 196,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 195,
+      "rpe_rotation_rmse_deg": 0.3995359749804605,
+      "rpe_translation_rmse_m": 0.006641437927198205,
+      "scale_fitted_for_evaluation": true
+    },
+    "reason": null,
+    "rpe_scope": "matched pose rows; not gap-aware (Y-03); not input-frame delta",
+    "scale_use": "evaluation-only Sim(3); does not recover metric scale",
+    "scope": "upstream final trajectory; optimized snapshot, not causal all-frame history"
+  },
+  "hashes": {
+    "yaropolk_y03_eval_smoke200_f7245ff_01/inputs.json": "d20f7c7ae4459968caaf1341f6ddbb6c5d0cef184dbd85562c7afc5e2c5baa09",
+    "yaropolk_y03_eval_smoke200_f7245ff_01/metrics.json": "fe5f45727b0e9627a8d75c718b01df6ffae427c66001f76eaa5efd63282100e2",
+    "yaropolk_y03_eval_smoke200_f7245ff_01/run.json": "62dcb9e4c400cd968bf7562b157668e9a9098120b32ba410ec5d77d226b6e29d",
+    "yaropolk_y03_eval_smoke200_f7245ff_01/tracking_states.png": "78f4a19ffdd7099ed4fb44758ca76227fffabe94fb30d9bb2cbb17218dbf9700",
+    "yaropolk_y03_eval_smoke200_f7245ff_02/inputs.json": "d20f7c7ae4459968caaf1341f6ddbb6c5d0cef184dbd85562c7afc5e2c5baa09",
+    "yaropolk_y03_eval_smoke200_f7245ff_02/metrics.json": "fe5f45727b0e9627a8d75c718b01df6ffae427c66001f76eaa5efd63282100e2",
+    "yaropolk_y03_eval_smoke200_f7245ff_02/run.json": "df83556938cc0ea6ab35c7229956792fad30c9eded2c9ba219dfc88eb8abdd67",
+    "yaropolk_y03_eval_smoke200_f7245ff_02/tracking_states.png": "78f4a19ffdd7099ed4fb44758ca76227fffabe94fb30d9bb2cbb17218dbf9700"
+  },
+  "implementation_commit": "f7245ff58f90b4e9e9572724d2db520728a841b2",
+  "limitations": [
+    "One 200-frame smoke; wider/held-out study is not completed.",
+    "Tracking success includes initialization in the denominator; UNKNOWN or track exceptions yield null rather than imputed success.",
+    "Sim(3) scale is evaluation-only and fitted separately for causal/final/retained trajectories.",
+    "Tracking latency excludes decode and post-call CSV work; mapping/whole-loop latency unavailable.",
+    "No real-time claim."
+  ],
+  "local_prerequisite_commit": "2dd1498",
+  "observed_origin_develop": "060eef75b3e16eff58617faf3b40efe58c897881",
+  "owner": "Yaropolk (WP2/WP5)",
+  "provenance": {
+    "final_trajectory_sha256": "cec399713f28fd074ffd8b0c0e739c64e10b6520e0445ff5d4e9083bde421e9f",
+    "groundtruth_sha256": "aac0319a6ef4e1cdf61e779d2152b95aa7e9f7b1749d6d18717b43ddabffede2",
+    "groundtruth_use": "evaluation only; user-supplied reference trajectory",
+    "preparation_sha256": "30568a8aa4913c019fb6c8c144b98f13868c3c147fd01119e85af1f16778a26b",
+    "resource_report_sha256": "5e3dd086659e45ea8a7b37a2d2f48f1865e5d4ce3e4a57523b27e019738dd541",
+    "source_dirty_worktree": false,
+    "source_environment": {
+      "numpy": "1.26.4",
+      "opencv_python": "4.11.0.86",
+      "python": "3.11.16",
+      "torch": "2.6.0"
+    },
+    "source_git_commit": "9bc4ee3be7bbf208a6ffa38b5e60d204f4c30bb9",
+    "source_hardware": {
+      "cpu": "arm64",
+      "gpu": null,
+      "ram_gb": 32.0
+    },
+    "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+    "source_run_sha256": "8fd10fef6b4a5d4616b98763f33188dd07eb9226328017d98ecf6654cb66e932",
+    "source_status": "ok",
+    "sparse_export_sha256": "6fff72519c6c558a3dd3362d9fb6395dbaab56dcd24e2c65a4049ad6438c82d9",
+    "sparse_sha256": {
+      "keyframes.npz": "c4b3e25b53a07b5b2b878a9d7dde33d5b3c08a6d006b1533f2eae28183ca1ff6",
+      "landmarks.npz": "48895074e7dfec68a46cce5be2d473233b13da39968bf197e3e05c10fc83d702",
+      "observations.csv": "03b4afd7be79747b2d688415b5765c814b961ca4992a8c7b49bb9821381e07e4",
+      "sparse_map.ply": "2110ac84b3fdb786f73b476bfeca5c1c23f2ff9f050be8fc609dff2970dca444"
+    },
+    "timing.csv_sha256": "205e3b1c700b8e38d48bf8e91836b4d8b86599ca75bf7ae0ba406ed9b40a1d37",
+    "tracking_export.json_sha256": "df7983adee14393e2188def009a60243ec0f24de587b36822cf51675e1abc33f",
+    "trajectory_all.csv_sha256": "82843baacbb6649c69fda9701f30f0aff96dee5a90ba6a2c9bc7bc68bf346dfc"
+  },
+  "real_time_claim": false,
+  "resources": {
+    "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+    "cold_start_s": null,
+    "effective_fps": 2.2300987772761856,
+    "effective_fps_reason": null,
+    "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including initialization and startup",
+    "exit_code": 0,
+    "launch_error": null,
+    "peak_rss_bytes": 1703723008,
+    "peak_rss_reason": null,
+    "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+    "platform": "Darwin",
+    "python": "3.11.16",
+    "real_time_claim": false,
+    "requested_frames": 200,
+    "schema": "rt_mapping.slam_resources/v1",
+    "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+    "source_run_sha256": "8fd10fef6b4a5d4616b98763f33188dd07eb9226328017d98ecf6654cb66e932",
+    "source_status": "ok",
+    "status": "ok",
+    "throughput_frames": 200,
+    "wall_clock_s": 89.68212620800477,
+    "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+  },
+  "retained_keyframes": {
+    "coverage": {
+      "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
+      "gt_associated_poses": 19,
+      "input_frames": 200,
+      "pose_count": 20,
+      "pose_fraction": 0.1,
+      "tracking_success": null,
+      "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success"
+    },
+    "metrics": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.004667043685913086,
+      "ate_median_m": 0.0050362527777324155,
+      "ate_rmse_m": 0.006776287260053055,
+      "evaluation_transform": {
+        "R": [
+          [
+            0.10578151835808951,
+            0.6596974016075736,
+            -0.7440494665585567
+          ],
+          [
+            0.9943082328026459,
+            -0.07973167603885033,
+            0.07066822494526682
+          ],
+          [
+            -0.012704666651914059,
+            -0.7472899023459711,
+            -0.6643766953295485
+          ]
+        ],
+        "direction": "reference_world = scale * R @ estimate_world + t",
+        "scale": 1.3763753729902537,
+        "t": [
+          1.3359411917161144,
+          0.622567156376618,
+          1.659611366188973
+        ]
+      },
+      "input_poses": 20,
+      "matched_poses": 19,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 18,
+      "rpe_rotation_rmse_deg": 0.7851208072379237,
+      "rpe_translation_rmse_m": 0.014219783573369987,
+      "scale_fitted_for_evaluation": true
+    },
+    "reason": null,
+    "rpe_scope": "matched pose rows; not gap-aware (Y-03); not input-frame delta",
+    "scale_use": "evaluation-only Sim(3); does not recover metric scale",
+    "scope": "stopped retained-keyframe snapshot; separate Sim(3) fit, same evaluator as comparison B0_sim3"
+  },
+  "schema": "rt_mapping.wp2_tracking_evaluation_verification/v1",
+  "source_note": "Own clean Y-02 native macOS run already contains complete merged Y-01 tracking export; no repeat SLAM run and no teammate ignored artifacts used.",
+  "source_run_id": "yaropolk_y02_smoke200_9bc4ee3_01",
+  "tracking": {
+    "export_semantics": {
+      "pose_frame": "upstream world at track return; not normalized to the final sparse snapshot",
+      "pose_temporality": "online/causal; never replaced with final optimized poses",
+      "tracking_timing_scope": "Slam.track wall time; includes waits and in-call event-hook overhead; excludes post-call pose/CSV work"
+    },
+    "failure_table": [
+      {
+        "category": "initializing",
+        "frame_count": 2
+      },
+      {
+        "category": "lost",
+        "frame_count": 0
+      },
+      {
+        "category": "relocalizing",
+        "frame_count": 0
+      },
+      {
+        "category": "unknown_state",
+        "frame_count": 0
+      },
+      {
+        "category": "ok_without_pose",
+        "frame_count": 0
+      },
+      {
+        "category": "track_exception",
+        "frame_count": 0
+      },
+      {
+        "category": "keyframe_observation_error",
+        "frame_count": 0
+      },
+      {
+        "category": "gt_unassociated_usable_pose",
+        "frame_count": 2
+      }
+    ],
+    "failure_table_scope": "counts may overlap; GT-unassociated is an evaluation limitation, not tracking loss",
+    "gap_aware_rpe": {
+      "candidate_pairs": 195,
+      "eligible_frame_id_pairs": [
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          9,
+          10
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          11,
+          12
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          13,
+          14
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          15,
+          16
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          17,
+          18
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          21,
+          22
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          23,
+          24
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          25,
+          26
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          27,
+          28
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          29,
+          30
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          31,
+          32
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          33,
+          34
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          35,
+          36
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          37,
+          38
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          39,
+          40
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          41,
+          42
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          43,
+          44
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          45,
+          46
+        ],
+        [
+          46,
+          47
+        ],
+        [
+          47,
+          48
+        ],
+        [
+          48,
+          49
+        ],
+        [
+          49,
+          50
+        ],
+        [
+          50,
+          51
+        ],
+        [
+          51,
+          52
+        ],
+        [
+          52,
+          53
+        ],
+        [
+          53,
+          54
+        ],
+        [
+          54,
+          55
+        ],
+        [
+          55,
+          56
+        ],
+        [
+          56,
+          57
+        ],
+        [
+          57,
+          58
+        ],
+        [
+          58,
+          59
+        ],
+        [
+          59,
+          60
+        ],
+        [
+          60,
+          61
+        ],
+        [
+          61,
+          62
+        ],
+        [
+          62,
+          63
+        ],
+        [
+          63,
+          64
+        ],
+        [
+          64,
+          65
+        ],
+        [
+          65,
+          66
+        ],
+        [
+          66,
+          67
+        ],
+        [
+          67,
+          68
+        ],
+        [
+          68,
+          69
+        ],
+        [
+          69,
+          70
+        ],
+        [
+          70,
+          71
+        ],
+        [
+          71,
+          72
+        ],
+        [
+          72,
+          73
+        ],
+        [
+          73,
+          74
+        ],
+        [
+          74,
+          75
+        ],
+        [
+          75,
+          76
+        ],
+        [
+          76,
+          77
+        ],
+        [
+          77,
+          78
+        ],
+        [
+          78,
+          79
+        ],
+        [
+          79,
+          80
+        ],
+        [
+          80,
+          81
+        ],
+        [
+          81,
+          82
+        ],
+        [
+          82,
+          83
+        ],
+        [
+          83,
+          84
+        ],
+        [
+          84,
+          85
+        ],
+        [
+          85,
+          86
+        ],
+        [
+          86,
+          87
+        ],
+        [
+          87,
+          88
+        ],
+        [
+          88,
+          89
+        ],
+        [
+          89,
+          90
+        ],
+        [
+          90,
+          91
+        ],
+        [
+          91,
+          92
+        ],
+        [
+          92,
+          93
+        ],
+        [
+          93,
+          94
+        ],
+        [
+          94,
+          95
+        ],
+        [
+          95,
+          96
+        ],
+        [
+          96,
+          97
+        ],
+        [
+          97,
+          98
+        ],
+        [
+          98,
+          99
+        ],
+        [
+          99,
+          100
+        ],
+        [
+          100,
+          101
+        ],
+        [
+          101,
+          102
+        ],
+        [
+          102,
+          103
+        ],
+        [
+          103,
+          104
+        ],
+        [
+          104,
+          105
+        ],
+        [
+          105,
+          106
+        ],
+        [
+          106,
+          107
+        ],
+        [
+          107,
+          108
+        ],
+        [
+          108,
+          109
+        ],
+        [
+          109,
+          110
+        ],
+        [
+          110,
+          111
+        ],
+        [
+          111,
+          112
+        ],
+        [
+          112,
+          113
+        ],
+        [
+          113,
+          114
+        ],
+        [
+          114,
+          115
+        ],
+        [
+          115,
+          116
+        ],
+        [
+          116,
+          117
+        ],
+        [
+          117,
+          118
+        ],
+        [
+          118,
+          119
+        ],
+        [
+          119,
+          120
+        ],
+        [
+          120,
+          121
+        ],
+        [
+          121,
+          122
+        ],
+        [
+          122,
+          123
+        ],
+        [
+          123,
+          124
+        ],
+        [
+          124,
+          125
+        ],
+        [
+          125,
+          126
+        ],
+        [
+          126,
+          127
+        ],
+        [
+          127,
+          128
+        ],
+        [
+          128,
+          129
+        ],
+        [
+          129,
+          130
+        ],
+        [
+          130,
+          131
+        ],
+        [
+          131,
+          132
+        ],
+        [
+          132,
+          133
+        ],
+        [
+          133,
+          134
+        ],
+        [
+          134,
+          135
+        ],
+        [
+          135,
+          136
+        ],
+        [
+          136,
+          137
+        ],
+        [
+          137,
+          138
+        ],
+        [
+          138,
+          139
+        ],
+        [
+          139,
+          140
+        ],
+        [
+          140,
+          141
+        ],
+        [
+          141,
+          142
+        ],
+        [
+          142,
+          143
+        ],
+        [
+          143,
+          144
+        ],
+        [
+          144,
+          145
+        ],
+        [
+          145,
+          146
+        ],
+        [
+          146,
+          147
+        ],
+        [
+          147,
+          148
+        ],
+        [
+          148,
+          149
+        ],
+        [
+          149,
+          150
+        ],
+        [
+          150,
+          151
+        ],
+        [
+          151,
+          152
+        ],
+        [
+          152,
+          153
+        ],
+        [
+          153,
+          154
+        ],
+        [
+          154,
+          155
+        ],
+        [
+          155,
+          156
+        ],
+        [
+          156,
+          157
+        ],
+        [
+          157,
+          158
+        ],
+        [
+          158,
+          159
+        ],
+        [
+          159,
+          160
+        ],
+        [
+          160,
+          161
+        ],
+        [
+          161,
+          162
+        ],
+        [
+          162,
+          163
+        ],
+        [
+          163,
+          164
+        ],
+        [
+          164,
+          165
+        ],
+        [
+          165,
+          166
+        ],
+        [
+          166,
+          167
+        ],
+        [
+          167,
+          168
+        ],
+        [
+          168,
+          169
+        ],
+        [
+          169,
+          170
+        ],
+        [
+          170,
+          171
+        ],
+        [
+          171,
+          172
+        ],
+        [
+          172,
+          173
+        ],
+        [
+          173,
+          174
+        ],
+        [
+          174,
+          175
+        ],
+        [
+          175,
+          176
+        ],
+        [
+          176,
+          177
+        ],
+        [
+          177,
+          178
+        ],
+        [
+          178,
+          179
+        ],
+        [
+          179,
+          180
+        ],
+        [
+          180,
+          181
+        ],
+        [
+          181,
+          182
+        ],
+        [
+          182,
+          183
+        ],
+        [
+          183,
+          184
+        ],
+        [
+          184,
+          185
+        ],
+        [
+          185,
+          186
+        ],
+        [
+          186,
+          187
+        ],
+        [
+          187,
+          188
+        ],
+        [
+          188,
+          189
+        ],
+        [
+          189,
+          190
+        ],
+        [
+          190,
+          191
+        ],
+        [
+          191,
+          192
+        ],
+        [
+          192,
+          193
+        ],
+        [
+          193,
+          194
+        ],
+        [
+          194,
+          197
+        ],
+        [
+          197,
+          198
+        ],
+        [
+          198,
+          199
+        ]
+      ],
+      "excluded_frame_id_pairs": [],
+      "excluded_gap_pairs": 0,
+      "gap_rule": "every intervening frozen input must have OK state, a valid causal pose and no track exception",
+      "metrics": {
+        "rpe_pairs": 195,
+        "rpe_rotation_rmse_deg": 0.3707259584187531,
+        "rpe_translation_rmse_m": 0.00554435237381671
+      },
+      "reason": null,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched causal pose rows before gap filtering",
+      "scale_use": "one global evaluation-only Sim(3) fit on causal poses; no per-segment fitting"
+    },
+    "input_frames": 200,
+    "non_ok_segments": [
+      {
+        "first_frame_id": 0,
+        "first_timestamp_s": 1305031102.175304,
+        "frame_count": 2,
+        "last_frame_id": 1,
+        "last_timestamp_s": 1305031102.211214,
+        "state": "NOT_INITIALIZED",
+        "timestamp_span_s": 0.03591012954711914
+      }
+    ],
+    "observed_ok_fraction": 0.99,
+    "online_trajectory": {
+      "metrics": {
+        "alignment_mode": "sim3",
+        "association_max_actual_delta_s": 0.007564067840576172,
+        "ate_median_m": 0.00838714603176117,
+        "ate_rmse_m": 0.011039323379682251,
+        "evaluation_transform": {
+          "R": [
+            [
+              0.08792998485421448,
+              0.6397250260745307,
+              -0.7635576001700717
+            ],
+            [
+              0.9961252817019896,
+              -0.0551956861770627,
+              0.06846794418978816
+            ],
+            [
+              0.0016555717049832929,
+              -0.7666194148607147,
+              -0.642099627659872
+            ]
+          ],
+          "direction": "reference_world = scale * R @ estimate_world + t",
+          "scale": 1.3776543517826274,
+          "t": [
+            1.3447738997180159,
+            0.6206157969806851,
+            1.6561201797470733
+          ]
+        },
+        "input_poses": 198,
+        "matched_poses": 196,
+        "max_timestamp_delta_s": 0.02,
+        "scale_fitted_for_evaluation": true
+      },
+      "reason": null,
+      "scope": "online/causal upstream world; separate evaluation-only Sim(3), not final optimized poses"
+    },
+    "state_counts": {
+      "NOT_INITIALIZED": 2,
+      "OK": 198
+    },
+    "state_segments": [
+      {
+        "first_frame_id": 0,
+        "first_timestamp_s": 1305031102.175304,
+        "frame_count": 2,
+        "last_frame_id": 1,
+        "last_timestamp_s": 1305031102.211214,
+        "state": "NOT_INITIALIZED",
+        "timestamp_span_s": 0.03591012954711914
+      },
+      {
+        "first_frame_id": 2,
+        "first_timestamp_s": 1305031102.275326,
+        "frame_count": 198,
+        "last_frame_id": 199,
+        "last_timestamp_s": 1305031109.011269,
+        "state": "OK",
+        "timestamp_span_s": 6.735943078994751
+      }
+    ],
+    "success_denominator": "all frozen associated RGB-depth input frames submitted to SLAM, including initialization/LOST/UNKNOWN",
+    "success_numerator": 198,
+    "tracking_latency": {
+      "cold_sample_scope": "first Slam.track invocation only; not process/model startup",
+      "mapping_ms": null,
+      "mapping_reason": "background mapping is not attributable per input frame",
+      "reason": null,
+      "scope": "Slam.track wall time including waits/hook overhead, excluding decode and post-call CSV work",
+      "summary": {
+        "cold_start_ms": 284.602,
+        "n_total": 200,
+        "n_warm": 199,
+        "n_warmup": 1,
+        "percentile_method": "linear",
+        "stage": "slam_track",
+        "unit": "ms",
+        "warm_max_ms": 1075.953,
+        "warm_mean_ms": 293.95146359296484,
+        "warm_median_ms": 168.414083,
+        "warm_min_ms": 12.374958,
+        "warm_p50_ms": 168.414083,
+        "warm_p95_ms": 909.2679711999999
+      },
+      "total_ms": null,
+      "total_reason": "whole input-loop latency is not instrumented",
+      "warmup_frames": 1,
+      "warmup_policy": "exclude the first N frozen input rows regardless of state; remaining initialization/lost rows are included"
+    },
+    "tracking_success": 0.99,
+    "tracking_success_reason": null,
+    "usable_pose_fraction": 0.99
+  },
+  "verification": {
+    "all_y02_recorded_artifact_hashes_unchanged": true,
+    "byte_identical_reevaluation": [
+      "metrics.json",
+      "inputs.json",
+      "tracking_states.png"
+    ],
+    "full_local_cpu_suite": "535 passed, 1 native skip",
+    "installs_downloads_baseline_changes": false,
+    "plot_visually_checked": true,
+    "wp2_evaluation_tests": "28 passed"
+  }
+}

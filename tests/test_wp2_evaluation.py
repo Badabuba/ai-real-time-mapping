@@ -202,3 +202,172 @@ def test_module_import_does_not_load_native_or_model_frameworks():
     code = f"import sys; sys.path.insert(0, {str(ROOT / 'src')!r}); import rt_mapping.evaluation.slam_run; print([m for m in ('cv2','torch','pyslam','psutil') if m in sys.modules])"
     done = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
     assert done.stdout.strip() == "[]"
+
+# Y-03 exercises native-state semantics and causal poses, not final pose counts.
+from rt_mapping.contracts.slam import SlamFrame
+from rt_mapping.evaluation.slam_run import evaluate_tracking
+from rt_mapping.slam.tracking_log import TrackingLog
+from rt_mapping.evaluation.trajectory import read_tum_trajectory
+
+
+def causal_rows(source, states=None):
+    states = states or ["OK"] * len(source[2])
+    result = []
+    for i, (time, xyz, state) in enumerate(zip(source[2], source[3], states)):
+        pose = np.eye(4)
+        pose[:3, 3] = xyz
+        result.append(SlamFrame(i, float(time), state,
+                                "unobservable" if state == "UNKNOWN" else None,
+                                pose if state == "OK" else None,
+                                None if state == "OK" else f"tracking_state:{state}",
+                                (), None, float((i+1)*10)))
+    return result
+
+
+def tracking_result(source, rows=None, **kwargs):
+    gt_times, gt_poses = read_tum_trajectory(source[1])
+    return evaluate_tracking(rows if rows is not None else causal_rows(source), gt_times, gt_poses, **kwargs)
+
+
+def attach_tracking(source, rows):
+    """New fixture run: never rewrite the original terminal manifest."""
+    import shutil
+    old = source[0]
+    target = old.parent / "with_tracking"
+    shutil.copytree(old, target, ignore=shutil.ignore_patterns("run.json"))
+    prep = json.loads((target / "input_setup/setup.json").read_text())
+    log = TrackingLog(target, prep["frames"])
+    for row in rows:
+        log.append(row)
+    log.finish()
+    record = load_run_manifest(old / "run.json")
+    record.update(run_id=target.name)
+    record["artifacts"].update(trajectory_all="trajectory_all.csv", tracking_timing="timing.csv",
+                               tracking_export="tracking_export.json")
+    write_run_manifest(record, target)
+    return (target, *source[1:])
+
+
+def test_gap_free_causal_metrics_match_existing_evaluator_and_warmup_policy(source):
+    result = tracking_result(source, warmup=1)
+    assert result["tracking_success"] == 1
+    assert result["success_numerator"] == 6 and result["input_frames"] == 6
+    assert result["gap_aware_rpe"]["candidate_pairs"] == 5
+    assert result["gap_aware_rpe"]["excluded_gap_pairs"] == 0
+    gt_times, gt_poses = read_tum_trajectory(source[1])
+    rows = causal_rows(source)
+    expected = trajectory_metrics(source[2], np.array([r.T_wc for r in rows]), gt_times, gt_poses, alignment="sim3")
+    for key in ("rpe_translation_rmse_m", "rpe_rotation_rmse_deg", "rpe_pairs"):
+        assert result["gap_aware_rpe"]["metrics"][key] == pytest.approx(expected[key])
+    assert all(not k.startswith("rpe_") for k in result["online_trajectory"]["metrics"])
+    latency = result["tracking_latency"]["summary"]
+    assert latency["cold_start_ms"] == 10
+    assert latency["n_warm"] == 5 and latency["warm_p50_ms"] == 40
+    assert latency["warm_p95_ms"] == pytest.approx(58)
+    assert result["tracking_latency"]["mapping_ms"] is None
+
+
+def test_rpe_does_not_bridge_lost_inputs_and_uses_one_global_scale(source):
+    rows = causal_rows(source, ["OK", "OK", "LOST", "OK", "LOST", "OK"])
+    result = tracking_result(source, rows)
+    gap = result["gap_aware_rpe"]
+    assert gap["eligible_frame_id_pairs"] == [[0, 1]]
+    assert gap["excluded_frame_id_pairs"] == [[1, 3], [3, 5]]
+    assert gap["metrics"]["rpe_pairs"] == 1
+    assert gap["metrics"]["rpe_translation_rmse_m"] < 1e-12
+    assert result["online_trajectory"]["metrics"]["evaluation_transform"]["scale"] == pytest.approx(3)
+    assert result["tracking_success"] == pytest.approx(4/6)
+    assert [(s["first_frame_id"], s["last_frame_id"]) for s in result["non_ok_segments"]] == [(2,2), (4,4)]
+
+
+def test_rpe_delta_checks_all_intervening_inputs_not_only_endpoints(source):
+    result = tracking_result(source, causal_rows(source, ["OK", "OK", "LOST", "OK", "OK", "OK"]), rpe_delta=2)
+    gap = result["gap_aware_rpe"]
+    assert gap["eligible_frame_id_pairs"] == [[3, 5]]
+    assert gap["excluded_frame_id_pairs"] == [[0, 3], [1, 4]]
+
+
+def test_all_lost_has_zero_success_but_undefined_geometry_not_zero_error(source):
+    result = tracking_result(source, causal_rows(source, ["LOST"]*6))
+    assert result["tracking_success"] == 0
+    assert result["online_trajectory"]["metrics"] is None
+    assert result["gap_aware_rpe"]["metrics"] is None
+    assert "no usable" in result["gap_aware_rpe"]["reason"]
+    assert result["non_ok_segments"][0]["frame_count"] == 6
+    assert result["tracking_latency"]["summary"]["n_total"] == 6
+
+
+def test_unknown_states_are_not_imputed_as_failures_or_successes(source):
+    result = tracking_result(source, causal_rows(source, ["OK", "OK", "UNKNOWN", "OK", "OK", "OK"]))
+    assert result["tracking_success"] is None
+    assert "UNKNOWN" in result["tracking_success_reason"]
+    assert result["observed_ok_fraction"] == pytest.approx(5/6)
+    assert [1, 3] in result["gap_aware_rpe"]["excluded_frame_id_pairs"]
+
+
+def test_missing_ok_pose_and_track_exception_also_break_pairs(source):
+    from dataclasses import replace
+    rows = causal_rows(source)
+    rows[2] = replace(rows[2], T_wc=None, pose_reason="unobservable")
+    rows[4] = replace(rows[4], T_wc=None, pose_reason="track_raised:RuntimeError", error="track_raised:RuntimeError")
+    result = tracking_result(source, rows)
+    assert result["tracking_success"] is None  # exception; no fabricated successful tracking
+    assert result["gap_aware_rpe"]["eligible_frame_id_pairs"] == [[0,1]]
+    table = {r["category"]: r["frame_count"] for r in result["failure_table"]}
+    assert table["ok_without_pose"] == 2 and table["track_exception"] == 1
+
+
+def test_no_pairs_with_large_delta_preserves_online_ate(source):
+    result = tracking_result(source, rpe_delta=100)
+    assert result["online_trajectory"]["metrics"]["ate_rmse_m"] < 1e-12
+    assert result["gap_aware_rpe"]["metrics"] is None
+    assert "no eligible" in result["gap_aware_rpe"]["reason"]
+
+
+def test_no_gt_matches_or_exhausted_warmup_are_null_with_reasons(source):
+    tum(source[1], source[2]+100, source[3])
+    result = tracking_result(source, warmup=6)
+    assert result["online_trajectory"]["metrics"] is None
+    assert result["gap_aware_rpe"]["metrics"] is None
+    assert result["tracking_latency"]["summary"] is None
+    assert "no samples" in result["tracking_latency"]["reason"]
+    assert result["tracking_success"] == 1
+
+
+def test_initializing_and_relocalizing_segments_and_latency_include_all_states(source):
+    rows = causal_rows(source, ["NOT_INITIALIZED", "NOT_INITIALIZED", "RELOCALIZE", "OK", "OK", "OK"])
+    result = tracking_result(source, rows, warmup=1)
+    assert result["non_ok_segments"][0]["frame_count"] == 2
+    assert result["non_ok_segments"][0]["timestamp_span_s"] == pytest.approx(0.1)
+    assert result["non_ok_segments"][1]["state"] == "RELOCALIZE"
+    assert result["tracking_success"] == 0.5
+    assert result["tracking_latency"]["summary"]["n_warm"] == 5
+
+
+def test_recorded_tracking_outputs_and_plot_are_byte_identical_on_reevaluation(source, tmp_path):
+    pytest.importorskip("matplotlib")
+    with_tracking = attach_tracking(source, causal_rows(source))
+    before = digest(with_tracking[0])
+    first = invoke(with_tracking, tmp_path, plot=True)
+    second = evaluate_slam_run(ROOT, with_tracking[0], with_tracking[1], run_id="second", output_root=tmp_path / "runs", plot=True)
+    for name in ("metrics.json", "inputs.json", "tracking_states.png"):
+        assert (first/name).read_bytes() == (second/name).read_bytes()
+    assert load_run_manifest(first/"run.json")["status"] == "ok"
+    assert json.loads((first/"metrics.json").read_text())["tracking_success"] == 1
+    assert before == digest(with_tracking[0])
+
+
+def test_tampered_tracking_file_is_rejected_before_output(source, tmp_path):
+    with_tracking = attach_tracking(source, causal_rows(source))
+    path = with_tracking[0] / "timing.csv"
+    path.write_text(path.read_text() + "corrupt\n")
+    with pytest.raises(ValueError, match="checksum"):
+        invoke(with_tracking, tmp_path)
+    assert not (tmp_path / "runs").exists()
+
+
+def test_invalid_tracking_warmup_and_plot_without_export_are_rejected(source, tmp_path):
+    with pytest.raises(ValueError, match="warmup"):
+        invoke(source, tmp_path, tracking_warmup=-1)
+    with pytest.raises(ValueError, match="requires"):
+        invoke(source, tmp_path, plot=True)
