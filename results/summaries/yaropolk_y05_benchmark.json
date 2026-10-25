@@ -1,0 +1,1422 @@
+{
+  "base_commit": "422172a4cf821d4a838d43426e1acd31c27827f5",
+  "chunk": "Y-05",
+  "cross_platform": {
+    "committed_summary": "results/summaries/nazar_n02_e2e_smoke200_0fc564f.json",
+    "final_pose_count": 198,
+    "hardware": {
+      "cpu": "AMD Ryzen 9 8940HX",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "gpu_vram_mib": 8151,
+      "nvidia_driver": "610.74",
+      "os": "Windows 11 Pro (build 26300)",
+      "ram_gb": 31.2
+    },
+    "input_sequence": "rgbd_dataset_freiburg1_xyz",
+    "note": "N-02 Docker smoke and prior local Y-02 smoke establish two-platform B0 operation. N-02 comparison/pipeline failed in its immutable evidence. Wider Y-05 desk runs are different sequences, so no paired speed/quality comparison is claimed.",
+    "pipeline_status": "failed",
+    "processed_frames": 200,
+    "sha256": "510ed59e5b4875dd22ae205c7978f28e7b039d5cc761cee95c8e3902547aeb24",
+    "slam_status": "ok"
+  },
+  "development_aggregate": {
+    "causal_ate_sim3_rmse_m": {
+      "mean": 0.028021159259072614,
+      "n": 3,
+      "reason": null,
+      "sample_std": 0.006333088154851467
+    },
+    "causal_rpe_rotation_rmse_deg": {
+      "mean": 0.6682956772995309,
+      "n": 3,
+      "reason": null,
+      "sample_std": 0.026223366923365347
+    },
+    "causal_rpe_translation_rmse_m": {
+      "mean": 0.012779446546808043,
+      "n": 3,
+      "reason": null,
+      "sample_std": 0.0003964026975527073
+    },
+    "final_ate_sim3_rmse_m": {
+      "mean": 0.018912279193969237,
+      "n": 3,
+      "reason": null,
+      "sample_std": 0.0026952979104906817
+    },
+    "peak_rss_bytes": {
+      "mean": 2443804672.0,
+      "n": 3,
+      "reason": null,
+      "sample_std": 618300495.8285764
+    },
+    "tracking_p50_ms": {
+      "mean": 131.88384716666667,
+      "n": 3,
+      "reason": null,
+      "sample_std": 3.5783016200180775
+    },
+    "tracking_p95_ms": {
+      "mean": 1290.8603033999982,
+      "n": 3,
+      "reason": null,
+      "sample_std": 61.57207638932617
+    },
+    "tracking_success": {
+      "mean": 0.7609075043630017,
+      "n": 3,
+      "reason": null,
+      "sample_std": 0.009068328835439125
+    },
+    "wall_clock_s": {
+      "mean": 193.04431786100517,
+      "n": 3,
+      "reason": null,
+      "sample_std": 10.210744639356067
+    },
+    "whole_run_fps": {
+      "mean": 2.9739177514042754,
+      "n": 3,
+      "reason": null,
+      "sample_std": 0.16131536000414998
+    }
+  },
+  "hardware_host": {
+    "cpu": "Apple M1 Pro",
+    "os": "macOS 26.6.2",
+    "ram_gib": 32,
+    "runtime": "native macOS arm64 Python core"
+  },
+  "heldout": {
+    "reason": "No downloaded held-out input; user deadline 3.5 hours; no held-out tuning or claims",
+    "status": "skipped"
+  },
+  "limitations": [
+    "Development succeeds on only about 76% of frozen inputs under the native OK-state criterion; pose ATE is conditional on available/associated poses.",
+    "Four process runs completed; this does not mean tracking never failed.",
+    "Three repeated development trials, one 50-frame selection trial; selection repeatability/generalization not established.",
+    "GT scale is fitted for evaluation only, not recovered metric scale.",
+    "No held-out evaluation under user deadline; no new model/fusion benchmark in Y-05.",
+    "Peak RSS is individual-process OS accounting, not concurrent process-tree memory.",
+    "No real-time claim; tracking latency excludes decode and post-call output."
+  ],
+  "owner": "Yaropolk (WP2/WP5)",
+  "protocol": {
+    "baseline_parameters_changed": false,
+    "frame_counts_changed": false,
+    "gt_reference": "all GT rows inside fixed input window +/- 20ms; ambiguous fr2 duplicate is outside selection50 interval",
+    "rpe_delta": "one matched causal pose row, excluding pairs crossing non-OK/missing-pose gaps",
+    "rss": "OS-reported peak individual-process child RSS; not summed concurrent worker RAM",
+    "scale": "one global Sim(3), evaluation-only; separate final/causal gauges",
+    "seed": 0,
+    "throughput": "frozen input frames / complete runner wall clock including startup and export",
+    "warmup_input_frames": 1
+  },
+  "real_time_claim": false,
+  "rows": [
+    {
+      "causal_ate_sim3_rmse_m": 0.01634649212508846,
+      "causal_matched_gt_poses": 45,
+      "causal_pose_count": 45,
+      "causal_rpe_rotation_rmse_deg": 0.2602945672887762,
+      "causal_rpe_translation_rmse_m": 0.00793272876059521,
+      "evaluation_status": "ok",
+      "excluded_gap_pairs": 0,
+      "final_ate_sim3_rmse_m": 0.01217505059020131,
+      "initializing_frames": 5,
+      "lost_frames": 0,
+      "observed_tracking_rows": 50,
+      "peak_rss_bytes": 1352089600,
+      "reason": null,
+      "relocalizing_frames": 0,
+      "requested_frames": 50,
+      "rpe_pairs": 44,
+      "run_id": "yaropolk_y05_sel50_422172a_01",
+      "source_status": "ok",
+      "split": "selection",
+      "tracking_p50_ms": 119.652417,
+      "tracking_p95_ms": 475.4887499999999,
+      "tracking_success": 0.9,
+      "unknown_frames": 0,
+      "wall_clock_s": 40.32174358300108,
+      "whole_run_fps": 1.2400257418699299
+    },
+    {
+      "causal_ate_sim3_rmse_m": 0.03533263931648242,
+      "causal_matched_gt_poses": 439,
+      "causal_pose_count": 439,
+      "causal_rpe_rotation_rmse_deg": 0.6982344421026564,
+      "causal_rpe_translation_rmse_m": 0.013038766393621113,
+      "evaluation_status": "ok",
+      "excluded_gap_pairs": 4,
+      "final_ate_sim3_rmse_m": 0.02198633339273141,
+      "initializing_frames": 2,
+      "lost_frames": 4,
+      "observed_tracking_rows": 573,
+      "peak_rss_bytes": 3154755584,
+      "reason": null,
+      "relocalizing_frames": 128,
+      "requested_frames": 573,
+      "rpe_pairs": 434,
+      "run_id": "yaropolk_y05_dev573_422172a_01",
+      "source_status": "ok",
+      "split": "development",
+      "tracking_p50_ms": 135.29475,
+      "tracking_p95_ms": 1339.4650600499979,
+      "tracking_success": 0.7661431064572426,
+      "unknown_frames": 0,
+      "wall_clock_s": 200.98194950001198,
+      "whole_run_fps": 2.851002298591824
+    },
+    {
+      "causal_ate_sim3_rmse_m": 0.024486663218647467,
+      "causal_matched_gt_poses": 439,
+      "causal_pose_count": 439,
+      "causal_rpe_rotation_rmse_deg": 0.6572528384600346,
+      "causal_rpe_translation_rmse_m": 0.012323136946509432,
+      "evaluation_status": "ok",
+      "excluded_gap_pairs": 2,
+      "final_ate_sim3_rmse_m": 0.016954213006616592,
+      "initializing_frames": 2,
+      "lost_frames": 2,
+      "observed_tracking_rows": 573,
+      "peak_rss_bytes": 2031697920,
+      "reason": null,
+      "relocalizing_frames": 130,
+      "requested_frames": 573,
+      "rpe_pairs": 436,
+      "run_id": "yaropolk_y05_dev573_422172a_02",
+      "source_status": "ok",
+      "split": "development",
+      "tracking_p50_ms": 132.19793750000002,
+      "tracking_p95_ms": 1311.4945895499986,
+      "tracking_success": 0.7661431064572426,
+      "unknown_frames": 0,
+      "wall_clock_s": 196.6256549580139,
+      "whole_run_fps": 2.9141670252661305
+    },
+    {
+      "causal_ate_sim3_rmse_m": 0.02424417524208796,
+      "causal_matched_gt_poses": 430,
+      "causal_pose_count": 430,
+      "causal_rpe_rotation_rmse_deg": 0.6493997513359019,
+      "causal_rpe_translation_rmse_m": 0.012976436300293583,
+      "evaluation_status": "ok",
+      "excluded_gap_pairs": 2,
+      "final_ate_sim3_rmse_m": 0.017796291182559706,
+      "initializing_frames": 13,
+      "lost_frames": 2,
+      "observed_tracking_rows": 573,
+      "peak_rss_bytes": 2144960512,
+      "reason": null,
+      "relocalizing_frames": 128,
+      "requested_frames": 573,
+      "rpe_pairs": 427,
+      "run_id": "yaropolk_y05_dev573_422172a_03",
+      "source_status": "ok",
+      "split": "development",
+      "tracking_p50_ms": 128.15885400000002,
+      "tracking_p95_ms": 1221.621260599998,
+      "tracking_success": 0.7504363001745201,
+      "unknown_frames": 0,
+      "wall_clock_s": 181.5253491249896,
+      "whole_run_fps": 3.156583930354872
+    }
+  ],
+  "run_order": "selection50, development573 x3; sequential fresh runner processes",
+  "runs": [
+    {
+      "evaluation_gt": {
+        "original_rows": 20957,
+        "original_sha256": "0d8e0119a4e9592b886c5ca954472c3270c01814dd2059fbe196d5c24c8f3d17",
+        "reference_rows": 502,
+        "reference_sha256": "1a9c422df3128f416318b0532fb18313f31b77a6869f2db4a17cba725a352465",
+        "rule": "all GT rows within frozen input time bounds +/- 20ms; no pose averaging/deduplication/tuning",
+        "window_s": [
+          1311868164.3431811,
+          1311868166.019133
+        ]
+      },
+      "failure_interpretation": "Tracking/relocalization states are observed; underlying cause is a hypothesis. Native blur flags are correlates, not proof of the cause.",
+      "failure_log_lines": [],
+      "failure_table": [
+        {
+          "category": "initializing",
+          "frame_count": 5
+        },
+        {
+          "category": "lost",
+          "frame_count": 0
+        },
+        {
+          "category": "relocalizing",
+          "frame_count": 0
+        },
+        {
+          "category": "unknown_state",
+          "frame_count": 0
+        },
+        {
+          "category": "ok_without_pose",
+          "frame_count": 0
+        },
+        {
+          "category": "track_exception",
+          "frame_count": 0
+        },
+        {
+          "category": "keyframe_observation_error",
+          "frame_count": 0
+        },
+        {
+          "category": "gt_unassociated_usable_pose",
+          "frame_count": 0
+        }
+      ],
+      "hashes": {
+        "results/runs/yaropolk_y05_sel50_422172a_01.eval/inputs.json": "ec1c38e0ce510778fcccfb418551f3e58e680cc83b17a837208d725f99fb48e1",
+        "results/runs/yaropolk_y05_sel50_422172a_01.eval/metrics.json": "55f7ed711f3c7ce49e9e43355fc41fc9bd28794d5b792ab56eeeab3e31b636c0",
+        "results/runs/yaropolk_y05_sel50_422172a_01.eval/run.json": "f0b9e32d25f55b9b6d6f8e2397d86cf31457bd7bae4a2d61cfb6c89858c2b485",
+        "results/runs/yaropolk_y05_sel50_422172a_01.resources.json": "1333ab7396155ecb158a2ea00118d3cd565aee4e1d01bcf7755b98a9ff0bfcdd",
+        "results/runs/yaropolk_y05_sel50_422172a_01/metrics.json": "b3711c0c02645f29b473c45791703c4862038be4e62a92cdd0427bfc87f58240",
+        "results/runs/yaropolk_y05_sel50_422172a_01/run.json": "b4faf18dce1bbfc7593127fda7fa9c7dab9392765ad159b7ac7bd2318decad2d",
+        "results/runs/yaropolk_y05_sel50_422172a_01/timing.csv": "bd0332f6b46cffde3180e99fb396c733049a132bffb247af82c4acb2521d2242",
+        "results/runs/yaropolk_y05_sel50_422172a_01/tracking_export.json": "78423d311e3639c808ce6c1f02df1059cd0beacfaeafcbcdb79c880d36749ae9",
+        "results/runs/yaropolk_y05_sel50_422172a_01/trajectory_all.csv": "b753349686c9eed80189c1d56299f5591e63f23ec099ba87eb5148d327863dfc"
+      },
+      "missing_metrics_reason": null,
+      "native_reported_blurry_frame_ids": [],
+      "non_ok_segments": [
+        {
+          "first_frame_id": 0,
+          "first_timestamp_s": 1311868164.363181,
+          "frame_count": 5,
+          "last_frame_id": 4,
+          "last_timestamp_s": 1311868164.49913,
+          "state": "NOT_INITIALIZED",
+          "timestamp_span_s": 0.13594889640808105
+        }
+      ],
+      "observed_prefix_only": null,
+      "resource_scope": {
+        "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+        "cold_start_s": null,
+        "effective_fps": 1.2400257418699299,
+        "effective_fps_reason": null,
+        "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+        "exit_code": 0,
+        "launch_error": null,
+        "peak_rss_bytes": 1352089600,
+        "peak_rss_reason": null,
+        "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+        "real_time_claim": false,
+        "requested_frames": 50,
+        "schema": "rt_mapping.slam_resources/v1",
+        "source_run_id": "yaropolk_y05_sel50_422172a_01",
+        "source_run_sha256": "b4faf18dce1bbfc7593127fda7fa9c7dab9392765ad159b7ac7bd2318decad2d",
+        "source_status": "ok",
+        "status": "ok",
+        "throughput_frames": 50,
+        "wall_clock_s": 40.32174358300108,
+        "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+      },
+      "row": {
+        "causal_ate_sim3_rmse_m": 0.01634649212508846,
+        "causal_matched_gt_poses": 45,
+        "causal_pose_count": 45,
+        "causal_rpe_rotation_rmse_deg": 0.2602945672887762,
+        "causal_rpe_translation_rmse_m": 0.00793272876059521,
+        "evaluation_status": "ok",
+        "excluded_gap_pairs": 0,
+        "final_ate_sim3_rmse_m": 0.01217505059020131,
+        "initializing_frames": 5,
+        "lost_frames": 0,
+        "observed_tracking_rows": 50,
+        "peak_rss_bytes": 1352089600,
+        "reason": null,
+        "relocalizing_frames": 0,
+        "requested_frames": 50,
+        "rpe_pairs": 44,
+        "run_id": "yaropolk_y05_sel50_422172a_01",
+        "source_status": "ok",
+        "split": "selection",
+        "tracking_p50_ms": 119.652417,
+        "tracking_p95_ms": 475.4887499999999,
+        "tracking_success": 0.9,
+        "unknown_frames": 0,
+        "wall_clock_s": 40.32174358300108,
+        "whole_run_fps": 1.2400257418699299
+      },
+      "rpe_pair_counts": {
+        "candidate_pairs": 44,
+        "excluded_gap_pairs": 0
+      },
+      "run_id": "yaropolk_y05_sel50_422172a_01",
+      "source_manifest": {
+        "alignment": null,
+        "artifacts": {
+          "keyframes": "sparse/keyframes.npz",
+          "landmarks": "sparse/landmarks.npz",
+          "metrics": "metrics.json",
+          "observations": "sparse/observations.csv",
+          "preparation": "input_setup/setup.json",
+          "sparse_export": "sparse/export.json",
+          "sparse_map": "sparse/sparse_map.ply",
+          "tracking_export": "tracking_export.json",
+          "tracking_timing": "timing.csv",
+          "trajectory": "input_setup/trajectory/trajectory_final.txt",
+          "trajectory_all": "trajectory_all.csv",
+          "upstream_counts": "input_setup/trajectory/other_metrics_info.txt",
+          "upstream_log": "upstream.log"
+        },
+        "config": {
+          "baseline": {
+            "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg2_desk.tgz",
+            "dataset_manifest": "data/manifests/tum_fr2_desk_selection50.json",
+            "feature_tracker": "ORB2",
+            "loop_detector": "DBOW3",
+            "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated.",
+            "num_features": 1000,
+            "python_optimization": 1,
+            "schema": "rt_mapping.wp2_setup/v1",
+            "seed": 0,
+            "sensor_type": "mono",
+            "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg2_desk",
+            "split": "selection",
+            "upstream": {
+              "repo": "https://github.com/luigifreda/pyslam.git",
+              "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+              "version": "2.10.8"
+            },
+            "use_cpp_core": false
+          },
+          "export_sparse": true,
+          "export_tracking": true,
+          "frames": 50,
+          "runner": "scripts/run_wp2_pyslam.py",
+          "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
+          "timeout_s": 600
+        },
+        "dataset": {
+          "checksum": "1a0756d72510a26e26e2a02bf0b6c69c2796619fca531e176fc2e5110173807c",
+          "manifest": "data/manifests/tum_fr2_desk_selection50.json",
+          "name": "TUM RGB-D",
+          "sequence": "rgbd_dataset_freiburg2_desk",
+          "split": "selection"
+        },
+        "dirty_worktree": false,
+        "environment": {
+          "numpy": "1.26.4",
+          "opencv_python": "4.11.0.86",
+          "python": "3.11.16",
+          "torch": "2.6.0"
+        },
+        "git_commit": "422172a4cf821d4a838d43426e1acd31c27827f5",
+        "hardware": {
+          "cpu": "arm64",
+          "gpu": null,
+          "ram_gb": 32.0
+        },
+        "method": "B0",
+        "model": null,
+        "reason": null,
+        "run_id": "yaropolk_y05_sel50_422172a_01",
+        "schema": "rt_mapping.run_manifest/v1",
+        "seed": 0,
+        "slam": {
+          "config": "configs/wp2_pyslam_baseline.json",
+          "pose_convention": "T_wc",
+          "repo": "https://github.com/luigifreda/pyslam.git",
+          "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+        },
+        "started_at": "2026-10-25T18:38:22.623501Z",
+        "status": "ok"
+      },
+      "state_counts": {
+        "NOT_INITIALIZED": 5,
+        "OK": 45
+      }
+    },
+    {
+      "evaluation_gt": {
+        "original_rows": 2335,
+        "original_sha256": "48c4fa61f5d78310ea579f404d31d296738c4210c19c2bdac4a5cdf6bff50831",
+        "reference_rows": 1981,
+        "reference_sha256": "6bdc01e7854a7406ac420d7da3953e9e50797b346606d89486fd39d36bf4e30c",
+        "rule": "all GT rows within frozen input time bounds +/- 20ms; no pose averaging/deduplication/tuning",
+        "window_s": [
+          1305031453.339684,
+          1305031473.216069
+        ]
+      },
+      "failure_interpretation": "Tracking/relocalization states are observed; underlying cause is a hypothesis. Native blur flags are correlates, not proof of the cause.",
+      "failure_log_lines": [],
+      "failure_table": [
+        {
+          "category": "initializing",
+          "frame_count": 2
+        },
+        {
+          "category": "lost",
+          "frame_count": 4
+        },
+        {
+          "category": "relocalizing",
+          "frame_count": 128
+        },
+        {
+          "category": "unknown_state",
+          "frame_count": 0
+        },
+        {
+          "category": "ok_without_pose",
+          "frame_count": 0
+        },
+        {
+          "category": "track_exception",
+          "frame_count": 0
+        },
+        {
+          "category": "keyframe_observation_error",
+          "frame_count": 0
+        },
+        {
+          "category": "gt_unassociated_usable_pose",
+          "frame_count": 0
+        }
+      ],
+      "hashes": {
+        "results/runs/yaropolk_y05_dev573_422172a_01.eval/inputs.json": "43e7a5a92040dfed8aa5db02abec1d99e5c0b55e7a7e537b6e6adae47eb696db",
+        "results/runs/yaropolk_y05_dev573_422172a_01.eval/metrics.json": "3cfca60c87c593929c5216fcfe3a84a74847e2e44480855099075be3738851de",
+        "results/runs/yaropolk_y05_dev573_422172a_01.eval/run.json": "1c8a1de51b277e364f355f531a476cab0443f0403ff6abff0c2bd680b28f54d1",
+        "results/runs/yaropolk_y05_dev573_422172a_01.resources.json": "c27f99cd477f6f777e5b7ff002abfa59fd5fa3e3e01560720e188988f416a74c",
+        "results/runs/yaropolk_y05_dev573_422172a_01/metrics.json": "6b601eda4fadcf6184cec969d59867860061866123fe375621d5c7d6ce00b92d",
+        "results/runs/yaropolk_y05_dev573_422172a_01/run.json": "811995266efad4e7f6481c5d26905b65b165427a1d43f3966b1c6fd9c2003422",
+        "results/runs/yaropolk_y05_dev573_422172a_01/timing.csv": "60fbfde7d57bedca42bcbd4cffe3bb02e3801380fecb6c42222fc281e39c2bdf",
+        "results/runs/yaropolk_y05_dev573_422172a_01/tracking_export.json": "0c385777ea83313d5d506cd6bd3701bafc44429c0e465a5dd1864f1466ca825d",
+        "results/runs/yaropolk_y05_dev573_422172a_01/trajectory_all.csv": "b6af0d5e5448a5cf6518aeba0245d5192ea9ab689e12a33ec56e6d85e3f073af"
+      },
+      "missing_metrics_reason": null,
+      "native_reported_blurry_frame_ids": [
+        158,
+        168,
+        236,
+        237,
+        238,
+        239,
+        240,
+        243,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        261,
+        262,
+        263,
+        266,
+        267,
+        270,
+        271,
+        274,
+        282,
+        285,
+        286,
+        288,
+        289,
+        374,
+        401,
+        457,
+        463,
+        464,
+        465,
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        496,
+        497,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        536
+      ],
+      "non_ok_segments": [
+        {
+          "first_frame_id": 0,
+          "first_timestamp_s": 1305031453.359684,
+          "frame_count": 2,
+          "last_frame_id": 1,
+          "last_timestamp_s": 1305031453.39169,
+          "state": "NOT_INITIALIZED",
+          "timestamp_span_s": 0.032006025314331055
+        },
+        {
+          "first_frame_id": 169,
+          "first_timestamp_s": 1305031459.559647,
+          "frame_count": 1,
+          "last_frame_id": 169,
+          "last_timestamp_s": 1305031459.559647,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        },
+        {
+          "first_frame_id": 170,
+          "first_timestamp_s": 1305031459.591695,
+          "frame_count": 128,
+          "last_frame_id": 297,
+          "last_timestamp_s": 1305031464.027703,
+          "state": "RELOCALIZE",
+          "timestamp_span_s": 4.436007976531982
+        },
+        {
+          "first_frame_id": 299,
+          "first_timestamp_s": 1305031464.095634,
+          "frame_count": 1,
+          "last_frame_id": 299,
+          "last_timestamp_s": 1305031464.095634,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        },
+        {
+          "first_frame_id": 301,
+          "first_timestamp_s": 1305031464.159817,
+          "frame_count": 1,
+          "last_frame_id": 301,
+          "last_timestamp_s": 1305031464.159817,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        },
+        {
+          "first_frame_id": 303,
+          "first_timestamp_s": 1305031464.227624,
+          "frame_count": 1,
+          "last_frame_id": 303,
+          "last_timestamp_s": 1305031464.227624,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        }
+      ],
+      "observed_prefix_only": null,
+      "resource_scope": {
+        "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+        "cold_start_s": null,
+        "effective_fps": 2.851002298591824,
+        "effective_fps_reason": null,
+        "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+        "exit_code": 0,
+        "launch_error": null,
+        "peak_rss_bytes": 3154755584,
+        "peak_rss_reason": null,
+        "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+        "real_time_claim": false,
+        "requested_frames": 573,
+        "schema": "rt_mapping.slam_resources/v1",
+        "source_run_id": "yaropolk_y05_dev573_422172a_01",
+        "source_run_sha256": "811995266efad4e7f6481c5d26905b65b165427a1d43f3966b1c6fd9c2003422",
+        "source_status": "ok",
+        "status": "ok",
+        "throughput_frames": 573,
+        "wall_clock_s": 200.98194950001198,
+        "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+      },
+      "row": {
+        "causal_ate_sim3_rmse_m": 0.03533263931648242,
+        "causal_matched_gt_poses": 439,
+        "causal_pose_count": 439,
+        "causal_rpe_rotation_rmse_deg": 0.6982344421026564,
+        "causal_rpe_translation_rmse_m": 0.013038766393621113,
+        "evaluation_status": "ok",
+        "excluded_gap_pairs": 4,
+        "final_ate_sim3_rmse_m": 0.02198633339273141,
+        "initializing_frames": 2,
+        "lost_frames": 4,
+        "observed_tracking_rows": 573,
+        "peak_rss_bytes": 3154755584,
+        "reason": null,
+        "relocalizing_frames": 128,
+        "requested_frames": 573,
+        "rpe_pairs": 434,
+        "run_id": "yaropolk_y05_dev573_422172a_01",
+        "source_status": "ok",
+        "split": "development",
+        "tracking_p50_ms": 135.29475,
+        "tracking_p95_ms": 1339.4650600499979,
+        "tracking_success": 0.7661431064572426,
+        "unknown_frames": 0,
+        "wall_clock_s": 200.98194950001198,
+        "whole_run_fps": 2.851002298591824
+      },
+      "rpe_pair_counts": {
+        "candidate_pairs": 438,
+        "excluded_gap_pairs": 4
+      },
+      "run_id": "yaropolk_y05_dev573_422172a_01",
+      "source_manifest": {
+        "alignment": null,
+        "artifacts": {
+          "keyframes": "sparse/keyframes.npz",
+          "landmarks": "sparse/landmarks.npz",
+          "metrics": "metrics.json",
+          "observations": "sparse/observations.csv",
+          "preparation": "input_setup/setup.json",
+          "sparse_export": "sparse/export.json",
+          "sparse_map": "sparse/sparse_map.ply",
+          "tracking_export": "tracking_export.json",
+          "tracking_timing": "timing.csv",
+          "trajectory": "input_setup/trajectory/trajectory_final.txt",
+          "trajectory_all": "trajectory_all.csv",
+          "upstream_counts": "input_setup/trajectory/other_metrics_info.txt",
+          "upstream_log": "upstream.log"
+        },
+        "config": {
+          "baseline": {
+            "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_desk.tgz",
+            "dataset_manifest": "data/manifests/tum_fr1_desk_development.json",
+            "feature_tracker": "ORB2",
+            "loop_detector": "DBOW3",
+            "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated.",
+            "num_features": 1000,
+            "python_optimization": 1,
+            "schema": "rt_mapping.wp2_setup/v1",
+            "seed": 0,
+            "sensor_type": "mono",
+            "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_desk",
+            "split": "development",
+            "upstream": {
+              "repo": "https://github.com/luigifreda/pyslam.git",
+              "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+              "version": "2.10.8"
+            },
+            "use_cpp_core": false
+          },
+          "export_sparse": true,
+          "export_tracking": true,
+          "frames": 573,
+          "runner": "scripts/run_wp2_pyslam.py",
+          "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
+          "timeout_s": 600
+        },
+        "dataset": {
+          "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+          "manifest": "data/manifests/tum_fr1_desk_development.json",
+          "name": "TUM RGB-D",
+          "sequence": "rgbd_dataset_freiburg1_desk",
+          "split": "development"
+        },
+        "dirty_worktree": false,
+        "environment": {
+          "numpy": "1.26.4",
+          "opencv_python": "4.11.0.86",
+          "python": "3.11.16",
+          "torch": "2.6.0"
+        },
+        "git_commit": "422172a4cf821d4a838d43426e1acd31c27827f5",
+        "hardware": {
+          "cpu": "arm64",
+          "gpu": null,
+          "ram_gb": 32.0
+        },
+        "method": "B0",
+        "model": null,
+        "reason": null,
+        "run_id": "yaropolk_y05_dev573_422172a_01",
+        "schema": "rt_mapping.run_manifest/v1",
+        "seed": 0,
+        "slam": {
+          "config": "configs/wp2_pyslam_baseline.json",
+          "pose_convention": "T_wc",
+          "repo": "https://github.com/luigifreda/pyslam.git",
+          "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+        },
+        "started_at": "2026-10-25T18:39:01.939726Z",
+        "status": "ok"
+      },
+      "state_counts": {
+        "LOST": 4,
+        "NOT_INITIALIZED": 2,
+        "OK": 439,
+        "RELOCALIZE": 128
+      }
+    },
+    {
+      "evaluation_gt": {
+        "original_rows": 2335,
+        "original_sha256": "48c4fa61f5d78310ea579f404d31d296738c4210c19c2bdac4a5cdf6bff50831",
+        "reference_rows": 1981,
+        "reference_sha256": "6bdc01e7854a7406ac420d7da3953e9e50797b346606d89486fd39d36bf4e30c",
+        "rule": "all GT rows within frozen input time bounds +/- 20ms; no pose averaging/deduplication/tuning",
+        "window_s": [
+          1305031453.339684,
+          1305031473.216069
+        ]
+      },
+      "failure_interpretation": "Tracking/relocalization states are observed; underlying cause is a hypothesis. Native blur flags are correlates, not proof of the cause.",
+      "failure_log_lines": [],
+      "failure_table": [
+        {
+          "category": "initializing",
+          "frame_count": 2
+        },
+        {
+          "category": "lost",
+          "frame_count": 2
+        },
+        {
+          "category": "relocalizing",
+          "frame_count": 130
+        },
+        {
+          "category": "unknown_state",
+          "frame_count": 0
+        },
+        {
+          "category": "ok_without_pose",
+          "frame_count": 0
+        },
+        {
+          "category": "track_exception",
+          "frame_count": 0
+        },
+        {
+          "category": "keyframe_observation_error",
+          "frame_count": 0
+        },
+        {
+          "category": "gt_unassociated_usable_pose",
+          "frame_count": 0
+        }
+      ],
+      "hashes": {
+        "results/runs/yaropolk_y05_dev573_422172a_02.eval/inputs.json": "d385dc491d00c376dfa092d14090e61db76c84b608cf3a70f1b1c57116865947",
+        "results/runs/yaropolk_y05_dev573_422172a_02.eval/metrics.json": "8d47e01d98cc3ff425da856fdb30a49e8455e4564ed7ebc1637978466ed5b7b2",
+        "results/runs/yaropolk_y05_dev573_422172a_02.eval/run.json": "637d08761e1a9fb26bdc0a30e9dd9e3db5f47624d73cffc03b7469d76eb89c83",
+        "results/runs/yaropolk_y05_dev573_422172a_02.resources.json": "dd98ca2253e473ac20085817bd375796c8dbbbabe4980106cbf5b9eb161618c4",
+        "results/runs/yaropolk_y05_dev573_422172a_02/metrics.json": "74af46f0d27ead8f0df28895a39607060e2c8d7a98190e8de47393e28483b4ad",
+        "results/runs/yaropolk_y05_dev573_422172a_02/run.json": "c4244961fd8ff62bf54fd79e71da1fe1e0c1e0c22e7b1d676d1f2ca6ed8eba7d",
+        "results/runs/yaropolk_y05_dev573_422172a_02/timing.csv": "928247f0eb9adc3cda1911a6f324fcda80d94f24adb81607b93b82ac7cea2cad",
+        "results/runs/yaropolk_y05_dev573_422172a_02/tracking_export.json": "afe4ad56928952507a7cd5253f4d20b56eea4e64f413ba99620515c0e70cafb6",
+        "results/runs/yaropolk_y05_dev573_422172a_02/trajectory_all.csv": "4c51a2ed301a48a5a740cbace6ca9cb16c05109ecf74af08873252488b20c51a"
+      },
+      "missing_metrics_reason": null,
+      "native_reported_blurry_frame_ids": [
+        158,
+        168,
+        236,
+        237,
+        238,
+        239,
+        240,
+        243,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        261,
+        262,
+        263,
+        266,
+        267,
+        270,
+        271,
+        274,
+        282,
+        285,
+        286,
+        288,
+        289,
+        374,
+        401,
+        457,
+        463,
+        464,
+        465,
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        496,
+        497,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        536
+      ],
+      "non_ok_segments": [
+        {
+          "first_frame_id": 0,
+          "first_timestamp_s": 1305031453.359684,
+          "frame_count": 2,
+          "last_frame_id": 1,
+          "last_timestamp_s": 1305031453.39169,
+          "state": "NOT_INITIALIZED",
+          "timestamp_span_s": 0.032006025314331055
+        },
+        {
+          "first_frame_id": 169,
+          "first_timestamp_s": 1305031459.559647,
+          "frame_count": 1,
+          "last_frame_id": 169,
+          "last_timestamp_s": 1305031459.559647,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        },
+        {
+          "first_frame_id": 170,
+          "first_timestamp_s": 1305031459.591695,
+          "frame_count": 129,
+          "last_frame_id": 298,
+          "last_timestamp_s": 1305031464.059652,
+          "state": "RELOCALIZE",
+          "timestamp_span_s": 4.467957019805908
+        },
+        {
+          "first_frame_id": 301,
+          "first_timestamp_s": 1305031464.159817,
+          "frame_count": 1,
+          "last_frame_id": 301,
+          "last_timestamp_s": 1305031464.159817,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        },
+        {
+          "first_frame_id": 302,
+          "first_timestamp_s": 1305031464.195585,
+          "frame_count": 1,
+          "last_frame_id": 302,
+          "last_timestamp_s": 1305031464.195585,
+          "state": "RELOCALIZE",
+          "timestamp_span_s": 0.0
+        }
+      ],
+      "observed_prefix_only": null,
+      "resource_scope": {
+        "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+        "cold_start_s": null,
+        "effective_fps": 2.9141670252661305,
+        "effective_fps_reason": null,
+        "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+        "exit_code": 0,
+        "launch_error": null,
+        "peak_rss_bytes": 2031697920,
+        "peak_rss_reason": null,
+        "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+        "real_time_claim": false,
+        "requested_frames": 573,
+        "schema": "rt_mapping.slam_resources/v1",
+        "source_run_id": "yaropolk_y05_dev573_422172a_02",
+        "source_run_sha256": "c4244961fd8ff62bf54fd79e71da1fe1e0c1e0c22e7b1d676d1f2ca6ed8eba7d",
+        "source_status": "ok",
+        "status": "ok",
+        "throughput_frames": 573,
+        "wall_clock_s": 196.6256549580139,
+        "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+      },
+      "row": {
+        "causal_ate_sim3_rmse_m": 0.024486663218647467,
+        "causal_matched_gt_poses": 439,
+        "causal_pose_count": 439,
+        "causal_rpe_rotation_rmse_deg": 0.6572528384600346,
+        "causal_rpe_translation_rmse_m": 0.012323136946509432,
+        "evaluation_status": "ok",
+        "excluded_gap_pairs": 2,
+        "final_ate_sim3_rmse_m": 0.016954213006616592,
+        "initializing_frames": 2,
+        "lost_frames": 2,
+        "observed_tracking_rows": 573,
+        "peak_rss_bytes": 2031697920,
+        "reason": null,
+        "relocalizing_frames": 130,
+        "requested_frames": 573,
+        "rpe_pairs": 436,
+        "run_id": "yaropolk_y05_dev573_422172a_02",
+        "source_status": "ok",
+        "split": "development",
+        "tracking_p50_ms": 132.19793750000002,
+        "tracking_p95_ms": 1311.4945895499986,
+        "tracking_success": 0.7661431064572426,
+        "unknown_frames": 0,
+        "wall_clock_s": 196.6256549580139,
+        "whole_run_fps": 2.9141670252661305
+      },
+      "rpe_pair_counts": {
+        "candidate_pairs": 438,
+        "excluded_gap_pairs": 2
+      },
+      "run_id": "yaropolk_y05_dev573_422172a_02",
+      "source_manifest": {
+        "alignment": null,
+        "artifacts": {
+          "keyframes": "sparse/keyframes.npz",
+          "landmarks": "sparse/landmarks.npz",
+          "metrics": "metrics.json",
+          "observations": "sparse/observations.csv",
+          "preparation": "input_setup/setup.json",
+          "sparse_export": "sparse/export.json",
+          "sparse_map": "sparse/sparse_map.ply",
+          "tracking_export": "tracking_export.json",
+          "tracking_timing": "timing.csv",
+          "trajectory": "input_setup/trajectory/trajectory_final.txt",
+          "trajectory_all": "trajectory_all.csv",
+          "upstream_counts": "input_setup/trajectory/other_metrics_info.txt",
+          "upstream_log": "upstream.log"
+        },
+        "config": {
+          "baseline": {
+            "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_desk.tgz",
+            "dataset_manifest": "data/manifests/tum_fr1_desk_development.json",
+            "feature_tracker": "ORB2",
+            "loop_detector": "DBOW3",
+            "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated.",
+            "num_features": 1000,
+            "python_optimization": 1,
+            "schema": "rt_mapping.wp2_setup/v1",
+            "seed": 0,
+            "sensor_type": "mono",
+            "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_desk",
+            "split": "development",
+            "upstream": {
+              "repo": "https://github.com/luigifreda/pyslam.git",
+              "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+              "version": "2.10.8"
+            },
+            "use_cpp_core": false
+          },
+          "export_sparse": true,
+          "export_tracking": true,
+          "frames": 573,
+          "runner": "scripts/run_wp2_pyslam.py",
+          "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
+          "timeout_s": 600
+        },
+        "dataset": {
+          "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+          "manifest": "data/manifests/tum_fr1_desk_development.json",
+          "name": "TUM RGB-D",
+          "sequence": "rgbd_dataset_freiburg1_desk",
+          "split": "development"
+        },
+        "dirty_worktree": false,
+        "environment": {
+          "numpy": "1.26.4",
+          "opencv_python": "4.11.0.86",
+          "python": "3.11.16",
+          "torch": "2.6.0"
+        },
+        "git_commit": "422172a4cf821d4a838d43426e1acd31c27827f5",
+        "hardware": {
+          "cpu": "arm64",
+          "gpu": null,
+          "ram_gb": 32.0
+        },
+        "method": "B0",
+        "model": null,
+        "reason": null,
+        "run_id": "yaropolk_y05_dev573_422172a_02",
+        "schema": "rt_mapping.run_manifest/v1",
+        "seed": 0,
+        "slam": {
+          "config": "configs/wp2_pyslam_baseline.json",
+          "pose_convention": "T_wc",
+          "repo": "https://github.com/luigifreda/pyslam.git",
+          "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+        },
+        "started_at": "2026-10-25T18:42:25.437942Z",
+        "status": "ok"
+      },
+      "state_counts": {
+        "LOST": 2,
+        "NOT_INITIALIZED": 2,
+        "OK": 439,
+        "RELOCALIZE": 130
+      }
+    },
+    {
+      "evaluation_gt": {
+        "original_rows": 2335,
+        "original_sha256": "48c4fa61f5d78310ea579f404d31d296738c4210c19c2bdac4a5cdf6bff50831",
+        "reference_rows": 1981,
+        "reference_sha256": "6bdc01e7854a7406ac420d7da3953e9e50797b346606d89486fd39d36bf4e30c",
+        "rule": "all GT rows within frozen input time bounds +/- 20ms; no pose averaging/deduplication/tuning",
+        "window_s": [
+          1305031453.339684,
+          1305031473.216069
+        ]
+      },
+      "failure_interpretation": "Tracking/relocalization states are observed; underlying cause is a hypothesis. Native blur flags are correlates, not proof of the cause.",
+      "failure_log_lines": [],
+      "failure_table": [
+        {
+          "category": "initializing",
+          "frame_count": 13
+        },
+        {
+          "category": "lost",
+          "frame_count": 2
+        },
+        {
+          "category": "relocalizing",
+          "frame_count": 128
+        },
+        {
+          "category": "unknown_state",
+          "frame_count": 0
+        },
+        {
+          "category": "ok_without_pose",
+          "frame_count": 0
+        },
+        {
+          "category": "track_exception",
+          "frame_count": 0
+        },
+        {
+          "category": "keyframe_observation_error",
+          "frame_count": 0
+        },
+        {
+          "category": "gt_unassociated_usable_pose",
+          "frame_count": 0
+        }
+      ],
+      "hashes": {
+        "results/runs/yaropolk_y05_dev573_422172a_03.eval/inputs.json": "19a53bc8b228cc602882b3749ad08edbbcbd2909d8b309db69874936ebb6283d",
+        "results/runs/yaropolk_y05_dev573_422172a_03.eval/metrics.json": "d121fb5cabf9cf56969008446cf3402905d342ec7b81f6c650f3f5c3f4e30a4a",
+        "results/runs/yaropolk_y05_dev573_422172a_03.eval/run.json": "4a591ca3d8a25e1043f52ccaa37e370243f71032f30c272e1bda2887d0ccc867",
+        "results/runs/yaropolk_y05_dev573_422172a_03.resources.json": "1057751da93af533d74bf298f664393f08f3b225593fb395368bf84f85cf9d6d",
+        "results/runs/yaropolk_y05_dev573_422172a_03/metrics.json": "494a669f9dc9626d5b1cf197553d3116a2240d381b8f07a7c01bd74c367b3ad7",
+        "results/runs/yaropolk_y05_dev573_422172a_03/run.json": "ea0c55be84a8f0af74cc016a53247c4fd75fda436ee01fc5298c58e08d73d3d5",
+        "results/runs/yaropolk_y05_dev573_422172a_03/timing.csv": "8f6c87f7cc2821c4f9edf8f36be9271e372d9591cb9cf053306c89f578390be1",
+        "results/runs/yaropolk_y05_dev573_422172a_03/tracking_export.json": "139182aceb23ee28fd1b932a16a42d284d2e2bfad7e2e9da43721de3c46609cf",
+        "results/runs/yaropolk_y05_dev573_422172a_03/trajectory_all.csv": "b3d6a755af60d50b06ac08b0b551c3bcf657f3ac6cbe6182195f185928ebdb81"
+      },
+      "missing_metrics_reason": null,
+      "native_reported_blurry_frame_ids": [
+        158,
+        168,
+        236,
+        237,
+        238,
+        239,
+        240,
+        243,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        261,
+        262,
+        263,
+        266,
+        267,
+        270,
+        271,
+        274,
+        282,
+        285,
+        286,
+        288,
+        289,
+        374,
+        401,
+        457,
+        463,
+        464,
+        465,
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        496,
+        497,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        536
+      ],
+      "non_ok_segments": [
+        {
+          "first_frame_id": 0,
+          "first_timestamp_s": 1305031453.359684,
+          "frame_count": 13,
+          "last_frame_id": 12,
+          "last_timestamp_s": 1305031453.759694,
+          "state": "NOT_INITIALIZED",
+          "timestamp_span_s": 0.4000101089477539
+        },
+        {
+          "first_frame_id": 169,
+          "first_timestamp_s": 1305031459.559647,
+          "frame_count": 1,
+          "last_frame_id": 169,
+          "last_timestamp_s": 1305031459.559647,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        },
+        {
+          "first_frame_id": 170,
+          "first_timestamp_s": 1305031459.591695,
+          "frame_count": 128,
+          "last_frame_id": 297,
+          "last_timestamp_s": 1305031464.027703,
+          "state": "RELOCALIZE",
+          "timestamp_span_s": 4.436007976531982
+        },
+        {
+          "first_frame_id": 299,
+          "first_timestamp_s": 1305031464.095634,
+          "frame_count": 1,
+          "last_frame_id": 299,
+          "last_timestamp_s": 1305031464.095634,
+          "state": "LOST",
+          "timestamp_span_s": 0.0
+        }
+      ],
+      "observed_prefix_only": null,
+      "resource_scope": {
+        "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+        "cold_start_s": null,
+        "effective_fps": 3.156583930354872,
+        "effective_fps_reason": null,
+        "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+        "exit_code": 0,
+        "launch_error": null,
+        "peak_rss_bytes": 2144960512,
+        "peak_rss_reason": null,
+        "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+        "real_time_claim": false,
+        "requested_frames": 573,
+        "schema": "rt_mapping.slam_resources/v1",
+        "source_run_id": "yaropolk_y05_dev573_422172a_03",
+        "source_run_sha256": "ea0c55be84a8f0af74cc016a53247c4fd75fda436ee01fc5298c58e08d73d3d5",
+        "source_status": "ok",
+        "status": "ok",
+        "throughput_frames": 573,
+        "wall_clock_s": 181.5253491249896,
+        "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+      },
+      "row": {
+        "causal_ate_sim3_rmse_m": 0.02424417524208796,
+        "causal_matched_gt_poses": 430,
+        "causal_pose_count": 430,
+        "causal_rpe_rotation_rmse_deg": 0.6493997513359019,
+        "causal_rpe_translation_rmse_m": 0.012976436300293583,
+        "evaluation_status": "ok",
+        "excluded_gap_pairs": 2,
+        "final_ate_sim3_rmse_m": 0.017796291182559706,
+        "initializing_frames": 13,
+        "lost_frames": 2,
+        "observed_tracking_rows": 573,
+        "peak_rss_bytes": 2144960512,
+        "reason": null,
+        "relocalizing_frames": 128,
+        "requested_frames": 573,
+        "rpe_pairs": 427,
+        "run_id": "yaropolk_y05_dev573_422172a_03",
+        "source_status": "ok",
+        "split": "development",
+        "tracking_p50_ms": 128.15885400000002,
+        "tracking_p95_ms": 1221.621260599998,
+        "tracking_success": 0.7504363001745201,
+        "unknown_frames": 0,
+        "wall_clock_s": 181.5253491249896,
+        "whole_run_fps": 3.156583930354872
+      },
+      "rpe_pair_counts": {
+        "candidate_pairs": 429,
+        "excluded_gap_pairs": 2
+      },
+      "run_id": "yaropolk_y05_dev573_422172a_03",
+      "source_manifest": {
+        "alignment": null,
+        "artifacts": {
+          "keyframes": "sparse/keyframes.npz",
+          "landmarks": "sparse/landmarks.npz",
+          "metrics": "metrics.json",
+          "observations": "sparse/observations.csv",
+          "preparation": "input_setup/setup.json",
+          "sparse_export": "sparse/export.json",
+          "sparse_map": "sparse/sparse_map.ply",
+          "tracking_export": "tracking_export.json",
+          "tracking_timing": "timing.csv",
+          "trajectory": "input_setup/trajectory/trajectory_final.txt",
+          "trajectory_all": "trajectory_all.csv",
+          "upstream_counts": "input_setup/trajectory/other_metrics_info.txt",
+          "upstream_log": "upstream.log"
+        },
+        "config": {
+          "baseline": {
+            "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_desk.tgz",
+            "dataset_manifest": "data/manifests/tum_fr1_desk_development.json",
+            "feature_tracker": "ORB2",
+            "loop_detector": "DBOW3",
+            "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated.",
+            "num_features": 1000,
+            "python_optimization": 1,
+            "schema": "rt_mapping.wp2_setup/v1",
+            "seed": 0,
+            "sensor_type": "mono",
+            "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_desk",
+            "split": "development",
+            "upstream": {
+              "repo": "https://github.com/luigifreda/pyslam.git",
+              "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+              "version": "2.10.8"
+            },
+            "use_cpp_core": false
+          },
+          "export_sparse": true,
+          "export_tracking": true,
+          "frames": 573,
+          "runner": "scripts/run_wp2_pyslam.py",
+          "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
+          "timeout_s": 600
+        },
+        "dataset": {
+          "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+          "manifest": "data/manifests/tum_fr1_desk_development.json",
+          "name": "TUM RGB-D",
+          "sequence": "rgbd_dataset_freiburg1_desk",
+          "split": "development"
+        },
+        "dirty_worktree": false,
+        "environment": {
+          "numpy": "1.26.4",
+          "opencv_python": "4.11.0.86",
+          "python": "3.11.16",
+          "torch": "2.6.0"
+        },
+        "git_commit": "422172a4cf821d4a838d43426e1acd31c27827f5",
+        "hardware": {
+          "cpu": "arm64",
+          "gpu": null,
+          "ram_gb": 32.0
+        },
+        "method": "B0",
+        "model": null,
+        "reason": null,
+        "run_id": "yaropolk_y05_dev573_422172a_03",
+        "schema": "rt_mapping.run_manifest/v1",
+        "seed": 0,
+        "slam": {
+          "config": "configs/wp2_pyslam_baseline.json",
+          "pose_convention": "T_wc",
+          "repo": "https://github.com/luigifreda/pyslam.git",
+          "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+        },
+        "started_at": "2026-10-25T18:45:43.344849Z",
+        "status": "ok"
+      },
+      "state_counts": {
+        "LOST": 2,
+        "NOT_INITIALIZED": 13,
+        "OK": 430,
+        "RELOCALIZE": 128
+      }
+    }
+  ],
+  "schema": "rt_mapping.wp2_baseline_benchmark/v1",
+  "verification": {
+    "byte_identical_recheck": [
+      "metrics.json",
+      "inputs.json",
+      "tracking_states.png"
+    ],
+    "cpu_suite": "688 passed, 1 native skip on the same source before evidence-only Y-05",
+    "evaluations": "4 primary + 1 repeatability recheck, clean commits, all status ok",
+    "git_diff_check": "passed",
+    "no_new_downloads": true,
+    "plots_visually_checked": true,
+    "source_code_changes": false,
+    "source_runs": "4 clean commits, all status ok"
+  }
+}
