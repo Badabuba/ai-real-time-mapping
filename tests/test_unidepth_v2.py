@@ -143,3 +143,23 @@ def test_namespace_package_reaches_source_verification(tmp_path, monkeypatch):
     with pytest.raises(GeometryAdapterError, match="source checked"):
         module.TorchUniDepthBackend().load(UniDepthConfig(checkpoint_dir=tmp_path))
     assert seen == [tmp_path]
+
+
+def test_prediction_declares_raw_grid_accepted_by_unchanged_alignment(tmp_path, frame):
+    # N-04 D-3 gate failed with "prediction must declare its pixel grid".
+    from rt_mapping.alignment.correspondences import prediction_grid
+    from rt_mapping.alignment import AlignmentError
+
+    one = UniDepthV2Adapter(UniDepthConfig(), tmp_path, Fake()).predict(frame)
+    assert one.preprocess["pixel_grid"] == "raw_distorted"
+    assert one.preprocess["intrinsics_convention"] == "pixel_centers_integer"
+    assert one.preprocess["steps"] == []
+    assert one.preprocess["input_wh"] == one.preprocess["output_wh"] == [8, 6]
+    transform, grid = prediction_grid(one, K, (8, 6))
+    assert grid == "raw_distorted"
+    np.testing.assert_array_equal(transform, np.eye(3))
+    # Validation is not weakened: a wrong K or a different keyframe size still fails.
+    with pytest.raises(AlignmentError, match="K_processed"):
+        prediction_grid(one, K * np.array([[1.01], [1.], [1.]]), (8, 6))
+    with pytest.raises(AlignmentError, match="input size"):
+        prediction_grid(one, K, (640, 480))

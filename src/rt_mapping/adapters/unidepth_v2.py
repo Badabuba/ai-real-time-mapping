@@ -282,7 +282,11 @@ class UniDepthV2Adapter:
         return GeometryPrediction(
             frame.frame_id, frame.timestamp_s, depth, np.ones(depth.shape, dtype=bool), confidence,
             frame.K, f"{REPO}@{REVISION}",
+            # Raw RGB goes in without rectification and infer() returns depth on
+            # that same input grid, so no resize/crop steps apply and K_processed
+            # is the input integer-centre K (same grid semantics as DA3).
             {**out.preprocess, "input_wh": [frame.width, frame.height], "output_wh": [frame.width, frame.height],
+             "pixel_grid": "raw_distorted", "intrinsics_convention": "pixel_centers_integer", "steps": [],
              "normalization": "upstream infer: RGB uint8 / 255, ImageNet mean/std",
              "metric_conversion": "none; upstream points[:, z] already in metres",
              "camera_mode": "calibrated pinhole; half-centre and actual-resize compensation",
