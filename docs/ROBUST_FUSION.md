@@ -117,3 +117,21 @@ python scripts/run_frame_diagnostics.py `
 ```powershell
 python -m pytest tests/test_frame_diagnostics.py tests/test_import_hygiene_robust.py -q
 ```
+
+## 3. U-02 — per-frame sparse anchoring і frame gate
+
+### 3.1 Метод (GT-free)
+
+Код: `src/rt_mapping/alignment/anchoring.py`, CLI `scripts/run_anchor_gate.py`, конфіг `configs/robust_fusion.json`.
+
+1. Preflight без запису run dir: валідація конфігу (точні ключі на кожному рівні, у кожного порогу є `source`), provenance і `residuals.csv` cross-check з U-01 (`load_sources`, `rebuild_pairs`, `check_recorded_residuals`).
+2. Конфіг має збігатися з порогами, з якими записано source comparison run (`residual_threshold_m`, `min_inliers`, `min_inlier_ratio`, `min_coverage_bins`, `voxel_size_m`, `thresholds_m`) і з U-01 `ANCHOR_BAND`. Інакше — відмова.
+3. Сигнали рахує незмінений U-01 `frame_signals` (без дублювання коду).
+4. **Anchoring:** `anchored_prediction(prediction, a_f)` повертає нову in-memory prediction з `z' = a_f · z_pred` (float64 добуток → float32 контракту); `valid_mask`, confidence, K і metadata без змін; файли не пишуться. Якщо `a_f` = null (A1), кадр лишається некоригованим. NaN/Inf/≤ 0 відхиляються з помилкою. SLAM poses зберігають global scale `s`.
+5. **Gate:** `gate_decision(signals, config)` відкидає кадр, якщо спрацював будь-який flag (правила з §2.2, строгі нерівності як у плані). Flag, який неможливо оцінити, записується як `unavailable` з причиною і не спрацьовує: A2 без `a_f`, A3 без withheld pair, S1 без tracking export. Некоректні входи (NaN, від'ємні значення, неузгоджені null) викликають помилку, а не default.
+6. **GT-free валідація:** withheld median |residual| кадру до (`|s·z_slam − z_pred|`) і після (`|s·z_slam − a_f·z_pred|`) корекції на тих самих withheld pairs. Лише звітується, для підбору не використовується.
+7. Артефакти: `frame_signals.csv`, `anchor_gate.csv` (по рядку на keyframe: входи рішення, `applied_scale`, flags `true/false/unavailable`, `decision`, `decision_reason`), `anchor_gate.json` (лічильники, withheld до/після, список рішень для U-03, sha256 конфігу) і `run.json`.
+
+**Розділення GT:** модуль і CLI не імпортують `rt_mapping.evaluation.*` і `data.tum` (AST-тест). Subprocess-тест перевіряє, що під час запуску CLI не завантажено жодного модуля `rt_mapping.evaluation`. Ще один тест видаляє всі GT/evaluation-only матеріали fixture і перевіряє, що рішення побайтово ті самі.
+
+Конфіг заморожується після merge U-02. U-03 відмовляється працювати, якщо sha256 `configs/robust_fusion.json` відрізняється від записаного в summary U-02.

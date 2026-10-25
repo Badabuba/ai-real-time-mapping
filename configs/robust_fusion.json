@@ -1,0 +1,74 @@
+{
+  "description": "P1-robust pre-registered thresholds, variants and input contract (docs/P1_ROBUST_EXTENSION_PLAN.md §3.4, §4). Frozen once U-02 merges; U-03 refuses a file whose sha256 differs from the U-02 summary. No value was tuned on ground truth.",
+  "gate": {
+    "anchor_band": {
+      "source": "delta1 accuracy band of the project depth metric (docs/EXPERIMENTS.md §4.2); flag A2 fires when |log a_f| > log(anchor_band)",
+      "value": 1.25
+    },
+    "min_anchor_inlier_ratio": {
+      "source": "merged runs/mapping_run.py DEFAULT_CONFIG min_inlier_ratio; flag A1 when the per-frame estimate_scale fails",
+      "value": 0.5
+    },
+    "min_anchor_inliers": {
+      "source": "merged runs/mapping_run.py DEFAULT_CONFIG min_inliers; flag A1 when the per-frame estimate_scale fails",
+      "value": 30
+    },
+    "min_coverage_bins": {
+      "source": "merged runs/mapping_run.py DEFAULT_CONFIG min_coverage_bins (of 4x4 = 16 bins); flag A4 when calibration-inlier coverage is lower",
+      "value": 4
+    },
+    "min_withheld_pairs": {
+      "source": "merged alignment/causal.py rule check.any(): flag A3 is evaluated only with at least one withheld pair",
+      "value": 1
+    },
+    "residual_threshold_m": {
+      "source": "merged runs/mapping_run.py DEFAULT_CONFIG residual_threshold_m (the global gate); flag A3 when the withheld median |residual| is larger",
+      "value": 0.1
+    },
+    "tracking_ok_state": {
+      "source": "Y-01 contract src/rt_mapping/contracts/slam.py STATES; flag S1 when a known state differs, unavailable when no tracking export exists",
+      "value": "OK"
+    }
+  },
+  "inputs": {
+    "evaluation_only_u03": [
+      "comparison/reference_evaluation_only.npz",
+      "comparison/trajectory_evaluation.json",
+      "comparison/evaluation/*.json",
+      "TUM sequence directory and dataset manifest via evaluation.oracle.load_oracle_inputs"
+    ],
+    "gt_free": [
+      "comparison/run.json (status ok; config.mapping)",
+      "comparison/inputs.json (pipeline slam/geometry run.json sha256)",
+      "comparison/methods/*.global/{run.json,alignment.json,residuals.csv}",
+      "slam run: sparse snapshot via runs.artifacts.load_mapping_inputs; tracking export when listed",
+      "geometry run: predictions via runs.artifacts.load_mapping_inputs"
+    ],
+    "source_run_id": "yulian_tum_e2e_f200_20261025_01"
+  },
+  "map_evaluation": {
+    "thresholds_m": {
+      "source": "merged runs/comparison_run.py DEFAULT_COMPARISON thresholds_m (D-4)",
+      "value": [0.02, 0.05, 0.1]
+    },
+    "voxel_size_m": {
+      "source": "merged runs/mapping_run.py DEFAULT_CONFIG voxel_size_m (D-4)",
+      "value": 0.02
+    }
+  },
+  "schema": "rt_mapping.p1_robust_config/v1",
+  "variants": [
+    {
+      "description": "unchanged public run_mapping with the recorded mapping config (only plot may differ)",
+      "name": "P1-global-control"
+    },
+    {
+      "description": "every keyframe depth multiplied by its a_f where a_f exists; frames with null a_f stay uncorrected",
+      "name": "P1-anchored"
+    },
+    {
+      "description": "P1-anchored with every gate-rejected keyframe left out of fusion",
+      "name": "P1-anchored+gate"
+    }
+  ]
+}
