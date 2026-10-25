@@ -120,20 +120,40 @@ def _child_fusion(root, inputs, parent_record, predictions, *, child_id, method,
     return path
 
 
-def _report(directory, rows, notes, *, plot):
+def _coverage_lines(coverage):
+    lines = ["## GT pose coverage", "",
+             f"- Policy: `{coverage['policy']}`; association tolerance {coverage['max_timestamp_delta_s']:g} s "
+             f"(unchanged); {coverage['association']}.",
+             f"- Evaluated {coverage['evaluated_keyframes']} of {coverage['candidate_keyframes']} retained keyframes "
+             f"(coverage {coverage['coverage_fraction']:.6f}); excluded {coverage['excluded_keyframes']}.",
+             "- The same eligible keyframe IDs define ATE/RPE and the GT reference cloud for every method.",
+             "- RPE pairs are consecutive eligible keyframes (matched pose rows), so a pair can span an excluded keyframe.",
+             "- Excluded keyframes are unavailable for GT evaluation, not invalid SLAM/depth frames; "
+             "they stay in the SLAM export, predictions and every fused map."]
+    if coverage["excluded"]:
+        lines += ["", "| Frame ID | Timestamp [s] | Nearest GT delta [s] | Reason |", "|---:|---:|---:|---|"]
+        lines += [f"| {item['frame_id']} | {item['timestamp_s']:.6f} | {item['nearest_gt_delta_s']:.6f} | {item['reason']} |"
+                  for item in coverage["excluded"]]
+    return lines
+
+
+def _report(directory, rows, notes, coverage, *, plot):
     fields = ["method", "map_points", "accuracy_mean_m", "completeness_mean_m", "chamfer_l1_m",
-              "ate_se3_rmse_m", "rpe_translation_rmse_m", "rpe_rotation_rmse_deg", "fusion_median_ms", "fusion_p95_ms"]
+              "ate_se3_rmse_m", "rpe_translation_rmse_m", "rpe_rotation_rmse_deg", "fusion_median_ms", "fusion_p95_ms",
+              "gt_evaluated_keyframes", "gt_candidate_keyframes", "gt_coverage_fraction"]
     fields += sorted({key for row in rows for key in row if key.startswith("fscore_")})
     with (directory / "comparison.csv").open("x", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
     lines = ["# Alignment/fusion comparison", "", *[f"- {note}" for note in notes], "",
-             "| Method | Points | Accuracy [m] | Completeness [m] | Chamfer-L1 [m] | ATE SE(3) [m] |",
-             "|---|---:|---:|---:|---:|---:|"]
+             "| Method | Points | Accuracy [m] | Completeness [m] | Chamfer-L1 [m] | ATE SE(3) [m] | GT keyframes |",
+             "|---|---:|---:|---:|---:|---:|---:|"]
     for row in rows:
         lines.append(f"| {row['method']} | {row['map_points']} | {row['accuracy_mean_m']:.6f} | "
-                     f"{row['completeness_mean_m']:.6f} | {row['chamfer_l1_m']:.6f} | {row['ate_se3_rmse_m']:.6f} |")
+                     f"{row['completeness_mean_m']:.6f} | {row['chamfer_l1_m']:.6f} | {row['ate_se3_rmse_m']:.6f} | "
+                     f"{row['gt_evaluated_keyframes']}/{row['gt_candidate_keyframes']} |")
+    lines += ["", *_coverage_lines(coverage)]
     (directory / "report.md").write_text("\n".join(lines)+"\n", encoding="utf-8")
     if plot:
         import matplotlib
@@ -187,21 +207,30 @@ def run_comparison(repo_root, slam_run, geometry_run, sequence_dir, manifest_pat
         scale = alignment["scale"]
         # Ground truth starts here, after the P1 result is immutable.
         oracle, reference, gt_poses, gt_times, gt_provenance = load_oracle_inputs(inputs, sequence_dir, manifest_path, mapping,
-                                                max_timestamp_delta_s=config["max_timestamp_delta_s"])
+                                                max_timestamp_delta_s=config["max_timestamp_delta_s"],
+                                                exclude_missing_gt_poses=True)
         _json(directory / "inputs.json", {"pipeline": inputs.provenance, "evaluation_only": gt_provenance})
         record["artifacts"]["inputs"] = "inputs.json"
         np.savez_compressed(directory / "reference_evaluation_only.npz", xyz_m=reference)
         record["artifacts"]["reference"] = "reference_evaluation_only.npz"
         cameras = inputs.snapshot.keyframes
+        coverage = gt_provenance["gt_pose_eligibility"]
+        # One explicit eligible set for every method's GT-dependent metrics.
+        eligible = np.isin(cameras["frame_id"], coverage["evaluated_frame_ids"])
+        if coverage["evaluated_keyframes"] < 3:
+            raise ValueError(f"insufficient_gt_coverage: ATE/RPE and the shared map evaluation transform need >= 3 "
+                             f"GT-eligible keyframes; {coverage['evaluated_keyframes']} of "
+                             f"{coverage['candidate_keyframes']} eligible, excluded {coverage['excluded_frame_ids']}")
+        eligible_times = cameras["timestamp_s"][eligible]
         metric_poses = np.array([metric_pose(pose, scale) for pose in cameras["T_wc"]])
-        trajectory = trajectory_metrics(cameras["timestamp_s"], metric_poses, gt_times, gt_poses, alignment="se3",
+        trajectory = trajectory_metrics(eligible_times, metric_poses[eligible], gt_times, gt_poses, alignment="se3",
                                         max_delta_s=config["max_timestamp_delta_s"])
-        baseline_trajectory = trajectory_metrics(cameras["timestamp_s"], cameras["T_wc"], gt_times, gt_poses,
+        baseline_trajectory = trajectory_metrics(eligible_times, cameras["T_wc"][eligible], gt_times, gt_poses,
                                                  alignment="sim3", max_delta_s=config["max_timestamp_delta_s"])
         transform = trajectory["evaluation_transform"]
         rotation, translation = np.asarray(transform["R"]), np.asarray(transform["t"])
         _json(directory / "trajectory_evaluation.json", {"P1_global_se3": trajectory, "B0_sim3": baseline_trajectory,
-            "scope": "retained keyframes, not all-frame trajectory/tracking evaluation"})
+            "scope": "retained keyframes, not all-frame trajectory/tracking evaluation", "gt_pose_coverage": coverage})
         record["artifacts"]["trajectory_evaluation"] = "trajectory_evaluation.json"
         paths = [("P1-global", global_path, scale)]
         paths.append(("P1-raw", _child_fusion(directory / "methods", inputs, record, inputs.predictions,
@@ -255,7 +284,7 @@ def run_comparison(repo_root, slam_run, geometry_run, sequence_dir, manifest_pat
                                       thresholds_m=config["thresholds_m"], crop_bounds=config["crop_bounds_m"])
             poses = np.array([metric_pose(pose, method_scale[int(frame_id)] if isinstance(method_scale, dict) else method_scale)
                               for frame_id, pose in zip(cameras["frame_id"], cameras["T_wc"])])
-            pose_metrics = trajectory_metrics(cameras["timestamp_s"], poses, gt_times, gt_poses, alignment="se3",
+            pose_metrics = trajectory_metrics(eligible_times, poses[eligible], gt_times, gt_poses, alignment="se3",
                                                max_delta_s=config["max_timestamp_delta_s"])
             timing = json.loads((path / "timing.json").read_text(encoding="utf-8")) if path else {}
             row = {"method": name, "map_points": evaluated["estimate_points"],
@@ -263,23 +292,30 @@ def run_comparison(repo_root, slam_run, geometry_run, sequence_dir, manifest_pat
                    "ate_se3_rmse_m": pose_metrics["ate_rmse_m"],
                    "rpe_translation_rmse_m": pose_metrics["rpe_translation_rmse_m"],
                    "rpe_rotation_rmse_deg": pose_metrics["rpe_rotation_rmse_deg"],
-                   "fusion_median_ms": timing.get("fusion_median_ms"), "fusion_p95_ms": timing.get("fusion_p95_ms")}
+                   "fusion_median_ms": timing.get("fusion_median_ms"), "fusion_p95_ms": timing.get("fusion_p95_ms"),
+                   "gt_evaluated_keyframes": coverage["evaluated_keyframes"],
+                   "gt_candidate_keyframes": coverage["candidate_keyframes"],
+                   "gt_coverage_fraction": coverage["coverage_fraction"]}
             rows.append(row)
             row.update({f"fscore_{score['threshold_m']:g}m": score["fscore"] for score in evaluated["fscores"]})
             details[name] = {"map": evaluated, "trajectory": pose_metrics, "fusion_timing": timing,
                              "scale": {str(k): v for k,v in method_scale.items()} if isinstance(method_scale, dict) else method_scale,
-                             "shared_map_evaluation_transform": transform}
+                             "shared_map_evaluation_transform": transform, "gt_pose_coverage": coverage}
             _json(directory / "evaluation" / f"{name}.json", details[name])
         notes = ["GT depth/poses are evaluation-only except the explicitly labeled B1 control.",
                  "All maps use the same voxel size, crop and P1 trajectory SE(3) world transform; no per-map alignment.",
                  "B0-shared-scale reuses P1 scale only for a fair sparse/dense map comparison; B0 Sim(3) ATE is separate.",
                  "RPE delta=1 matched retained-keyframe pair; full-frame tracking/timing are not evaluated.",
-                 "Fusion timing excludes model and SLAM inference. No real-time claim."]
+                 "Fusion timing excludes model and SLAM inference. No real-time claim.",
+                 f"GT pose coverage {coverage['evaluated_keyframes']}/{coverage['candidate_keyframes']} retained keyframes "
+                 f"within {coverage['max_timestamp_delta_s']:g} s; excluded frame IDs {coverage['excluded_frame_ids']} "
+                 "are left out of ATE/RPE and the GT reference for every method, never matched to a farther pose."]
         if inputs.slam["dataset"]["name"] == "synthetic":
             notes.insert(0, "SYNTHETIC CORRECTNESS FIXTURE — not a TUM or scientific benchmark result.")
         _json(directory / "metrics.json", {"rows": rows, "skipped_ablations": skipped, "notes": notes,
-            "dataset": record["dataset"], "hardware": record["hardware"], "real_time_claim": False})
-        _report(directory, rows, notes, plot=mapping["plot"])
+            "dataset": record["dataset"], "hardware": record["hardware"], "real_time_claim": False,
+            "gt_pose_coverage": coverage})
+        _report(directory, rows, notes, coverage, plot=mapping["plot"])
         record["artifacts"].update(metrics="metrics.json", comparison_csv="comparison.csv", report="report.md", evaluation="evaluation")
         if mapping["plot"]:
             record["artifacts"]["comparison_plot"] = "comparison.png"
