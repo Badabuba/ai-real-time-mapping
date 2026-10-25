@@ -138,8 +138,8 @@ def write_sparse_snapshot(output: Path, snapshot: SparseSnapshot) -> dict:
     return metadata
 
 
-def check_sparse_export(output: Path) -> dict:
-    """Read back and verify the handoff without importing the SLAM backend."""
+def load_sparse_snapshot(output: Path) -> SparseSnapshot:
+    """Read and verify the full snapshot without importing the SLAM backend."""
     metadata = json.loads((output / "export.json").read_text())
     if metadata["schema"] != "rt_mapping.sparse_export/v1" or metadata["status"] != "ok":
         raise ValueError("incomplete or unsupported sparse export")
@@ -153,9 +153,15 @@ def check_sparse_export(output: Path) -> dict:
     with (output / "observations.csv").open(newline="") as stream:
         rows = [{name: (int(value) if name in OBSERVATION_FIELDS[:4] else float(value))
                  for name, value in row.items()} for row in csv.DictReader(stream)]
-    validate_snapshot(SparseSnapshot(points, cameras, rows, metadata))
+    snapshot = SparseSnapshot(points, cameras, rows, metadata)
+    validate_snapshot(snapshot)
     counts = {"landmarks": len(points["point_id"]), "keyframes": len(cameras["frame_id"]),
               "observations": len(rows)}
     if metadata["counts"] != counts:
         raise ValueError("sparse metadata counts mismatch")
-    return metadata
+    return snapshot
+
+
+def check_sparse_export(output: Path) -> dict:
+    """Compatibility API returning completion metadata after full validation."""
+    return load_sparse_snapshot(output).metadata

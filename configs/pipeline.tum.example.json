@@ -1,0 +1,15 @@
+{
+  "schema": "rt_mapping.pipeline_config/v1",
+  "dataset_manifest": "data/manifests/tum_fr1_xyz.json",
+  "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz",
+  "split": "smoke",
+  "slam": {
+    "command": ["python", "scripts/run_wp2_pyslam.py", "--pyslam-root", "external/pyslam", "--pyslam-python", ".venv-pyslam/bin/python", "--frames", "200", "--export-sparse"]
+  },
+  "geometry": {
+    "command": ["python", "scripts/run_tum_da3_metric.py", "--frames", "200", "--warmup", "1"]
+  },
+  "mapping": {"plot": true},
+  "comparison": {"keyframe_intervals": [2, 5]},
+  "timeout_s": 3600
+}

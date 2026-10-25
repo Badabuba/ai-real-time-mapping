@@ -13,6 +13,7 @@ dependencies = ["numpy", "Pillow"]
 dev = ["pytest", "PyYAML"]
 plots = ["matplotlib", "scipy"]
 filtering = ["scipy"]
+benchmark = ["scipy", "matplotlib"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

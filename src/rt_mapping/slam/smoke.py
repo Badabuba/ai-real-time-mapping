@@ -107,7 +107,7 @@ def check_smoke_artifacts(preparation: Path, frames: list[dict[str, Any]]) -> di
 
 def run_smoke(
     root: Path, source: Path, python: Path, config: dict[str, Any], *, run_id: str,
-    frames: int = 200, timeout_s: int = 1800, export_sparse: bool = False,
+    frames: int = 200, timeout_s: int = 1800, export_sparse: bool = False, output_root: Path | None = None,
 ) -> Path:
     """Create one immutable terminal run.json and retain upstream log on failure."""
     if frames < 2 or timeout_s < 1:
@@ -120,7 +120,7 @@ def run_smoke(
     manifest = json.loads((root / config["dataset_manifest"]).read_text())
     if frames > len(manifest["splits"][config["split"]]["frames"]):
         raise ValueError("requested frames exceed the frozen split")
-    run_dir = root / "results/runs" / run_id
+    run_dir = Path(output_root) / run_id if output_root is not None else root / "results/runs" / run_id
     # build_run_manifest validates the run_id before any directory creation.
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=root, text=True).strip())
