@@ -1,8 +1,8 @@
 """Recorded B0 pySLAM smoke runs; upstream runs in a separate native environment.
 
-The runner validates raw TUM trajectories and upstream frame counts, with an
-opt-in retained-keyframe sparse handoff. ATE/RPE and per-stage latency remain
-separate work.
+The runner validates raw TUM trajectories and upstream frame counts, records
+causal per-input-frame states/poses/tracking wall time, and supports an opt-in
+retained-keyframe sparse handoff. ATE/RPE and resource measurement remain separate.
 Ground truth is verified as dataset metadata, never passed to upstream SLAM.
 """
 from __future__ import annotations
@@ -22,9 +22,11 @@ import numpy as np
 from rt_mapping.contracts.run_manifest import build_run_manifest, format_utc, write_run_manifest
 from rt_mapping.slam.setup import inspect_source, prepare_baseline, verify_dataset
 from rt_mapping.slam.sparse import check_sparse_export
+from rt_mapping.slam.tracking_log import FILES as TRACKING_FILES, METADATA as TRACKING_METADATA, read_tracking_log
 
 
-def upstream_bootstrap(root: Path, preparation: Path, run_dir: Path, *, seed: int, export_sparse: bool) -> str:
+def upstream_bootstrap(root: Path, preparation: Path, run_dir: Path, *, seed: int, export_sparse: bool,
+                       export_tracking: bool = False) -> str:
     """Preserve upstream __main__/spawn behavior and optionally instrument quit."""
     # Upstream starts in its own source directory, not the caller's cwd.
     root, preparation, run_dir = root.absolute(), preparation.absolute(), run_dir.absolute()
@@ -33,15 +35,25 @@ def upstream_bootstrap(root: Path, preparation: Path, run_dir: Path, *, seed: in
         f"random.seed({seed}); np.random.seed({seed}); cv2.setRNGSeed({seed}); "
         "sys.argv=sys.argv[1:]; "
     )
-    if export_sparse:
+    if export_sparse or export_tracking:
         code += (
             f"sys.path.insert(0, {str(root / 'src')!r}); "
             "from pathlib import Path; import json; "
-            "from rt_mapping.slam.pyslam_export import install_shutdown_export; "
             "from pyslam.config import Config; "
             "from pyslam.slam.slam import Slam; "
+            f"_rt_frames=json.loads(Path({str(preparation / 'setup.json')!r}).read_text())['frames']; "
+        )
+    if export_sparse:
+        code += (
+            "from rt_mapping.slam.pyslam_export import install_shutdown_export; "
             f"install_shutdown_export(Slam, Path({str(run_dir / 'sparse')!r}), "
-            f"json.loads(Path({str(preparation / 'setup.json')!r}).read_text())['frames']); "
+            "_rt_frames); "
+        )
+    if export_tracking:
+        code += (
+            "from pyslam.slam.map import Map; "
+            "from rt_mapping.slam.tracking_log import install_tracking_export; "
+            f"install_tracking_export(Slam, Map, Path({str(run_dir)!r}), _rt_frames); "
         )
     return code + "runpy.run_path(sys.argv[0],run_name='__main__')"
 
@@ -110,6 +122,7 @@ def check_smoke_artifacts(preparation: Path, frames: list[dict[str, Any]]) -> di
 def run_smoke(
     root: Path, source: Path, python: Path, config: dict[str, Any], *, run_id: str,
     frames: int = 200, timeout_s: int = 1800, export_sparse: bool = False, output_root: Path | None = None,
+    export_tracking: bool = True,
 ) -> Path:
     """Create one immutable terminal run.json and retain upstream log on failure."""
     if frames < 2 or timeout_s < 1:
@@ -141,7 +154,7 @@ def run_smoke(
         slam={"repo": config["upstream"]["repo"], "revision": config["upstream"]["revision"],
               "config": "configs/wp2_pyslam_baseline.json", "pose_convention": "T_wc"},
         config={"runner": "scripts/run_wp2_pyslam.py", "frames": frames, "baseline": config,
-                "export_sparse": export_sparse,
+                "export_sparse": export_sparse, "export_tracking": export_tracking,
                 "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
                 "timeout_s": timeout_s},
         hardware={"gpu": None, "cpu": platform.machine(), "ram_gb": ram_gb}, environment=environment,
@@ -160,7 +173,8 @@ def run_smoke(
         plan = prepare_baseline(root, source, preparation, config, frames=frames)
         artifacts["preparation"] = "input_setup/setup.json"
         artifacts["upstream_log"] = "upstream.log"
-        bootstrap = upstream_bootstrap(root, preparation, run_dir, seed=config["seed"], export_sparse=export_sparse)
+        bootstrap = upstream_bootstrap(root, preparation, run_dir, seed=config["seed"],
+                                       export_sparse=export_sparse, export_tracking=export_tracking)
         env = {**os.environ, "PYSLAM_USE_CPP": "false", "PYTHONUNBUFFERED": "1", "PYTHONHASHSEED": str(config["seed"]),
                "MPLCONFIGDIR": str(root / ".local/wp2/matplotlib"),
                "XDG_CACHE_HOME": str(root / ".local/wp2/cache"), "QT_QPA_PLATFORM": "offscreen"}
@@ -173,6 +187,13 @@ def run_smoke(
         if exit_code:
             raise RuntimeError(f"upstream_exit: {exit_code}; see upstream.log")
         metrics = check_smoke_artifacts(preparation, plan["frames"])
+        incomplete_tracking = False
+        if export_tracking:
+            rows, tracking = read_tracking_log(run_dir, plan["frames"])
+            metrics["tracking_export"] = {k: tracking[k] for k in (
+                "frame_count", "state_counts", "pose_count", "keyframes_created", "observation_errors")}
+            incomplete_tracking = any(r.tracking_state == "UNKNOWN" or r.error or r.created_keyframe_frame_ids is None
+                                      or (r.tracking_state == "OK" and r.T_wc is None) for r in rows)
         if export_sparse:
             sparse = check_sparse_export(run_dir / "sparse")
             metrics["sparse_export"] = sparse["counts"]
@@ -183,7 +204,8 @@ def run_smoke(
         (run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2, allow_nan=False) + "\n")
         artifacts.update(metrics="metrics.json", trajectory="input_setup/trajectory/trajectory_final.txt",
                          upstream_counts="input_setup/trajectory/other_metrics_info.txt")
-        record.update(status="ok", reason=None)
+        record.update(status="degraded" if incomplete_tracking else "ok",
+                      reason="tracking_observations_incomplete: see causal export reasons" if incomplete_tracking else None)
     except KeyboardInterrupt:
         record.update(status="failed", reason="interrupted: user stopped upstream run")
         raise
@@ -194,6 +216,10 @@ def run_smoke(
     except Exception as exc:
         record.update(status="failed", reason=f"internal_error: {type(exc).__name__}: {exc}")
     finally:
+        if export_tracking:
+            for key, name in zip(("trajectory_all", "tracking_timing", "tracking_export"), (*TRACKING_FILES, TRACKING_METADATA)):
+                if (run_dir / name).is_file():
+                    artifacts[key] = name
         record["artifacts"] = artifacts
         write_run_manifest(build_run_manifest(**record), run_dir, overwrite=True)
     return run_dir
