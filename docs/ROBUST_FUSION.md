@@ -135,3 +135,49 @@ python -m pytest tests/test_frame_diagnostics.py tests/test_import_hygiene_robus
 **Розділення GT:** модуль і CLI не імпортують `rt_mapping.evaluation.*` і `data.tum` (AST-тест). Subprocess-тест перевіряє, що під час запуску CLI не завантажено жодного модуля `rt_mapping.evaluation`. Ще один тест видаляє всі GT/evaluation-only матеріали fixture і перевіряє, що рішення побайтово ті самі.
 
 Конфіг заморожується після merge U-02. U-03 відмовляється працювати, якщо sha256 `configs/robust_fusion.json` відрізняється від записаного в summary U-02.
+
+### 3.2 Результати (run `yulian_u02_anchor_gate_smoke200_2e6fad5_01`)
+
+- статус `ok`, clean commit `2e6fad5`, `dirty_worktree=false`; GT не відкривався;
+- `frame_signals.csv` побайтово ідентичний U-01 run `yulian_u01_diag_smoke200_8b5b8a7_01`;
+- sha256 `configs/robust_fusion.json`: `90567529160ec9913ba2cd756980046ba28f19c547180482358e2e906a395486`.
+
+**Рішення gate:** 22/22 accept, 0 reject. A1 = A2 = A3 = A4 = 0 спрацювань; S1 `unavailable` для всіх 22 кадрів (historical run передує Y-01 export, `be9bff2`), тож gate фактично працював на A1–A4. Це очікуваний нульовий результат з U-01 (§2.4); пороги не змінювалися.
+
+**Anchoring:** `a_f` застосовано до 22/22 кадрів, `a_f` ∈ [0.947, 1.059], max |log a_f| = 0.057.
+
+**Withheld |residual| до/після корекції (GT-free, лише звіт):**
+
+| Показник | До | Після |
+|---|---:|---:|
+| pooled median, 1,737 withheld pairs | 0.0388 m | 0.0301 m |
+| median із per-frame medians, 22 кадри | 0.0407 m | 0.0317 m |
+
+Покращилося 18 кадрів, погіршилося 4 (31, 35, 38, 72; +0.0005…+0.0031 m). Це узгодженість зі sparse SLAM map, а не точність depth чи карти: `a_f` і withheld residual міряються відносно того самого `s·z_slam`. Чи зменшує anchoring помилку карти, вимірює U-03.
+
+Дані:
+- [summary](../results/summaries/yulian_u02_anchor_gate_smoke200_2e6fad5.json) (містить список рішень, який U-03 має відтворити)
+- [per-keyframe CSV](../results/summaries/yulian_u02_anchor_gate_smoke200_2e6fad5.csv)
+
+### 3.3 Обмеження
+
+- Одна проста послідовність; 22 keyframes. Anchors із фінального BA snapshot — offline і non-causal.
+- Withheld residual до/після — GT-free перевірка узгодженості, не метрика точності.
+- S1 недоступний для historical run; gated variant на цьому run збігається з anchored.
+- U-02 не будує карту. Немає real-time claims.
+
+### 3.4 Команда
+
+```powershell
+python scripts/run_anchor_gate.py `
+  --comparison-run results/runs/yulian_tum_e2e_f200_20261025_01/stages/yulian_tum_e2e_f200_20261025_01.comparison `
+  --slam-run results/runs/yulian_tum_e2e_f200_20261025_01/stages/yulian_tum_e2e_f200_20261025_01.slam `
+  --geometry-run results/runs/yulian_tum_e2e_f200_20261025_01/stages/yulian_tum_e2e_f200_20261025_01.geometry `
+  --run-id <new_unique_run_id>
+```
+
+`--config` за замовчуванням `configs/robust_fusion.json`. Без GPU, Docker, pySLAM і без GT. CPU-тести:
+
+```powershell
+python -m pytest tests/test_anchoring.py tests/test_import_hygiene_robust.py -q
+```
