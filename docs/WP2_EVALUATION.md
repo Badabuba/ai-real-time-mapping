@@ -108,3 +108,15 @@ Derived status **ok**, якщо source ok, verified tracking повний, final
 Tests охоплюють gap-free parity з unchanged evaluator, LOST та multi-frame gaps, missing poses / exceptions, UNKNOWN без imputation, all-lost, no GT / no pairs, warmup exhaustion, state segments, corrupt export, immutable source та byte-identical `metrics.json`, `inputs.json`, PNG при повторному evaluation. `run.json` має нові run_id / started_at, тому ці provenance поля не порівнюються побітово.
 
 Real numeric evidence, source hashes і test counts записуються окремо в `results/summaries/yaropolk_y03_eval_smoke200.json`; timeline — `results/plots/yaropolk_y03_tracking_states_smoke200.png`. Install / download / baseline tuning не виконувались. Shared status docs лишаються для IC1 за file boundaries плану.
+
+
+### Recorded Y-03 result — 25 жовтня 2026
+
+Implementation `f7245ff58f90b4e9e9572724d2db520728a841b2`; runs `yaropolk_y03_eval_smoke200_f7245ff_01` і `_02`: **ok**, `dirty_worktree=false`. [Summary](../results/summaries/yaropolk_y03_eval_smoke200.json), [state/latency timeline](../results/plots/yaropolk_y03_tracking_states_smoke200.png).
+
+- Tracking success **198/200 = 0.99**. Frames 0–1: NOT_INITIALIZED; frames 2–199: OK. LOST / UNKNOWN / relocalization / observer exceptions / missing OK poses — 0.
+- Causal trajectory: 198 usable poses, 196 GT associations, Sim(3) ATE RMSE **0.01103932 m**. Два GT-unassociated poses не рахуються як tracking loss.
+- Gap-aware RPE: 195 candidate / 195 eligible / 0 excluded-gap pairs; translation RMSE **0.00554435 m**, rotation RMSE **0.37072596 deg**. Scale **1.37765435**, evaluation-only.
+- Tracking warm-up=1, 199 samples: p50 **168.414083 ms**, p95 **909.267971 ms**, mean **293.951464 ms**. First-call sample **284.602 ms**; це не process cold start. `real_time_claim=false`.
+- Full local CPU suite **535 passed, 1 native skip**; WP2 evaluation tests **28 passed**. `metrics.json`, `inputs.json`, `tracking_states.png` побітово однакові в обох evaluations. Всі раніше recorded Y-02 artifact hashes залишилися незмінними; timeline візуально перевірено.
+- Failed real Y-03 evaluations: **немає**. Matplotlib створив temporary cache, бо default user cache недоступний у sandbox; це не вплинуло на output, детермінізм або status. Existing environments не змінювались.
