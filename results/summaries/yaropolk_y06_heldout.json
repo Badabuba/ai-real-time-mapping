@@ -1,0 +1,238 @@
+{
+  "causal_metrics": {},
+  "chunk": "Y-06",
+  "data_preflight": {
+    "archive_sha256": "c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c",
+    "archive_size_bytes": 1483556251,
+    "associated_rgb_frames_outside_gt_time_range": 3,
+    "associations": 2488,
+    "checks": [
+      "frozen_manifest",
+      "archive_sha256",
+      "index_sha256",
+      "PNG_headers",
+      "timestamps",
+      "evaluation_GT",
+      "selected_rgb_depth_sha256"
+    ],
+    "depth_frames": 2509,
+    "extracted_files_verified": 5098,
+    "groundtruth_poses": 8710,
+    "limitations": [
+      "Associated RGB frames extend beyond the GT time range; all frozen inputs are retained. Evaluation must report unmatched poses using its unchanged timestamp tolerance."
+    ],
+    "quaternion_norm_squared_tolerance": 0.0005,
+    "rgb_frames": 2585,
+    "selected_input_hashes_verified": 4976,
+    "sequence": "rgbd_dataset_freiburg3_long_office_household",
+    "split": "held-out",
+    "split_frames": 2488,
+    "status": "ok"
+  },
+  "disclosures": [
+    {
+      "reason": "superseded v2.2.1 runner: upstream local_mapping.py TypeError: int object is not iterable; no trajectory/metrics; nothing tuned",
+      "run_id": "wp2_heldout2488_4484fd7",
+      "status": "failed"
+    },
+    {
+      "reason": "committed N-06 evidence: preflight GT endpoint check, zero SLAM frames; fixed separately in PR #27; no tuning",
+      "run_id": "nazar_n06_heldout2488_da3_e561d8c_01",
+      "status": "failed"
+    },
+    {
+      "reason": "first original archive missing, then official GT boundary gap rejected by preflight; no experiment/run created before fix PR #27",
+      "scope": "local Y-06 preliminary verification",
+      "status": "blocked then resolved"
+    }
+  ],
+  "execution_failure": {
+    "diagnosis": "OpenMP shared-memory initialization failed; sandbox restriction is the suspected cause, not yet confirmed by an unrestricted retry",
+    "launch_context": "restricted execution sandbox",
+    "metrics_reason": "No tracked frames or trajectory; ATE/RPE/tracking success/throughput unavailable",
+    "observed_frames": 0,
+    "phase": "native worker initialization before any tracking frame",
+    "signature": "OMP: Error #179: Function Can't open SHM failed",
+    "termination": "Only stalled upstream PID 16910 received SIGTERM; runner finalized failed manifest; no finished manifest edited"
+  },
+  "failure_table": null,
+  "gap_aware_rpe_metrics": {},
+  "hashes": {
+    "configs/benchmark_frozen.json": "bf990a4ab459ca1db4457530e18c378a1e4219e89e943aaa7bc17ffb29213407",
+    "configs/wp2_pyslam_heldout.json": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "data/manifests/tum_fr3_long_office_heldout.json": "42b1149db6b48874b0b24f0b5a260f624139afc63fa4573cdee607dd5ca80ee3",
+    "results/runs/yaropolk_y06_heldout2488_c08833f_01.resources.json": "79117522bee8def027368e42b4f544edb26a8e332ebe5b95e6f80a6a80a419d0",
+    "results/runs/yaropolk_y06_heldout2488_c08833f_01/input_setup/setup.json": "72e804c34350b610d78dbff2baaac23b81c881b225180ac419e941335a213e9c",
+    "results/runs/yaropolk_y06_heldout2488_c08833f_01/run.json": "f9d0ebd5b8c4297855109ecae6ff86fea4a3ad9e21cec1ac30ee8414656a7b8e",
+    "results/runs/yaropolk_y06_heldout2488_c08833f_01/timing.csv": "95d879b2023b060a5e256024a3e35abbd1d6e4b62c4ca6a09d8a56fc5f4d9d08",
+    "results/runs/yaropolk_y06_heldout2488_c08833f_01/trajectory_all.csv": "afe3fb64ab3c4b7b979f835a71b753a78a173c29ff6e7f4ea6283ae094523ddd",
+    "results/runs/yaropolk_y06_heldout2488_c08833f_01/upstream.log": "30d80186212401d13b4261cacb0953e38a14d111fb68fea34addc18f432d85e6"
+  },
+  "limitations": [
+    "One held-out run only; no variance estimate or tuning.",
+    "Pose ATE applies to evaluable poses; tracking coverage is separately reported.",
+    "Peak RSS is the maximum individual-process RSS, not summed concurrent worker RAM.",
+    "Cold start to first tracked frame is not instrumented."
+  ],
+  "metrics": {},
+  "non_ok_segments": null,
+  "owner": "Yaropolk (WP2)",
+  "protocol": {
+    "baseline_settings_changed": false,
+    "freeze_commit": "4021a02",
+    "freeze_pr": 25,
+    "frozen_config_sha256": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "gt_use": "evaluation-only trajectory association; preflight integrity/timestamp checks; no fitting in SLAM",
+    "input_frames": 2488,
+    "inputs_changed": false,
+    "max_timestamp_delta_s": 0.02,
+    "preflight_fix_commit": "bd0a17e660d40d67bd2c0e7bd861719ac93b26ed",
+    "preflight_fix_pr": 27,
+    "rerun": false,
+    "rpe_delta": 1,
+    "runtime": "native macOS arm64, same pySLAM revision; second platform relative to Docker; not a matched speed comparison",
+    "runtime_timeout_s": 14400,
+    "seed": 0,
+    "sim3": "evaluation-only; does not recover metric scale",
+    "tracking_warmup_input_frames": 1
+  },
+  "real_time_claim": false,
+  "resource_scope": {
+    "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+    "cold_start_s": null,
+    "effective_fps": null,
+    "effective_fps_reason": "source run did not complete successfully",
+    "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+    "exit_code": 1,
+    "launch_error": null,
+    "peak_rss_bytes": 743489536,
+    "peak_rss_reason": null,
+    "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+    "real_time_claim": false,
+    "requested_frames": 2488,
+    "schema": "rt_mapping.slam_resources/v1",
+    "source_run_id": "yaropolk_y06_heldout2488_c08833f_01",
+    "source_run_sha256": "f9d0ebd5b8c4297855109ecae6ff86fea4a3ad9e21cec1ac30ee8414656a7b8e",
+    "source_status": "failed",
+    "status": "failed",
+    "throughput_frames": null,
+    "wall_clock_s": 199.44500675000018,
+    "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+  },
+  "row": {
+    "causal_ate_sim3_rmse_m": null,
+    "causal_matched_gt_poses": null,
+    "causal_pose_count": null,
+    "causal_rpe_rotation_rmse_deg": null,
+    "causal_rpe_translation_rmse_m": null,
+    "evaluation_status": "unavailable",
+    "excluded_gap_pairs": null,
+    "final_ate_sim3_rmse_m": null,
+    "final_matched_gt_poses": null,
+    "final_pose_count": null,
+    "initializing_frames": 0,
+    "lost_frames": 0,
+    "observed_tracking_rows": 0,
+    "ok_frames": null,
+    "peak_rss_bytes": 743489536,
+    "reason": "smoke_failed: upstream_exit: -15; see upstream.log",
+    "relocalizing_frames": 0,
+    "requested_frames": 2488,
+    "rpe_pairs": null,
+    "run_id": "yaropolk_y06_heldout2488_c08833f_01",
+    "source_status": "failed",
+    "split": "held-out",
+    "tracking_p50_ms": null,
+    "tracking_p95_ms": null,
+    "tracking_success": null,
+    "unknown_frames": 0,
+    "wall_clock_s": 199.44500675000018,
+    "whole_run_fps": null
+  },
+  "run_count": 1,
+  "run_progress": {
+    "commit": "c08833f0b287cecbdb72953796cd0dcd253b296b",
+    "driver_exit_code": 0,
+    "frozen_config_sha256": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "run_id": "yaropolk_y06_heldout2488_c08833f_01",
+    "source_reason": "smoke_failed: upstream_exit: -15; see upstream.log",
+    "source_status": "failed",
+    "stage": "finished"
+  },
+  "schema": "rt_mapping.wp2_heldout_benchmark/v1",
+  "source_commit": "c08833f0b287cecbdb72953796cd0dcd253b296b",
+  "source_manifest": {
+    "alignment": null,
+    "artifacts": {
+      "preparation": "input_setup/setup.json",
+      "tracking_timing": "timing.csv",
+      "trajectory_all": "trajectory_all.csv",
+      "upstream_log": "upstream.log"
+    },
+    "config": {
+      "baseline": {
+        "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household.tgz",
+        "dataset_manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+        "feature_tracker": "ORB2",
+        "loop_detector": "DBOW3",
+        "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated.",
+        "num_features": 1000,
+        "python_optimization": 1,
+        "schema": "rt_mapping.wp2_setup/v1",
+        "seed": 0,
+        "sensor_type": "mono",
+        "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household",
+        "split": "held-out",
+        "upstream": {
+          "repo": "https://github.com/luigifreda/pyslam.git",
+          "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+          "version": "2.10.8"
+        },
+        "use_cpp_core": false
+      },
+      "export_sparse": true,
+      "export_tracking": true,
+      "frames": 2488,
+      "runner": "scripts/run_wp2_pyslam.py",
+      "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
+      "timeout_s": 14400
+    },
+    "dataset": {
+      "checksum": "c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c",
+      "manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+      "name": "TUM RGB-D",
+      "sequence": "rgbd_dataset_freiburg3_long_office_household",
+      "split": "held-out"
+    },
+    "dirty_worktree": false,
+    "environment": {
+      "numpy": "1.26.4",
+      "opencv_python": "4.11.0.86",
+      "python": "3.11.16",
+      "torch": "2.6.0"
+    },
+    "git_commit": "c08833f0b287cecbdb72953796cd0dcd253b296b",
+    "hardware": {
+      "cpu": "arm64",
+      "gpu": null,
+      "ram_gb": 32.0
+    },
+    "method": "B0",
+    "model": null,
+    "reason": "smoke_failed: upstream_exit: -15; see upstream.log",
+    "run_id": "yaropolk_y06_heldout2488_c08833f_01",
+    "schema": "rt_mapping.run_manifest/v1",
+    "seed": 0,
+    "slam": {
+      "config": "configs/wp2_pyslam_baseline.json",
+      "pose_convention": "T_wc",
+      "repo": "https://github.com/luigifreda/pyslam.git",
+      "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+    },
+    "started_at": "2026-10-25T19:50:55.498564Z",
+    "status": "failed"
+  },
+  "state_counts": {},
+  "tracking_latency": null,
+  "tracking_success_reason": null
+}
