@@ -1,0 +1,446 @@
+{
+  "alignment": "none (raw metric depth; no scale fitted)",
+  "chunk": "N-05 (partial: IC2 fallback model-only rows)",
+  "code_commit": "0dc5f7f",
+  "evaluation": "depth vs TUM GT depth on the raw RGB grid; GT is evaluation-only; frame-mean aggregation",
+  "heldout_accessed": false,
+  "primary_model": "DA3METRIC-LARGE process_res 504 (plan D-3 fallback trigger, N-04 gate failure)",
+  "real_time_claim": false,
+  "rows": [
+    {
+      "abs_rel": 0.08189315490478577,
+      "delta1": 0.9669367606966105,
+      "frames": 573,
+      "mae_m": 0.1153467410942544,
+      "model": "depth-anything/DA3METRIC-LARGE",
+      "model_p50_ms": 86.54609999939566,
+      "model_p95_ms": 97.86543999944114,
+      "peak_vram_gib": 1.5448637008666992,
+      "rmse_m": 0.1625845448479622,
+      "role": "primary (D-3 fallback triggered)",
+      "run_id": "nazar_n05_dev573_geom_da3_0dc5f7f_01",
+      "sequence": "fr1/desk",
+      "setting": "process_res=504",
+      "split": "development",
+      "valid_coverage": 1.0
+    },
+    {
+      "abs_rel": 0.08267035145178186,
+      "delta1": 0.974415295953991,
+      "frames": 573,
+      "mae_m": 0.08801302134853119,
+      "model": "lpiccinelli/unidepth-v2-vitl14",
+      "model_p50_ms": 74.75290000002133,
+      "model_p95_ms": 86.4225000004808,
+      "peak_vram_gib": 1.7968764305114746,
+      "rmse_m": 0.13735311148694931,
+      "role": "ablation (D-3 rubric winner, failed N-04 gate)",
+      "run_id": "nazar_n05_dev573_geom_unidepth_0dc5f7f_01",
+      "sequence": "fr1/desk",
+      "setting": "resolution_level=0",
+      "split": "development",
+      "valid_coverage": 1.0
+    },
+    {
+      "abs_rel": 0.11452422387719427,
+      "delta1": 0.9569969434943179,
+      "frames": 50,
+      "mae_m": 0.23159610771615327,
+      "model": "depth-anything/DA3METRIC-LARGE",
+      "model_p50_ms": 79.26100000076985,
+      "model_p95_ms": 86.64674499923422,
+      "peak_vram_gib": 1.5448637008666992,
+      "rmse_m": 0.4210774910310583,
+      "role": "primary (D-3 fallback triggered)",
+      "run_id": "nazar_n05_sel50_geom_da3_0dc5f7f_01",
+      "sequence": "fr2/desk",
+      "setting": "process_res=504",
+      "split": "selection",
+      "valid_coverage": 1.0
+    },
+    {
+      "abs_rel": 0.06458709390995604,
+      "delta1": 0.9670877395865307,
+      "frames": 50,
+      "mae_m": 0.14089935304365928,
+      "model": "lpiccinelli/unidepth-v2-vitl14",
+      "model_p50_ms": 73.63039999836474,
+      "model_p95_ms": 74.60872999909043,
+      "peak_vram_gib": 1.7968764305114746,
+      "rmse_m": 0.4499414425618869,
+      "role": "ablation (D-3 rubric winner, failed N-04 gate)",
+      "run_id": "nazar_n05_sel50_geom_unidepth_0dc5f7f_01",
+      "sequence": "fr2/desk",
+      "setting": "resolution_level=0",
+      "split": "selection",
+      "valid_coverage": 1.0
+    }
+  ],
+  "runs": [
+    {
+      "archive_hash_verified": true,
+      "dataset": {
+        "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+        "manifest": "data/manifests/tum_fr1_desk_development.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg1_desk",
+        "split": "development"
+      },
+      "dataset_manifest_sha256": "e061f8526dd4fb29288d3865f965b7fa7696fd677bffb9710a182d107ee4e162",
+      "depth_mean": {
+        "abs_rel": 0.08189315490478577,
+        "aggregation": "frame_mean",
+        "delta1": 0.9669367606966105,
+        "mae_m": 0.1153467410942544,
+        "n_evaluated": 131241461,
+        "n_frames": 573,
+        "n_gt_valid": 131241461,
+        "n_pixels": 176025600,
+        "n_pred_valid": 176025600,
+        "rmse_m": 0.1625845448479622,
+        "valid_coverage": 1.0
+      },
+      "depth_mean_recomputed_max_abs_diff": 0.0,
+      "dirty_worktree": false,
+      "environment": {
+        "cuda_runtime": "12.8",
+        "depth_anything_3": "0.0.0+git3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+        "huggingface_hub": "2.2.0",
+        "numpy": "1.26.4",
+        "opencv": "4.11.0.86",
+        "pillow": "12.3.0",
+        "platform": "Windows-10-10.0.26300-SP0",
+        "python": "3.11.16",
+        "torch": "2.11.0+cu128"
+      },
+      "excluded_frames": [],
+      "frame_ids": [
+        0,
+        572
+      ],
+      "frames_evaluated": 573,
+      "frames_requested": 573,
+      "git_commit": "0dc5f7faa40322832b0a700d533806237961aa13",
+      "hardware": {
+        "cpu": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+        "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+        "ram_gb": 31.2
+      },
+      "model": {
+        "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "dtype": "bfloat16",
+        "repo": "depth-anything/DA3METRIC-LARGE",
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+      },
+      "model_config": {
+        "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "process_res": 504,
+        "resolution_level": null,
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+        "seed": 0
+      },
+      "model_key": "da3",
+      "prewarm_calls": 10,
+      "reason": null,
+      "run_id": "nazar_n05_dev573_geom_da3_0dc5f7f_01",
+      "run_json_sha256": "81ff7bc92391eb79c660c35463c3abc7f40b4fecdafeaa32784cccfa071ca521",
+      "sequence": "fr1/desk",
+      "split": "development",
+      "status": "ok",
+      "timing": {
+        "cold_inference_ms": 871.9989000001078,
+        "model_load_s": 4.8768019000017375,
+        "peak_vram_gb": 1.5448637008666992,
+        "percentile_method": "linear",
+        "recomputed_max_abs_diff_ms": 0.0,
+        "recomputed_p50_ms": 86.54609999939566,
+        "recomputed_p95_ms": 97.86543999944114,
+        "scope": "one DA3 inference() call (preprocess + forward + postprocess), CUDA-synchronized; image decode excluded",
+        "wall_clock_s": 157.52804780000042,
+        "warm_median_ms": 86.54609999939566,
+        "warm_p95_ms": 97.86543999944114
+      }
+    },
+    {
+      "archive_hash_verified": true,
+      "dataset": {
+        "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+        "manifest": "data/manifests/tum_fr1_desk_development.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg1_desk",
+        "split": "development"
+      },
+      "dataset_manifest_sha256": "e061f8526dd4fb29288d3865f965b7fa7696fd677bffb9710a182d107ee4e162",
+      "depth_mean": {
+        "abs_rel": 0.08267035145178186,
+        "aggregation": "frame_mean",
+        "delta1": 0.974415295953991,
+        "mae_m": 0.08801302134853119,
+        "n_evaluated": 131241461,
+        "n_frames": 573,
+        "n_gt_valid": 131241461,
+        "n_pixels": 176025600,
+        "n_pred_valid": 176025600,
+        "rmse_m": 0.13735311148694931,
+        "valid_coverage": 1.0
+      },
+      "depth_mean_recomputed_max_abs_diff": 0.0,
+      "dirty_worktree": false,
+      "environment": {
+        "cuda_runtime": "12.8",
+        "numpy": "2.2.6",
+        "platform": "Windows-10-10.0.26300-SP0",
+        "python": "3.11.16",
+        "torch": "2.11.0+cu128",
+        "unidepth": "0.1",
+        "unidepth_source_revision": "8d8cfe4c7ee15297099983607febf0d4f32eb3d6",
+        "unidepth_source_sha256": "cc4b12d0f5cfd2d6f0cc2b84db46c834fb7dac95a624553ed85ec4998ba6fbf5"
+      },
+      "excluded_frames": [],
+      "frame_ids": [
+        0,
+        572
+      ],
+      "frames_evaluated": 573,
+      "frames_requested": 573,
+      "git_commit": "0dc5f7faa40322832b0a700d533806237961aa13",
+      "hardware": {
+        "cpu": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+        "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+        "ram_gb": 31.2
+      },
+      "model": {
+        "checkpoint": "model.safetensors@sha256:ba73d3de735302ccc64a50f1e557122050c4b1893e6060b28dba05d6af3e67c6",
+        "dtype": "float16",
+        "repo": "lpiccinelli/unidepth-v2-vitl14",
+        "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9"
+      },
+      "model_config": {
+        "checkpoint_sha256": null,
+        "device": "cuda",
+        "dtype": "float16",
+        "process_res": null,
+        "resolution_level": 0,
+        "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9",
+        "seed": 0
+      },
+      "model_key": "unidepth",
+      "prewarm_calls": 10,
+      "reason": null,
+      "run_id": "nazar_n05_dev573_geom_unidepth_0dc5f7f_01",
+      "run_json_sha256": "1bff7202cc7d8fd05235c94fabe9c415317257268412623daf9ef8b610873658",
+      "sequence": "fr1/desk",
+      "split": "development",
+      "status": "ok",
+      "timing": {
+        "cold_inference_ms": 1002.0022000026074,
+        "model_load_s": 7.426691800003027,
+        "peak_vram_gb": 1.7968764305114746,
+        "percentile_method": "linear",
+        "recomputed_max_abs_diff_ms": 0.0,
+        "recomputed_p50_ms": 74.75290000002133,
+        "recomputed_p95_ms": 86.4225000004808,
+        "scope": "upstream infer plus required CPU depth/confidence/K export; CUDA-synchronized; image decode and camera plan excluded",
+        "wall_clock_s": 232.0807335999998,
+        "warm_median_ms": 74.75290000002133,
+        "warm_p95_ms": 86.4225000004808
+      }
+    },
+    {
+      "archive_hash_verified": true,
+      "dataset": {
+        "checksum": "1a0756d72510a26e26e2a02bf0b6c69c2796619fca531e176fc2e5110173807c",
+        "manifest": "data/manifests/tum_fr2_desk_selection50.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg2_desk",
+        "split": "selection"
+      },
+      "dataset_manifest_sha256": "5fc5c01a1d909b7905db6711f6cc76f38ac692f784e9f0ff321af85e74b2c0bd",
+      "depth_identity_vs_n03": {
+        "depth_bit_identical_frames": 50,
+        "frames": 50,
+        "max_abs_depth_diff_m": 0.0,
+        "reference_run": "nazar_n03_sel50_da3_c130626_01",
+        "valid_mask_identical_frames": 50
+      },
+      "depth_mean": {
+        "abs_rel": 0.11452422387719427,
+        "aggregation": "frame_mean",
+        "delta1": 0.9569969434943179,
+        "mae_m": 0.23159610771615327,
+        "n_evaluated": 10402479,
+        "n_frames": 50,
+        "n_gt_valid": 10402479,
+        "n_pixels": 15360000,
+        "n_pred_valid": 15360000,
+        "rmse_m": 0.4210774910310583,
+        "valid_coverage": 1.0
+      },
+      "depth_mean_recomputed_max_abs_diff": 0.0,
+      "dirty_worktree": false,
+      "environment": {
+        "cuda_runtime": "12.8",
+        "depth_anything_3": "0.0.0+git3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+        "huggingface_hub": "2.2.0",
+        "numpy": "1.26.4",
+        "opencv": "4.11.0.86",
+        "pillow": "12.3.0",
+        "platform": "Windows-10-10.0.26300-SP0",
+        "python": "3.11.16",
+        "torch": "2.11.0+cu128"
+      },
+      "excluded_frames": [],
+      "frame_ids": [
+        0,
+        49
+      ],
+      "frames_evaluated": 50,
+      "frames_requested": 50,
+      "git_commit": "0dc5f7faa40322832b0a700d533806237961aa13",
+      "hardware": {
+        "cpu": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+        "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+        "ram_gb": 31.2
+      },
+      "model": {
+        "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "dtype": "bfloat16",
+        "repo": "depth-anything/DA3METRIC-LARGE",
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+      },
+      "model_config": {
+        "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "process_res": 504,
+        "resolution_level": null,
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+        "seed": 0
+      },
+      "model_key": "da3",
+      "prewarm_calls": 10,
+      "reason": null,
+      "run_id": "nazar_n05_sel50_geom_da3_0dc5f7f_01",
+      "run_json_sha256": "f940e3115ecddbba218f358b43fcbc7b865d5cf4290feeddad5078b1c40aee88",
+      "sequence": "fr2/desk",
+      "split": "selection",
+      "status": "ok",
+      "timing": {
+        "cold_inference_ms": 702.6710000027379,
+        "model_load_s": 3.7003556999989087,
+        "peak_vram_gb": 1.5448637008666992,
+        "percentile_method": "linear",
+        "recomputed_max_abs_diff_ms": 0.0,
+        "recomputed_p50_ms": 79.26100000076985,
+        "recomputed_p95_ms": 86.64674499923422,
+        "scope": "one DA3 inference() call (preprocess + forward + postprocess), CUDA-synchronized; image decode excluded",
+        "wall_clock_s": 31.23841419999735,
+        "warm_median_ms": 79.26100000076985,
+        "warm_p95_ms": 86.64674499923422
+      }
+    },
+    {
+      "archive_hash_verified": true,
+      "dataset": {
+        "checksum": "1a0756d72510a26e26e2a02bf0b6c69c2796619fca531e176fc2e5110173807c",
+        "manifest": "data/manifests/tum_fr2_desk_selection50.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg2_desk",
+        "split": "selection"
+      },
+      "dataset_manifest_sha256": "5fc5c01a1d909b7905db6711f6cc76f38ac692f784e9f0ff321af85e74b2c0bd",
+      "depth_identity_vs_n03": {
+        "depth_bit_identical_frames": 50,
+        "frames": 50,
+        "max_abs_depth_diff_m": 0.0,
+        "reference_run": "nazar_n03_sel50_unidepth_c130626_01",
+        "valid_mask_identical_frames": 50
+      },
+      "depth_mean": {
+        "abs_rel": 0.06458709390995604,
+        "aggregation": "frame_mean",
+        "delta1": 0.9670877395865307,
+        "mae_m": 0.14089935304365928,
+        "n_evaluated": 10402479,
+        "n_frames": 50,
+        "n_gt_valid": 10402479,
+        "n_pixels": 15360000,
+        "n_pred_valid": 15360000,
+        "rmse_m": 0.4499414425618869,
+        "valid_coverage": 1.0
+      },
+      "depth_mean_recomputed_max_abs_diff": 0.0,
+      "dirty_worktree": false,
+      "environment": {
+        "cuda_runtime": "12.8",
+        "numpy": "2.2.6",
+        "platform": "Windows-10-10.0.26300-SP0",
+        "python": "3.11.16",
+        "torch": "2.11.0+cu128",
+        "unidepth": "0.1",
+        "unidepth_source_revision": "8d8cfe4c7ee15297099983607febf0d4f32eb3d6",
+        "unidepth_source_sha256": "cc4b12d0f5cfd2d6f0cc2b84db46c834fb7dac95a624553ed85ec4998ba6fbf5"
+      },
+      "excluded_frames": [],
+      "frame_ids": [
+        0,
+        49
+      ],
+      "frames_evaluated": 50,
+      "frames_requested": 50,
+      "git_commit": "0dc5f7faa40322832b0a700d533806237961aa13",
+      "hardware": {
+        "cpu": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+        "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+        "ram_gb": 31.2
+      },
+      "model": {
+        "checkpoint": "model.safetensors@sha256:ba73d3de735302ccc64a50f1e557122050c4b1893e6060b28dba05d6af3e67c6",
+        "dtype": "float16",
+        "repo": "lpiccinelli/unidepth-v2-vitl14",
+        "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9"
+      },
+      "model_config": {
+        "checkpoint_sha256": null,
+        "device": "cuda",
+        "dtype": "float16",
+        "process_res": null,
+        "resolution_level": 0,
+        "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9",
+        "seed": 0
+      },
+      "model_key": "unidepth",
+      "prewarm_calls": 10,
+      "reason": null,
+      "run_id": "nazar_n05_sel50_geom_unidepth_0dc5f7f_01",
+      "run_json_sha256": "a727e423c3de988e214f38f3bbc5e678071741c70b166ce6852e34ebd0b0cc91",
+      "sequence": "fr2/desk",
+      "split": "selection",
+      "status": "ok",
+      "timing": {
+        "cold_inference_ms": 983.0819999988307,
+        "model_load_s": 5.989244100001088,
+        "peak_vram_gb": 1.7968764305114746,
+        "percentile_method": "linear",
+        "recomputed_max_abs_diff_ms": 0.0,
+        "recomputed_p50_ms": 73.63039999836474,
+        "recomputed_p95_ms": 74.60872999909043,
+        "scope": "upstream infer plus required CPU depth/confidence/K export; CUDA-synchronized; image decode and camera plan excluded",
+        "wall_clock_s": 49.30228630000056,
+        "warm_median_ms": 73.63039999836474,
+        "warm_p95_ms": 74.60872999909043
+      }
+    }
+  ],
+  "schema": "rt_mapping.nazar_n05_model_only/v1",
+  "units": {
+    "abs_rel": "ratio",
+    "delta1": "fraction",
+    "mae_m": "m",
+    "rmse_m": "m",
+    "timing": "ms",
+    "vram": "GiB"
+  }
+}
