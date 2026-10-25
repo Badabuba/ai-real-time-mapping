@@ -50,4 +50,20 @@ Unit tests: exact/noisy/Sim(3) trajectory, partial pose coverage, відсутн
 
 Перший worktree preflight із symlink на raw data відхилений existing verifier як outside repository; жодного SLAM run не створено. Після APFS clone dataset/source/runtime preflight — **ok**.
 
-Clean real-run IDs, hashes, numeric metrics та остаточні test counts будуть записані в `results/summaries/yaropolk_y02_*.json` після verification. Shared status docs за file boundaries плану оновлюються на IC1; цей документ і PR надають status row/evidence.
+## Clean macOS smoke — 25 жовтня 2026
+
+Implementation commit: `9bc4ee3be7bbf208a6ffa38b5e60d204f4c30bb9`. Source та evaluation мають `dirty_worktree=false`. [Versioned summary з hashes](../results/summaries/yaropolk_y02_smoke200_9bc4ee3.json).
+
+- Source `yaropolk_y02_smoke200_9bc4ee3_01`: **ok**; 200 processed, 198 final poses, 0 LOST за upstream counters. Y-01 export: 198 OK / 2 NOT_INITIALIZED; 1,282 landmarks / 20 retained keyframes / 8,351 observations. Жодного failed real run у Y-02.
+- Evaluation `yaropolk_y02_eval_smoke200_9bc4ee3_01`: **degraded** за documented Y-02 scope; metrics успішно обчислені.
+
+| Scope | Poses / GT matches | Sim(3) ATE RMSE [m] | RPE translation RMSE [m] | RPE rotation RMSE [deg] |
+|---|---:|---:|---:|---:|
+| Upstream final | 198 / 196 | 0.01107299 | 0.00664144 | 0.39953597 |
+| Stopped retained keyframes | 20 / 19 | 0.00677629 | 0.01421978 | 0.78512081 |
+
+Pose coverage final = 198/200 = 0.99; це не tracking success. Independent fits: evaluation scale 1.38005506 (final) та 1.37637537 (retained). GT association one-to-one, тому GT matches може бути менше за pose count. RPE pairs: 195 final / 18 retained.
+
+Whole-run wall clock **89.682126 s**, effective throughput **2.230099 FPS** (startup/export включено). OS-reported peak individual-process RSS **1,703,723,008 bytes** (~1.587 GiB); не сумарний RAM workers. Cold start — `null` з причиною. macOS 26.6.2 / arm64, 32 GiB RAM, native runtime Python 3.11.16, NumPy 1.26.4, torch 2.6.0, OpenCV 4.11.0; native pySLAM source `96019cf`.
+
+Verification: full local CPU suite **523 passed, 1 native skip**; Y-02 tests **16 passed**. Source run.json hash до evaluator (resource report) і після evaluator збігається. Sparse read-back/checksums validated existing runner-ом. Historical runs не змінювались. Shared status docs за file boundaries плану оновлюються на IC1; цей документ і PR надають status row/evidence.
