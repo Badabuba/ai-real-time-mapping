@@ -33,4 +33,19 @@ Existing Linux/Docker runtime та TUM inputs можна використати 
 docker exec --env LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libQt5Core.so.5:/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5:/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5 rt-mapping-wp2-yulian python -O scripts/run_wp2_pyslam.py --pyslam-root /opt/pyslam --pyslam-python /usr/local/bin/python --frames 200 --export-sparse --run-id new_unique_tracking_smoke
 ```
 
-Two clean 200-frame runs, state comparison та sparse read-back evidence додаються окремим small summary після запуску. State/event observations не гарантують byte-identical SLAM geometry: upstream workers залишаються недетермінованими. Automated ATE/RPE/resources і gap-aware success reporting належать наступним Y-02/Y-03; existing evaluators та historical runs тут не змінюються.
+## Clean real-run evidence
+
+Обидва native runs мають clean `be9bff24eb2a54ea7927078c7cfc48969fd6d45a`, `dirty_worktree=false`, status **ok**. [Small summary із hashes](../results/summaries/yaropolk_y01_tracking_smoke200_be9bff2.json).
+
+| Run suffix | Rows | States | Online poses | Creation events | Retained keyframes | Final poses |
+|---|---:|---|---:|---:|---:|---:|
+| `_01` | 200 | 198 OK / 2 NOT_INITIALIZED | 198 | 62 | 20 | 198 |
+| `_02` | 200 | 198 OK / 2 NOT_INITIALIZED | 198 | 55 | 24 | 198 |
+
+Full IDs: `yaropolk_y01_smoke200_be9bff2_01` та `_02`. State vectors збігаються на всіх 200 frames; unposed frames лише 0/1. UNKNOWN/observation errors — 0. Обидва final pose counts збігаються з prior clean baseline (198); upstream LOST counter також 0. Sparse read-back валідний: `_01` 1,254 landmarks / 8,097 observations; `_02` 1,375 / 10,140.
+
+Keyframe event sequences відрізняються між runs. Це спостережувана nondeterminism upstream workers; identical states/pose counts не доводять byte-identical geometry. Retained frame IDs в обох runs є підмножиною recorded creation events. Initialization events `[0,2]` записані під час input frame 2, без backfill рядка 0. Mapping/whole-loop timing порожні в усіх 200 рядках кожного run.
+
+CI Ubuntu/Windows × Python 3.11/3.12: **489 passed, 1 native skip**. Installed-backend sparse API check окремо **1 passed**. Historical pipeline: перевірено, що 13 hashes source artifacts не змінилися. Baseline config, upstream sources, existing summaries та WP3/WP4 code не змінювалися.
+
+Automated ATE/RPE/resources і gap-aware success reporting належать наступним Y-02/Y-03; existing evaluators тут не змінюються. Shared status docs лишаються для IC1 за file boundaries поточного team plan; status row та evidence надано в PR.
