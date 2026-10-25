@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 import sys
 
@@ -10,6 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from rt_mapping.evaluation.slam_run import evaluate_slam_run
 from rt_mapping.contracts.run_manifest import load_run_manifest
+from rt_mapping.evaluation.trajectory import NoGroundTruthOverlap
 
 
 def main():
@@ -31,7 +33,11 @@ def main():
             tracking_warmup=args.tracking_warmup, plot=args.plot,
         )
     except (OSError, ValueError, KeyError) as exc:
-        print(f"Rejected: {exc}", file=sys.stderr)
+        if isinstance(exc, NoGroundTruthOverlap):
+            print(json.dumps({"status": "failed", "reason": str(exc), "gt_coverage": exc.coverage}),
+                  file=sys.stderr)
+        else:
+            print(f"Rejected: {exc}", file=sys.stderr)
         return 2
     record = load_run_manifest(directory / "run.json")
     print(f"Evaluation: {directory} ({record['status']})")

@@ -2,7 +2,10 @@
 import numpy as np
 import pytest
 
-from rt_mapping.evaluation.trajectory import associate_timestamps, quaternion_rotation, read_tum_trajectory, trajectory_metrics
+from rt_mapping.evaluation.trajectory import (
+    GT_MATCH_TOLERANCE_S, associate_timestamps, gt_timestamp_coverage,
+    quaternion_rotation, read_tum_trajectory, trajectory_metrics,
+)
 
 
 def poses():
@@ -16,6 +19,34 @@ def test_association_is_unique_and_keeps_timestamp_deltas():
     matches = associate_timestamps([1., 1.01, 1.1], [1.002, 1.1], max_delta_s=0.02)
     np.testing.assert_array_equal(matches, [[0, 0], [2, 1]])
     assert associate_timestamps([0], [1], 0.1).shape == (0, 2)
+
+
+def test_fr3_initial_rgb_frames_are_not_confused_with_gt_endpoint_coverage():
+    # Three RGB timestamps precede official fr3 GT, but the third is within 20 ms.
+    rgb = [1341847980.722988, 1341847980.754743, 1341847980.786856,
+           1341847980.822978, 1341847980.854676]
+    gt = [1341847980.7900, 1341847980.8000, 1341847980.8100,
+          1341847980.8201, 1341847980.8301, 1341847980.8400, 1341847980.8500]
+    coverage, matches = gt_timestamp_coverage(range(5), rgb, gt)
+    assert coverage["max_timestamp_delta_s"] == GT_MATCH_TOLERANCE_S == 0.02
+    assert coverage["total_rgb_frames"] == 5
+    assert coverage["matched_gt_frames"] == 3 and coverage["unmatched_gt_frames"] == 2
+    assert coverage["coverage_percent"] == 60
+    assert coverage["excluded_frame_ids"] == [0, 1]
+    assert coverage["matched_frame_ids"] == [2, 3, 4]
+    assert {r["reason"] for r in coverage["excluded"]} == {"no_gt_pose_within_tolerance"}
+    np.testing.assert_array_equal(matches, associate_timestamps(rgb, gt, 0.02))
+
+
+def test_coverage_preserves_inclusive_20_ms_boundary_and_explains_competition():
+    coverage, matches = gt_timestamp_coverage([4, 8, 9], [0., .1, .2], [.02, .120001, .22])
+    assert coverage["matched_frame_ids"] == [4, 9]
+    assert coverage["excluded_frame_ids"] == [8]
+    assert coverage["excluded"][0]["nearest_gt_delta_s"] == pytest.approx(.020001)
+    coverage, matches = gt_timestamp_coverage([3, 7], [1., 1.015], [1.001])
+    assert coverage["excluded_frame_ids"] == [7]
+    assert coverage["excluded"][0]["reason"] == "gt_pose_within_tolerance_assigned_to_other_frame"
+    assert matches.tolist() == [[0, 0]]
 
 
 def test_perfect_world_gauge_ate_and_rpe():

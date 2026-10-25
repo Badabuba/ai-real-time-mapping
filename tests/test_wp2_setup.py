@@ -28,7 +28,8 @@ def dataset(tmp_path):
     (seq / "rgb.txt").write_text("".join(rgb))
     (seq / "depth.txt").write_text("".join(depth))
     # Four-decimal quaternion rounding: not exactly unit length, valid TUM precision.
-    (seq / "groundtruth.txt").write_text("0.9 0 0 0 0 0 0.7071 0.7071\n1.3 0 0 0 0 0 0.7071 0.7071\n")
+    (seq / "groundtruth.txt").write_text("".join(
+        f"{t} 0 0 0 0 0 0.7071 0.7071\n" for t in (0.9, 1.0, 1.1, 1.2, 1.3)))
     archive = seq.with_suffix(".tgz")
     with tarfile.open(archive, "w:gz") as tar:
         tar.add(seq, arcname=seq.name)
@@ -49,7 +50,7 @@ def test_full_verification_checks_real_archive_and_rounded_gt(dataset):
     report = verify_dataset(root, config, full=True)
     assert report["status"] == "ok"
     assert report["rgb_frames"] == report["depth_frames"] == report["associations"] == 3
-    assert report["groundtruth_poses"] == 2
+    assert report["groundtruth_poses"] == 5
     assert report["extracted_files_verified"] == 9
     assert before == {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
 
@@ -355,7 +356,7 @@ def test_prepare_cli_all_frames_writes_rgb_view_only(dataset, monkeypatch):
 def test_preflight_reports_official_style_duplicate_gt_without_fitting(dataset):
     root, seq, _, config = dataset
     (seq / "groundtruth.txt").write_text(
-        "0.9 0 0 0 0 0 0 1\n0.9 0.001 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
+        "0.9 0 0 0 0 0 0 1\n0.9 0.001 0 0 0 0 0 1\n1.1 0 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
     before = (seq / "groundtruth.txt").read_bytes()
     report = verify_dataset(root, config)
     assert report["status"] == "ok"
@@ -376,7 +377,7 @@ def test_preflight_still_rejects_decreasing_gt_timestamps(dataset):
 def test_preflight_reports_gt_boundary_gaps_without_changing_inputs(dataset, start, end):
     root, seq, _, config = dataset
     (seq / "groundtruth.txt").write_text(
-        f"{start} 0 0 0 0 0 0 1\n{end} 0 0 0 0 0 0 1\n")
+        f"{start} 0 0 0 0 0 0 1\n1.1 0 0 0 0 0 0 1\n{end} 0 0 0 0 0 0 1\n")
     before = {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
     report = verify_dataset(root, config)
     assert report["status"] == "ok"
@@ -391,5 +392,68 @@ def test_preflight_rejects_gt_without_time_overlap(dataset, start, end):
     root, seq, _, config = dataset
     (seq / "groundtruth.txt").write_text(
         f"{start} 0 0 0 0 0 0 1\n{end} 0 0 0 0 0 0 1\n")
-    with pytest.raises(ValueError, match="does not overlap"):
+    with pytest.raises(ValueError, match="no_valid_gt_overlap"):
         verify_dataset(root, config)
+
+
+def test_fr3_partial_gt_preflight_and_preparation_retain_every_frozen_rgb(dataset, monkeypatch):
+    root, seq, _, _ = dataset
+    stamps = [1341847980.722988, 1341847980.754743, 1341847980.786856]
+    (seq / "rgb.txt").write_text("".join(f"{t:.6f} rgb/{i}.png\n" for i, t in enumerate(stamps)))
+    (seq / "depth.txt").write_text("".join(f"{t+.00001:.6f} depth/{i}.png\n" for i, t in enumerate(stamps)))
+    (seq / "groundtruth.txt").write_text(
+        "1341847980.7900 0 0 0 0 0 0 1\n1341847980.8000 0 0 0 0 0 0 1\n")
+    root, seq, _, config = freeze_split(dataset, "held-out", camera="freiburg3")
+    before = {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
+    original_config = copy.deepcopy(config)
+    report = verify_dataset(root, config, full=True)
+    assert report["rgb_frames"] == report["split_frames"] == 3
+    coverage = report["gt_coverage"]
+    assert coverage["total_rgb_frames"] == 3 and coverage["matched_gt_frames"] == 1
+    assert coverage["unmatched_gt_frames"] == 2
+    assert coverage["coverage_percent"] == pytest.approx(100/3)
+    assert coverage["excluded_frame_ids"] == [0, 1]
+    assert report["associated_rgb_frames_outside_gt_time_range"] == 3
+    source = fake_source(root, monkeypatch)
+    output = root / "outputs/wp2/fr3_partial"
+    plan = prepare_baseline(root, source, output, config, frames=None)
+    assert [f["frame_id"] for f in plan["frames"]] == [0, 1, 2]
+    assert len(list((output / "input").glob("*.png"))) == 3
+    assert [float(t) for t in (output / "input/times.txt").read_text().split()] == stamps
+    assert config == original_config
+    assert before == {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
+
+
+def test_overlapping_gt_endpoints_without_a_20_ms_match_fail_with_coverage(dataset):
+    root, seq, _, config = dataset
+    # Time ranges overlap, but there is no GT sample within 20 ms of any input.
+    (seq / "groundtruth.txt").write_text("0.9 0 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
+    with pytest.raises(ValueError, match="no_valid_gt_overlap") as error:
+        verify_dataset(root, config)
+    coverage = error.value.coverage
+    assert coverage["total_rgb_frames"] == 2  # frozen smoke prefix, not raw index
+    assert coverage["matched_gt_frames"] == 0 and coverage["coverage_percent"] == 0
+    assert coverage["excluded_frame_ids"] == [0, 1]
+
+
+def test_duplicate_gt_inside_evaluated_interval_is_not_silently_deduplicated(dataset):
+    root, seq, _, config = dataset
+    (seq / "groundtruth.txt").write_text(
+        "1.0 0 0 0 0 0 0 1\n1.0 1 0 0 0 0 0 1\n1.1 0 0 0 0 0 0 1\n")
+    with pytest.raises(ValueError, match="ambiguous GT"):
+        verify_dataset(root, config)
+
+
+def test_dataset_cli_reports_excluded_ids_on_zero_gt_overlap(dataset, monkeypatch, capsys):
+    import sys
+    root, seq, _, config = dataset
+    (seq / "groundtruth.txt").write_text("0.9 0 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
+    path = cli_config(root, config)
+    module = load_cli("check_wp2_environment")
+    monkeypatch.setattr(module, "ROOT", root)
+    monkeypatch.setattr(sys, "argv", ["check_wp2_environment.py", "--config", str(path), "--dataset-only"])
+    assert module.main() == 1
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "failed" and "no_valid_gt_overlap" in report["reason"]
+    assert report["gt_coverage"]["raw_rgb_index_frames"] == 3
+    assert report["gt_coverage"]["excluded_frame_ids"] == [0, 1]

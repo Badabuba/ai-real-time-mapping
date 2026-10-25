@@ -23,6 +23,7 @@ from rt_mapping.data.manifest import sha256_file
 from rt_mapping.evaluation.timing import summarize_timings
 from rt_mapping.evaluation.trajectory import (
     associate_timestamps, read_tum_trajectory, trajectory_metrics,
+    GT_MATCH_TOLERANCE_S, NoGroundTruthOverlap, gt_timestamp_coverage,
 )
 from rt_mapping.geometry.projection import validate_pose
 from rt_mapping.runs.artifacts import artifact_path
@@ -150,8 +151,9 @@ def _evaluate(times, poses, gt_times, gt_poses, input_times, *, tolerance, rpe_d
         "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
         "tracking_success": None, "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success",
     }
-    matches = associate_timestamps(times, gt_times, max_delta_s=tolerance)
+    coverage["gt_coverage"], matches = gt_timestamp_coverage(associated[:, 1], times, gt_times, max_delta_s=tolerance)
     coverage["gt_associated_poses"] = len(matches)
+    coverage["gt_coverage"]["scope"] = "RGB frames with exported poses in this trajectory"
     try:
         metrics = trajectory_metrics(times, poses, gt_times, gt_poses,
                                      alignment="sim3", max_delta_s=tolerance, rpe_delta=rpe_delta)
@@ -198,6 +200,7 @@ def evaluate_tracking(rows, gt_times, gt_poses, *, max_delta_s=0.02, rpe_delta=1
     usable = np.array([r.tracking_state == "OK" and r.T_wc is not None and not r.error for r in rows])
     valid_indices = np.flatnonzero(usable)
     times = np.array([r.timestamp_s for r in rows])
+    gt_coverage, _ = gt_timestamp_coverage([r.frame_id for r in rows], times, gt_times, max_delta_s=max_delta_s)
     segments = _state_segments(rows)
     incomplete_states = counts["UNKNOWN"] > 0 or any(r.error for r in rows)
     success = None if incomplete_states else counts["OK"] / len(rows)
@@ -264,6 +267,7 @@ def evaluate_tracking(rows, gt_times, gt_poses, *, max_delta_s=0.02, rpe_delta=1
     }
     return {
         "input_frames": len(rows), "success_numerator": counts["OK"],
+        "gt_coverage": gt_coverage,
         "success_denominator": "all frozen associated RGB-depth input frames submitted to SLAM, including initialization/LOST/UNKNOWN",
         "tracking_success": success, "tracking_success_reason": reason,
         "observed_ok_fraction": counts["OK"] / len(rows), "usable_pose_fraction": len(valid_indices) / len(rows),
@@ -321,6 +325,8 @@ def evaluate_slam_run(root, source_run, groundtruth, *, run_id, output_root=None
         raise ValueError("invalid timestamp tolerance or RPE delta")
     if type(tracking_warmup) is not int or tracking_warmup < 0:
         raise ValueError("tracking warmup must be a nonnegative integer")
+    if max_delta_s != GT_MATCH_TOLERANCE_S:
+        raise ValueError("WP2 GT matching tolerance is frozen at exactly 0.02 s (20 ms)")
     source = load_run_manifest(source_run / "run.json")
     if source["method"] != "B0" or source["status"] not in ("ok", "degraded"):
         raise ValueError("evaluation requires a completed ok/degraded B0 source run")
@@ -338,6 +344,11 @@ def evaluate_slam_run(root, source_run, groundtruth, *, run_id, output_root=None
     final_times, final_poses = read_tum_trajectory(final_path)
     # No ground-truth files are used in SLAM or measurement.
     gt_times, gt_poses = read_tum_trajectory(groundtruth)
+    gt_coverage, _ = gt_timestamp_coverage([f["frame_id"] for f in frames], input_times, gt_times,
+                                         max_delta_s=max_delta_s)
+    gt_coverage["scope"] = "all frozen RGB frames submitted to SLAM, including initialization and tracking loss"
+    if not gt_coverage["matched_gt_frames"]:
+        raise NoGroundTruthOverlap(gt_coverage)
     final = _evaluate(final_times, final_poses, gt_times, gt_poses, input_times,
                       tolerance=max_delta_s, rpe_delta=rpe_delta,
                       scope="upstream final trajectory; optimized snapshot, not causal all-frame history")
@@ -349,6 +360,7 @@ def evaluate_slam_run(root, source_run, groundtruth, *, run_id, output_root=None
         "preparation_sha256": sha256_file(prep_path), "final_trajectory_sha256": sha256_file(final_path),
         "groundtruth_sha256": sha256_file(groundtruth),
         "groundtruth_use": "evaluation only; user-supplied reference trajectory",
+        "gt_coverage": gt_coverage,
     }
     retained = {"metrics": None, "reason": "source run has no retained-keyframe export"}
     if "keyframes" in source["artifacts"]:
@@ -393,6 +405,7 @@ def evaluate_slam_run(root, source_run, groundtruth, *, run_id, output_root=None
         import matplotlib  # fail before creating an output directory if unavailable
     metrics = {
         "schema": "rt_mapping.slam_evaluation/v1", "final_trajectory": final,
+        "gt_coverage": gt_coverage,
         "retained_keyframes": retained, "resources": resource_report,
         "tracking": tracking if tracking is not None else _missing("source has no Y-01 causal export"),
         "tracking_success": tracking["tracking_success"] if tracking else None,

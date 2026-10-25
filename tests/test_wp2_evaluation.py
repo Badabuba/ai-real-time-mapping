@@ -95,11 +95,34 @@ def test_partial_pose_coverage_is_not_tracking_success(source, tmp_path):
     assert final["coverage"]["tracking_success"] is None
 
 
-def test_no_gt_matches_are_null_with_reason(source, tmp_path):
+def test_no_gt_matches_fail_explicitly_before_output(source, tmp_path):
     tum(source[1], source[2] + 100, source[3])
-    final = json.loads((invoke(source, tmp_path) / "metrics.json").read_text())["final_trajectory"]
-    assert final["metrics"] is None and "insufficient" in final["reason"]
-    assert final["coverage"]["gt_associated_poses"] == 0
+    with pytest.raises(ValueError, match="no_valid_gt_overlap") as error:
+        invoke(source, tmp_path)
+    assert error.value.coverage["unmatched_gt_frames"] == 6
+    assert error.value.coverage["excluded_frame_ids"] == list(range(6))
+    assert not (tmp_path / "runs").exists()
+
+
+@pytest.mark.parametrize("tolerance", [0.019, 0.020001, 0.03])
+def test_recorded_wp2_evaluation_keeps_frozen_20_ms_tolerance(source, tmp_path, tolerance):
+    with pytest.raises(ValueError, match="frozen at exactly 0.02"):
+        invoke(source, tmp_path, max_delta_s=tolerance)
+    assert not (tmp_path / "runs").exists()
+
+
+def test_evaluation_cli_reports_coverage_and_fails_on_zero_overlap(source, tmp_path):
+    tum(source[1], source[2]+100, source[3])
+    done = subprocess.run([
+        sys.executable, str(ROOT / "scripts/evaluate_wp2_run.py"), "--source-run", str(source[0]),
+        "--groundtruth", str(source[1]), "--run-id", "no_overlap", "--output-root", str(tmp_path / "runs"),
+    ], capture_output=True, text=True, timeout=30)
+    assert done.returncode == 2
+    report = json.loads(done.stderr)
+    assert report["status"] == "failed" and "no_valid_gt_overlap" in report["reason"]
+    assert report["gt_coverage"]["total_rgb_frames"] == 6
+    assert report["gt_coverage"]["excluded_frame_ids"] == list(range(6))
+    assert not (tmp_path / "runs").exists()
 
 
 def test_collinear_gauge_is_null_with_reason(source, tmp_path):
@@ -246,6 +269,39 @@ def attach_tracking(source, rows):
                                tracking_export="tracking_export.json")
     write_run_manifest(record, target)
     return (target, *source[1:])
+
+
+@pytest.mark.parametrize("keep", [[2, 3, 4, 5], [0, 1, 3, 4, 5]])
+def test_partial_gt_excludes_only_geometric_metrics_and_reports_every_input(source, tmp_path, keep):
+    tum(source[1], source[2][keep], 3*source[3][keep]+[4, -2, 1])
+    excluded = sorted(set(range(6))-set(keep))
+    bad_xyz = source[3].copy()
+    bad_xyz[excluded] = [999, -999, 999]  # must not affect the GT alignment/errors
+    tum(source[0] / "input_setup/trajectory/trajectory_final.txt", source[2], bad_xyz)
+    with_tracking = (source[0], source[1], source[2], bad_xyz)
+    with_tracking = attach_tracking(with_tracking, causal_rows(with_tracking))
+    before = digest(with_tracking[0])
+    gt_before = source[1].read_bytes()
+    metrics = json.loads((invoke(with_tracking, tmp_path) / "metrics.json").read_text())
+    coverage = metrics["gt_coverage"]
+    assert coverage["total_rgb_frames"] == 6
+    assert coverage["matched_gt_frames"] == len(keep)
+    assert coverage["unmatched_gt_frames"] == len(excluded)
+    assert coverage["coverage_percent"] == pytest.approx(100*len(keep)/6)
+    assert coverage["excluded_frame_ids"] == excluded
+    assert {item["reason"] for item in coverage["excluded"]} == {"no_gt_pose_within_tolerance"}
+    final = metrics["final_trajectory"]
+    assert final["coverage"]["pose_count"] == 6
+    assert final["coverage"]["gt_coverage"]["excluded_frame_ids"] == excluded
+    assert final["metrics"]["matched_poses"] == len(keep)
+    assert final["metrics"]["ate_rmse_m"] < 1e-12
+    tracking = metrics["tracking"]
+    assert tracking["tracking_success"] == 1
+    assert tracking["input_frames"] == tracking["tracking_latency"]["summary"]["n_total"] == 6
+    assert tracking["online_trajectory"]["metrics"]["matched_poses"] == len(keep)
+    assert tracking["online_trajectory"]["metrics"]["ate_rmse_m"] < 1e-12
+    assert tracking["gap_aware_rpe"]["metrics"]["rpe_translation_rmse_m"] < 1e-12
+    assert before == digest(with_tracking[0]) and source[1].read_bytes() == gt_before
 
 
 def test_gap_free_causal_metrics_match_existing_evaluator_and_warmup_policy(source):

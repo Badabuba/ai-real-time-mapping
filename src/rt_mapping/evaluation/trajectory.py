@@ -13,6 +13,19 @@ import numpy as np
 from rt_mapping.geometry.projection import validate_pose
 
 
+GT_MATCH_TOLERANCE_S = 0.02
+
+
+class NoGroundTruthOverlap(ValueError):
+    """No frame can be evaluated; retain structured coverage for diagnostics."""
+
+    def __init__(self, coverage):
+        self.coverage = coverage
+        super().__init__(
+            f"no_valid_gt_overlap: 0/{coverage['total_rgb_frames']} RGB frames have a distinct "
+            f"GT timestamp within {coverage['max_timestamp_delta_s']:g} s")
+
+
 def quaternion_rotation(quaternion):
     q = np.asarray(quaternion, dtype=float)
     if q.shape != (4,) or not np.isfinite(q).all() or np.linalg.norm(q) < 1e-12:
@@ -56,6 +69,45 @@ def associate_timestamps(source, target, max_delta_s=0.02):
             used_source.add(i)
             used_target.add(j)
     return np.asarray(sorted(matches), dtype=np.int64).reshape(-1, 2)
+
+
+def gt_timestamp_coverage(frame_ids, timestamps_s, gt_timestamps_s, *, max_delta_s=GT_MATCH_TOLERANCE_S):
+    """Report GT eligibility without filtering or modifying RGB inputs.
+
+    Uses the existing greedy one-to-one, inclusive timestamp matcher unchanged.
+    Nearest deltas explain exclusions only, never authorize farther matches.
+    Empty GT returns zero coverage for explicit caller failure diagnostics.
+    """
+    ids = np.asarray(frame_ids)
+    stamps, gt = np.asarray(timestamps_s, dtype=float), np.asarray(gt_timestamps_s, dtype=float)
+    if (ids.shape != stamps.shape or ids.ndim != 1 or not np.issubdtype(ids.dtype, np.integer)
+            or len(np.unique(ids)) != len(ids) or np.any(ids < 0)):
+        raise ValueError("unique nonnegative integer frame IDs must align with timestamps")
+    associate_timestamps(stamps, stamps, max_delta_s)  # validate even for empty GT
+    if gt.ndim != 1:
+        raise ValueError("GT timestamps must be a vector")
+    matches = (associate_timestamps(stamps, gt, max_delta_s) if len(gt)
+               else np.empty((0, 2), dtype=np.int64))
+    matched = np.zeros(len(stamps), dtype=bool)
+    matched[matches[:, 0]] = True
+    excluded = []
+    for i in np.flatnonzero(~matched):
+        within = bool(len(gt) and np.any((gt >= stamps[i]-max_delta_s) & (gt <= stamps[i]+max_delta_s)))
+        excluded.append({
+            "frame_id": int(ids[i]), "timestamp_s": float(stamps[i]),
+            "nearest_gt_delta_s": float(np.min(np.abs(gt-stamps[i]))) if len(gt) else None,
+            "reason": ("gt_pose_within_tolerance_assigned_to_other_frame" if within
+                       else "no_gt_pose_within_tolerance"),
+        })
+    return {
+        "max_timestamp_delta_s": float(max_delta_s),
+        "association": "greedy one-to-one by timestamp distance, inclusive tolerance; no interpolation",
+        "total_rgb_frames": len(stamps), "matched_gt_frames": len(matches),
+        "unmatched_gt_frames": len(excluded), "coverage_percent": 100.0 * len(matches) / len(stamps),
+        "matched_frame_ids": [int(f) for f in ids[matched]],
+        "excluded_frame_ids": [item["frame_id"] for item in excluded], "excluded": excluded,
+        "exclusion_scope": "GT-dependent evaluation metrics only; retain every RGB input for SLAM",
+    }, matches
 
 
 def fit_trajectory_alignment(source_xyz, target_xyz, *, recover_scale):

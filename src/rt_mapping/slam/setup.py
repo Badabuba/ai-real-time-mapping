@@ -21,6 +21,7 @@ from typing import Any
 
 from rt_mapping.data.manifest import build_tum_manifest, build_tum_split_manifest, sha256_file
 from rt_mapping.data.tum import load_sequence, read_index
+from rt_mapping.evaluation.trajectory import GT_MATCH_TOLERANCE_S, NoGroundTruthOverlap, gt_timestamp_coverage
 
 
 def load_setup_config(path: Path) -> dict[str, Any]:
@@ -152,11 +153,24 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
         raise ValueError("groundtruth timestamps must be nonempty and nondecreasing")
     duplicate_gt_pairs = sum(a[0] == b[0] for a, b in zip(gt, gt[1:]))
     frames = load_sequence(seq, max_delta_s=manifest["association"]["max_delta_s"])
-    if gt[-1][0] < frames[0].frame.timestamp_s or gt[0][0] > frames[-1].frame.timestamp_s:
-        raise ValueError("groundtruth time range does not overlap associated RGB frames")
     # Official TUM sequences may start/end outside the motion-capture interval.
     # Keep every frozen RGB input; GT association/coverage belongs to evaluation.
     outside_gt = sum(not gt[0][0] <= f.frame.timestamp_s <= gt[-1][0] for f in frames)
+    input_times = [f["rgb_timestamp_s"] for f in frozen["frames"]]
+    gt_times = [row[0] for row in gt]
+    if duplicate_gt_pairs:
+        # Official fr2 has a duplicate far outside selection50. Check only
+        # possible GT matches for this split; never deduplicate or average poses.
+        gt_times = [t for t in gt_times if input_times[0]-GT_MATCH_TOLERANCE_S <= t
+                    <= input_times[-1]+GT_MATCH_TOLERANCE_S]
+        if any(a == b for a, b in zip(gt_times, gt_times[1:])):
+            raise ValueError("ambiguous GT timestamps inside frozen RGB matching interval")
+    gt_coverage, _ = gt_timestamp_coverage(
+        [f["frame_id"] for f in frozen["frames"]], input_times, gt_times)
+    gt_coverage["scope"] = "configured frozen RGB split; raw RGB index count is reported separately as rgb_frames"
+    gt_coverage["raw_rgb_index_frames"] = counts["rgb.txt"]
+    if not gt_coverage["matched_gt_frames"]:
+        raise NoGroundTruthOverlap(gt_coverage)
     return {
         "status": "ok", "sequence": manifest["sequence_id"],
         "archive_sha256": rebuilt["source"]["archive_sha256"],
@@ -168,13 +182,15 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
             "selected_input_hashes_verified": 2 * len(frozen["frames"])}),
         "groundtruth_poses": len(gt), "quaternion_norm_squared_tolerance": 5e-4,
         "associated_rgb_frames_outside_gt_time_range": outside_gt,
+        "gt_coverage": gt_coverage,
         "extracted_files_verified": verify_extracted_archive(archive, seq) if full else None,
         "checks": ["frozen_manifest", "archive_sha256", "index_sha256", "PNG_headers", "timestamps", "evaluation_GT"]
                   + (["selected_rgb_depth_sha256"] if hashed_split else []),
         **({"groundtruth_duplicate_timestamp_pairs": duplicate_gt_pairs} if duplicate_gt_pairs else {}),
         "limitations": ([] if full else ["PNG headers checked; extracted bytes not compared with archive (use --full)."] )
                        + (["Ground-truth timestamps contain duplicates; evaluation must explicitly handle/reference only its time window. RGB/depth inputs are unaffected."] if duplicate_gt_pairs else [])
-                       + (["Associated RGB frames extend beyond the GT time range; all frozen inputs are retained. Evaluation must report unmatched poses using its unchanged timestamp tolerance."] if outside_gt else []),
+                       + (["Associated RGB frames extend beyond the GT time range; all frozen inputs are retained. Evaluation must report unmatched poses using its unchanged timestamp tolerance."] if outside_gt else [])
+                       + (["Partial GT coverage within 20 ms; unmatched RGB inputs remain in SLAM and are excluded only from GT-dependent evaluation."] if gt_coverage["unmatched_gt_frames"] else []),
     }
 
 
