@@ -2,6 +2,11 @@
 
 No function in this module is called by the proposed-method scale estimator.
 The B1 control reuses P1's recovered camera scale; GT never fits that scale.
+
+A retained keyframe without a GT pose inside the unchanged association
+tolerance is unavailable for GT evaluation, not an invalid SLAM/depth frame.
+It is never interpolated or matched to a farther pose; callers either fail
+(default) or exclude it explicitly and record it (``exclude_missing_gt_poses``).
 """
 from __future__ import annotations
 
@@ -19,7 +24,41 @@ from rt_mapping.evaluation.tum_depth import load_tum_depth_m
 from rt_mapping.fusion import VoxelFusion, depth_points
 
 
-def load_oracle_inputs(inputs, sequence_dir, manifest_path, config, *, max_timestamp_delta_s=0.02):
+GT_POSE_POLICY = "exclude_keyframes_without_gt_pose_within_tolerance"
+
+
+def gt_pose_eligibility(frame_ids, timestamps_s, gt_timestamps_s, max_timestamp_delta_s):
+    """Which retained keyframes have a distinct GT pose within the tolerance.
+
+    Uses the frozen one-to-one association unchanged (inclusive boundary).
+    Excluded keyframes are listed in keyframe timestamp order with the nearest
+    GT delta for diagnosis only; that pose is never used.
+    """
+    frame_ids = np.asarray(frame_ids, dtype=np.int64)
+    stamps, gt = np.asarray(timestamps_s, dtype=float), np.asarray(gt_timestamps_s, dtype=float)
+    if frame_ids.shape != stamps.shape:
+        raise ValueError("keyframe IDs and timestamps must align")
+    matches = associate_timestamps(stamps, gt, max_timestamp_delta_s)
+    matched = np.zeros(len(stamps), dtype=bool)
+    matched[matches[:, 0]] = True
+    excluded = []
+    for i in np.flatnonzero(~matched):
+        within = np.any((gt >= stamps[i]-max_timestamp_delta_s) & (gt <= stamps[i]+max_timestamp_delta_s))
+        excluded.append({"frame_id": int(frame_ids[i]), "timestamp_s": float(stamps[i]),
+                         "nearest_gt_delta_s": float(np.min(np.abs(gt-stamps[i]))),
+                         "reason": ("gt_pose_within_tolerance_assigned_to_closer_keyframe" if within
+                                    else "no_gt_pose_within_tolerance")})
+    summary = {"policy": GT_POSE_POLICY, "max_timestamp_delta_s": float(max_timestamp_delta_s),
+               "association": "one-to-one nearest timestamp, inclusive tolerance; no interpolation, no farther pose",
+               "candidate_keyframes": len(stamps), "evaluated_keyframes": len(matches),
+               "excluded_keyframes": len(excluded), "coverage_fraction": len(matches)/len(stamps),
+               "evaluated_frame_ids": [int(f) for f in frame_ids[matched]],
+               "excluded_frame_ids": [item["frame_id"] for item in excluded], "excluded": excluded}
+    return summary, matches
+
+
+def load_oracle_inputs(inputs, sequence_dir, manifest_path, config, *, max_timestamp_delta_s=0.02,
+                       exclude_missing_gt_poses=False):
     sequence_dir, manifest_path = Path(sequence_dir), Path(manifest_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     dataset = inputs.slam["dataset"]
@@ -33,21 +72,25 @@ def load_oracle_inputs(inputs, sequence_dir, manifest_path, config, *, max_times
     entries = {int(item["frame_id"]): item for item in manifest["splits"][dataset["split"]]["frames"]}
     cameras = inputs.snapshot.keyframes
     stamps, gt_poses = read_tum_trajectory(sequence_dir / "groundtruth.txt")
-    matches = associate_timestamps(cameras["timestamp_s"], stamps, max_timestamp_delta_s)
-    if len(matches) != len(cameras["frame_id"]):
+    eligibility, matches = gt_pose_eligibility(cameras["frame_id"], cameras["timestamp_s"], stamps,
+                                               max_timestamp_delta_s)
+    if eligibility["excluded_keyframes"] and not exclude_missing_gt_poses:
         raise ValueError("all retained keyframes need distinct associated GT poses for a shared comparison")
-    gt_by_camera = np.empty_like(cameras["T_wc"])
-    gt_stamps = np.empty(len(cameras["frame_id"]))
-    for ci, gi in matches:
-        gt_by_camera[ci] = gt_poses[gi]
-        gt_stamps[ci] = stamps[gi]
+    if not eligibility["evaluated_keyframes"]:
+        raise ValueError(f"no retained keyframe has a GT pose within {max_timestamp_delta_s} s; "
+                         "GT evaluation is unavailable")
+    # Rows follow the eligible keyframes in keyframe order; with full coverage
+    # this is every keyframe, exactly as before the exclusion policy.
+    gt_by_camera, gt_stamps = gt_poses[matches[:, 1]], stamps[matches[:, 1]]
+    gt_row = {int(ci): row for row, ci in enumerate(matches[:, 0])}
     predictions = {}
     provenance = {"manifest_sha256": sha256_file(manifest_path),
                   "groundtruth_sha256": sha256_file(sequence_dir / "groundtruth.txt"), "depth_sha256": {},
                   "depth_units": "PNG/5000; dataset depth correction is already applied by TUM",
                   "reference_geometry": "shared calibrated RGB K and Brown coefficients, matching the frozen pipeline",
                   "reference_limitation": "registered depth rectification is approximate; TUM recommends ROS-default K for direct depth clouds",
-                  "format_reference": "https://cvg.cit.tum.de/data/datasets/rgbd-dataset/file_formats"}
+                  "format_reference": "https://cvg.cit.tum.de/data/datasets/rgbd-dataset/file_formats",
+                  "gt_pose_eligibility": eligibility}
     reference = VoxelFusion(config["voxel_size_m"], config["max_voxels"])
     for ci, frame_id in enumerate(cameras["frame_id"]):
         item = entries[int(frame_id)]
@@ -78,9 +121,12 @@ def load_oracle_inputs(inputs, sequence_dir, manifest_path, config, *, max_times
                    depth_m=depth, valid_mask=valid, confidence=None, K_processed=source.K_processed,
                    model_id="oracle/TUM-RGBD-depth", preprocess=source.preprocess, inference_ms=0.)
         predictions[int(frame_id)] = oracle
-        reference.add(depth_points(oracle, gt_by_camera[ci], distortion=cameras["distortion"][ci],
-                                   min_depth_m=config["min_depth_m"], max_depth_m=config["max_depth_m"],
-                                   pixel_stride=config["pixel_stride"]))
+        # GT depth needs no GT pose, so B1 keeps every retained keyframe like P1;
+        # only the GT-posed reference cloud is restricted to eligible keyframes.
+        if ci in gt_row:
+            reference.add(depth_points(oracle, gt_by_camera[gt_row[ci]], distortion=cameras["distortion"][ci],
+                                       min_depth_m=config["min_depth_m"], max_depth_m=config["max_depth_m"],
+                                       pixel_stride=config["pixel_stride"]))
         provenance["depth_sha256"][item["depth_path"]] = sha256_file(depth_path)
     points, _ = reference.cloud()
     if not len(points):

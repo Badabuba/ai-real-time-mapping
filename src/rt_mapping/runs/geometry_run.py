@@ -14,6 +14,7 @@ Model-agnostic: the adapter comes from a factory; torch is never imported here.
 from __future__ import annotations
 
 import json
+import hashlib
 import platform
 import subprocess
 import time
@@ -33,6 +34,7 @@ from rt_mapping.data.manifest import sha256_file
 from rt_mapping.evaluation.depth import evaluate_depth, mean_depth_metrics, resize_depth_nearest
 from rt_mapping.evaluation.timing import summarize_timings
 from rt_mapping.evaluation.tum_depth import load_tum_depth_m
+from rt_mapping.evaluation.prediction_grid import resize_prediction
 from rt_mapping.geometry.adapter import GeometryAdapterError
 
 EXIT_OK = 0
@@ -104,6 +106,8 @@ class RunSpec:
     initial_model: dict[str, Any]
     config: dict[str, Any]
     archive_path: Path | None = None
+    prewarm_calls: int = 0
+    evaluation_grid: str = "prediction"
 
 
 @dataclass(frozen=True)
@@ -231,6 +235,9 @@ def verify_tum_split(
         expected = (entry["rgb_timestamp_s"], entry["rgb_path"], entry["depth_timestamp_s"], entry["depth_path"])
         if actual != expected:
             raise RunFailure("dataset_mismatch", f"frame {frame_id}: loader gives {actual}, manifest {expected}")
+        for field, relative in (("rgb_sha256", item.frame.image_path), ("depth_sha256", item.gt_depth_path)):
+            if field in entry and sha256_file(sequence_dir / relative) != entry[field]:
+                raise RunFailure("dataset_mismatch", f"frame {frame_id}: {field} differs from frozen bytes")
         if (item.frame.width, item.frame.height) != (manifest["image"]["width"], manifest["image"]["height"]):
             raise RunFailure("dataset_mismatch", f"frame {frame_id}: image size differs from the manifest")
         selected.append(item)
@@ -264,6 +271,10 @@ def preflight(spec: RunSpec, manifest: dict[str, Any]) -> None:
             raise PreflightError(f"{name} must be an integer, got {value!r}")
     if spec.frames < 1:
         raise PreflightError(f"frames must be >= 1, got {spec.frames}")
+    if isinstance(spec.prewarm_calls, bool) or not isinstance(spec.prewarm_calls, int) or spec.prewarm_calls < 0:
+        raise PreflightError("prewarm_calls must be a non-negative integer")
+    if spec.evaluation_grid not in {"prediction", "raw_rgb"}:
+        raise PreflightError("evaluation_grid must be prediction or raw_rgb")
     if not 0 <= spec.warmup < spec.frames:
         raise PreflightError(f"warmup must satisfy 0 <= warmup < frames ({spec.frames}), got {spec.warmup}")
     available = len(split_frames(manifest, spec.split))
@@ -308,6 +319,9 @@ def run_geometry_benchmark(
             "frames": spec.frames,
             "warmup": spec.warmup,
             "archive_hash_verified": spec.archive_path is not None,
+            "dataset_manifest_sha256": sha256_file(spec.manifest_path),
+            "prewarm_calls": spec.prewarm_calls,
+            "evaluation_grid": spec.evaluation_grid,
         },
         "hardware": {"gpu": None, "cpu": host_info.cpu, "ram_gb": host_info.ram_gb},
         "environment": base_environment(),
@@ -340,6 +354,10 @@ def run_geometry_benchmark(
         record["hardware"]["gpu"] = description.get("gpu")
         record["config"]["model"] = description["config"]
 
+        prewarm_ms = []
+        for _ in range(spec.prewarm_calls):
+            prewarm_ms.append(adapter.predict(frames[0].frame).inference_ms)
+
         (run_dir / PREDICTIONS_DIR).mkdir()
         per_frame: list[dict[str, Any]] = []
         metrics = []
@@ -358,7 +376,13 @@ def run_geometry_benchmark(
             try:
                 gt = load_tum_depth_m(spec.sequence_dir, item.gt_depth_path)
                 height, width = prediction.depth_m.shape
-                frame_metrics = evaluate_depth(prediction, resize_depth_nearest(gt, (width, height)))
+                if spec.evaluation_grid == "raw_rgb":
+                    evaluated_prediction = resize_prediction(prediction, (frame.width, frame.height))
+                    if gt.shape != (frame.height, frame.width):
+                        raise ValueError("GT grid differs from raw RGB")
+                    frame_metrics = evaluate_depth(evaluated_prediction, gt)
+                else:
+                    frame_metrics = evaluate_depth(prediction, resize_depth_nearest(gt, (width, height)))
             except (OSError, ValueError) as exc:
                 raise RunFailure("evaluation_failed", f"frame {frame.frame_id}: {exc}") from exc
             metrics.append(frame_metrics)
@@ -366,6 +390,14 @@ def run_geometry_benchmark(
             per_frame.append(
                 {
                     **frame_metrics.to_dict(),
+                    "evaluation_mask_sha256": hashlib.sha256(
+                        np.ascontiguousarray(
+                            (np.isfinite(gt) & (gt > 0) & evaluated_prediction.valid_mask)
+                            if spec.evaluation_grid == "raw_rgb" else
+                            (np.isfinite(resize_depth_nearest(gt, (width, height)))
+                             & (resize_depth_nearest(gt, (width, height)) > 0) & prediction.valid_mask)
+                        ).tobytes()
+                    ).hexdigest(),
                     "timestamp_s": frame.timestamp_s,
                     "rgb_path": frame.image_path,
                     "gt_depth_timestamp_s": item.gt_depth_timestamp_s,
@@ -384,7 +416,8 @@ def run_geometry_benchmark(
             "schema": METRICS_SCHEMA,
             "protocol": {
                 "ground_truth": "TUM depth PNG / 5000 (rt_mapping.evaluation.tum_depth), evaluation only",
-                "gt_resize": "rt_mapping.evaluation.depth.resize_depth_nearest to the prediction grid",
+                "gt_resize": ("none; prediction bilinear to raw RGB grid" if spec.evaluation_grid == "raw_rgb"
+                              else "rt_mapping.evaluation.depth.resize_depth_nearest to the prediction grid"),
                 "mask": "finite(gt) & gt > 0 & prediction.valid_mask",
                 "scale_alignment": "none (raw metric depth)",
                 "aggregation": "frame_mean",
@@ -403,6 +436,8 @@ def run_geometry_benchmark(
             "stages": {TIMING_STAGE: timing.to_dict()},
             "per_frame_ms": [{"frame_id": m.frame_id, "inference_ms": ms} for m, ms in zip(metrics, samples_ms)],
             "model_load_s": load_seconds,
+            "prewarm_samples_ms": prewarm_ms,
+            "cold_inference_ms": prewarm_ms[0] if prewarm_ms else samples_ms[0],
             "peak_vram_gb": peak() if callable(peak) else None,
             "started_at": format_utc(started),
             "finished_at": format_utc(finished),
