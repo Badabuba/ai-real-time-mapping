@@ -1,0 +1,1013 @@
+{
+  "alignment_modes": {
+    "B0 trajectory": "evaluation-only Sim(3)",
+    "P1/B1/B0-shared-scale map + ATE": "shared SE(3) of the P1-global metric trajectory (GT evaluation only)"
+  },
+  "b0_development": {
+    "failure_table": [
+      {
+        "category": "initializing",
+        "frame_count": 13
+      },
+      {
+        "category": "lost",
+        "frame_count": 4
+      },
+      {
+        "category": "relocalizing",
+        "frame_count": 126
+      },
+      {
+        "category": "unknown_state",
+        "frame_count": 0
+      },
+      {
+        "category": "ok_without_pose",
+        "frame_count": 0
+      },
+      {
+        "category": "track_exception",
+        "frame_count": 0
+      },
+      {
+        "category": "keyframe_observation_error",
+        "frame_count": 0
+      },
+      {
+        "category": "gt_unassociated_usable_pose",
+        "frame_count": 0
+      }
+    ],
+    "final_trajectory_sim3": {
+      "ate_median_m": 0.011626089797946878,
+      "ate_rmse_m": 0.019529924537680335,
+      "matched_poses": 430,
+      "rpe_rotation_rmse_deg": 0.7144780809288441,
+      "rpe_translation_rmse_m": 0.013065591387620486
+    },
+    "gap_aware_rpe": {
+      "candidate_pairs": 429,
+      "excluded_frame_id_pairs": [
+        [
+          168,
+          294
+        ],
+        [
+          294,
+          298
+        ],
+        [
+          298,
+          300
+        ],
+        [
+          300,
+          302
+        ]
+      ],
+      "excluded_gap_pairs": 4,
+      "gap_rule": "every intervening frozen input must have OK state, a valid causal pose and no track exception",
+      "metrics": {
+        "rpe_pairs": 425,
+        "rpe_rotation_rmse_deg": 0.6444619812381633,
+        "rpe_translation_rmse_m": 0.012164615088167314
+      },
+      "reason": null,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched causal pose rows before gap filtering",
+      "scale_use": "one global evaluation-only Sim(3) fit on causal poses; no per-segment fitting"
+    },
+    "input_frames": 573,
+    "resources": {
+      "reason": "no resource report supplied; historical wall clock is not a peak-RSS measurement",
+      "value": null
+    },
+    "retained_keyframes_sim3": {
+      "ate_rmse_m": 0.016014430264426612,
+      "matched_poses": 71,
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.017889512067644983
+    },
+    "run_id": "nazar_n05_dev573_b0eval_cd64251_01",
+    "run_json_sha256": "51a433081161999c834fd041bf5fd632ff226c3d29416e08d598f01f83bece2e",
+    "scale_use": "evaluation-only Sim(3); not metric scale",
+    "source_slam_stage": "nazar_n05_dev573_da3_cd64251_01.slam",
+    "tracking_latency": {
+      "cold_sample_scope": "first Slam.track invocation only; not process/model startup",
+      "mapping_ms": null,
+      "mapping_reason": "background mapping is not attributable per input frame",
+      "reason": null,
+      "scope": "Slam.track wall time including waits/hook overhead, excluding decode and post-call CSV work",
+      "summary": {
+        "cold_start_ms": 575.221782,
+        "n_total": 573,
+        "n_warm": 572,
+        "n_warmup": 1,
+        "percentile_method": "linear",
+        "stage": "slam_track",
+        "unit": "ms",
+        "warm_max_ms": 3716.570721,
+        "warm_mean_ms": 840.5658944737763,
+        "warm_median_ms": 611.384609,
+        "warm_min_ms": 79.819031,
+        "warm_p50_ms": 611.384609,
+        "warm_p95_ms": 2312.4678535999988
+      },
+      "total_ms": null,
+      "total_reason": "whole input-loop latency is not instrumented",
+      "warmup_frames": 1,
+      "warmup_policy": "exclude the first N frozen input rows regardless of state; remaining initialization/lost rows are included"
+    },
+    "tracking_success": 0.7504363001745201,
+    "tracking_success_denominator": "frozen associated RGB-depth input frames actually submitted to SLAM"
+  },
+  "chunk": "N-05",
+  "consistency_checks": {
+    "b0_retained_keyframe_sim3_ate_matches_y_evaluator": true,
+    "dev_identical_gt_eligible_frame_ids_across_all_comparisons": true,
+    "dev_w150_B0-shared-scale_identical_to_base": true,
+    "dev_w150_B1-oracle_identical_to_base": true,
+    "dev_w150_P1-global_identical_to_base": true,
+    "dev_w150_P1-keyframes-2_identical_to_base": true,
+    "dev_w150_P1-keyframes-5_identical_to_base": true,
+    "dev_w150_P1-raw_identical_to_base": true,
+    "dev_w60_B0-shared-scale_identical_to_base": true,
+    "dev_w60_B1-oracle_identical_to_base": true,
+    "dev_w60_P1-global_identical_to_base": true,
+    "dev_w60_P1-keyframes-2_identical_to_base": true,
+    "dev_w60_P1-keyframes-5_identical_to_base": true,
+    "dev_w60_P1-raw_identical_to_base": true
+  },
+  "derived_freeze": {
+    "best_chamfer_l1_m": 0.10567079877991567,
+    "candidate_set_note": "P1 variants = configurations of keyframe interval / causal window / confidence filter (the fields IC3 freezes). P1-raw is a scale-mode ablation reported on every split, not a freezable configuration; DA3 has no confidence, so confidence = none.",
+    "candidates": [
+      {
+        "ate_se3_rmse_m": 0.046632670727040894,
+        "causal_window_frames": 0,
+        "chamfer_l1_m": 0.10573913871685756,
+        "confidence_threshold": null,
+        "eligible": true,
+        "keyframe_interval": 1,
+        "method": "P1-global",
+        "run_id": "nazar_n05_dev573_da3_cd64251_01",
+        "window_beats_global_on_both": null
+      },
+      {
+        "ate_se3_rmse_m": 0.046632670727040894,
+        "causal_window_frames": 0,
+        "chamfer_l1_m": 0.10567079877991567,
+        "confidence_threshold": null,
+        "eligible": true,
+        "keyframe_interval": 2,
+        "method": "P1-keyframes-2",
+        "run_id": "nazar_n05_dev573_da3_cd64251_01",
+        "window_beats_global_on_both": null
+      },
+      {
+        "ate_se3_rmse_m": 0.046632670727040894,
+        "causal_window_frames": 0,
+        "chamfer_l1_m": 0.12231989932422027,
+        "confidence_threshold": null,
+        "eligible": true,
+        "keyframe_interval": 5,
+        "method": "P1-keyframes-5",
+        "run_id": "nazar_n05_dev573_da3_cd64251_01",
+        "window_beats_global_on_both": null
+      },
+      {
+        "ate_se3_rmse_m": 0.06286416470466831,
+        "causal_window_frames": 60,
+        "chamfer_l1_m": 0.10581459051987871,
+        "confidence_threshold": null,
+        "eligible": false,
+        "keyframe_interval": 1,
+        "method": "P1-window",
+        "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+        "window_beats_global_on_both": false
+      },
+      {
+        "ate_se3_rmse_m": 0.06286201846192706,
+        "causal_window_frames": 150,
+        "chamfer_l1_m": 0.10581545400655706,
+        "confidence_threshold": null,
+        "eligible": false,
+        "keyframe_interval": 1,
+        "method": "P1-window",
+        "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+        "window_beats_global_on_both": false
+      }
+    ],
+    "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+    "chosen": {
+      "causal_window_frames": 0,
+      "confidence_threshold": null,
+      "keyframe_interval": 2,
+      "method": "P1-keyframes-2"
+    },
+    "model": "depth-anything/DA3METRIC-LARGE@4010e39f3634a45bc60553321fb49fb760bd594e, process_res 504, bfloat16",
+    "p1_window_on_heldout": false,
+    "rule": "plan D-4: lowest dev Chamfer-L1 among the primary model's P1 variants; ties within 1 mm -> simpler (global over window, larger keyframe interval, no confidence filter); P1-window only if it beats P1-global on both dev Chamfer-L1 and dev SE(3) ATE; selection rows not used",
+    "tie_tolerance_m": 0.001,
+    "tied": [
+      "P1-global(k=1,w=0)",
+      "P1-keyframes-2(k=2,w=0)"
+    ]
+  },
+  "failures": [
+    {
+      "cause": "official fr2/desk groundtruth.txt has one duplicate timestamp (1311868229.576, rows 10858/10859, outside the sel50 window; recorded by Y-04); merged rt_mapping.evaluation.trajectory.read_tum_trajectory requires strictly increasing timestamps. Not a tolerance issue; 20 ms unchanged. No evaluator change in N-05.",
+      "reason": "pipeline_failed: comparison_failed: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+      "run_id": "nazar_n05_sel50_da3_cd64251_01",
+      "stage": "comparison",
+      "status": "failed"
+    },
+    {
+      "cause": "same GT file",
+      "reason": "Rejected: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+      "run_id": "nazar_n05_sel50_b0eval_cd64251_01",
+      "stage": "B0 evaluation",
+      "status": "rejected_before_run_directory"
+    },
+    {
+      "cause": "same GT file",
+      "reason": "pipeline_failed: comparison_failed: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+      "run_id": "nazar_n05_sel50_unidepth_580bba1_01",
+      "stage": "comparison",
+      "status": "failed"
+    }
+  ],
+  "gt_pose_coverage": {
+    "dev_da3": {
+      "candidate_keyframes": 71,
+      "evaluated_keyframes": 71,
+      "excluded_frame_ids": [],
+      "excluded_keyframes": 0,
+      "max_timestamp_delta_s": 0.02,
+      "policy": "exclude_keyframes_without_gt_pose_within_tolerance"
+    },
+    "dev_ud": {
+      "candidate_keyframes": 71,
+      "evaluated_keyframes": 71,
+      "excluded_frame_ids": [],
+      "excluded_keyframes": 0,
+      "max_timestamp_delta_s": 0.02,
+      "policy": "exclude_keyframes_without_gt_pose_within_tolerance"
+    },
+    "dev_w150": {
+      "candidate_keyframes": 71,
+      "evaluated_keyframes": 71,
+      "excluded_frame_ids": [],
+      "excluded_keyframes": 0,
+      "max_timestamp_delta_s": 0.02,
+      "policy": "exclude_keyframes_without_gt_pose_within_tolerance"
+    },
+    "dev_w60": {
+      "candidate_keyframes": 71,
+      "evaluated_keyframes": 71,
+      "excluded_frame_ids": [],
+      "excluded_keyframes": 0,
+      "max_timestamp_delta_s": 0.02,
+      "policy": "exclude_keyframes_without_gt_pose_within_tolerance"
+    }
+  },
+  "gt_rule": "GT depth/poses only in evaluation and the labelled B1 oracle; 20 ms association, missing-GT policy from PR #21",
+  "hardware": "NVIDIA GeForce RTX 5070 Laptop GPU (8 GiB), AMD64 CPU, 31.2 GB RAM, Windows 11 host + Linux Docker pySLAM 96019cf (rt-mapping-wp2:96019cf)",
+  "heldout_accessed": false,
+  "real_time_claim": false,
+  "rows": [
+    {
+      "accuracy_mean_m": 0.03477458705376323,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.14349423378883702,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.2522138805239108,
+      "fscore_0.02m": 0.02874823432199999,
+      "fscore_0.05m": 0.20727661563717437,
+      "fscore_0.1m": 0.4745044344413545,
+      "fusion_p95_ms": null,
+      "gt_keyframes": "71/71",
+      "map_points": 2006,
+      "method": "B0-shared-scale",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.10011181549845732,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.10573913871685756,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.11136646193525779,
+      "fscore_0.02m": 0.26534910114881877,
+      "fscore_0.05m": 0.443705419361377,
+      "fscore_0.1m": 0.6053344182267029,
+      "fusion_p95_ms": 178.65689999962342,
+      "gt_keyframes": "71/71",
+      "map_points": 205228,
+      "method": "P1-global",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.10005681803670803,
+      "ate_se3_rmse_m": 0.2148213015972098,
+      "chamfer_l1_m": 0.09894636281999336,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.09783590760327868,
+      "fscore_0.02m": 0.28808763918354247,
+      "fscore_0.05m": 0.4776973351450942,
+      "fscore_0.1m": 0.6451867295786641,
+      "fusion_p95_ms": 179.16144999981043,
+      "gt_keyframes": "71/71",
+      "map_points": 228126,
+      "method": "P1-raw",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.05279385358777588,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.015667181527437676,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.016610622723369696,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.01755406391930172,
+      "fscore_0.02m": 0.7376815520119939,
+      "fscore_0.05m": 0.9743780563652619,
+      "fscore_0.1m": 0.9999789530620522,
+      "fusion_p95_ms": 137.89420000102837,
+      "gt_keyframes": "71/71",
+      "map_points": 136434,
+      "method": "B1-oracle",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.09023347159214379,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.10567079877991567,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.12110812596768755,
+      "fscore_0.02m": 0.2560353860554614,
+      "fscore_0.05m": 0.4465133841894166,
+      "fscore_0.1m": 0.6121339652699133,
+      "fusion_p95_ms": 175.53045000022394,
+      "gt_keyframes": "71/71",
+      "map_points": 138957,
+      "method": "P1-keyframes-2",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.08363113881670357,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.12231989932422027,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.16100865983173698,
+      "fscore_0.02m": 0.20516472972689687,
+      "fscore_0.05m": 0.40591350135310444,
+      "fscore_0.1m": 0.5752081457511262,
+      "fusion_p95_ms": 172.17669999954524,
+      "gt_keyframes": "71/71",
+      "map_points": 75026,
+      "method": "P1-keyframes-5",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.02621096293493815,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.12348153132429271,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.22075209971364726,
+      "fscore_0.02m": 0.044778785787592486,
+      "fscore_0.05m": 0.2528811352618724,
+      "fscore_0.1m": 0.5195739139281035,
+      "fusion_p95_ms": null,
+      "gt_keyframes": "71/71",
+      "map_points": 2064,
+      "method": "B0-shared-scale",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.06277061971043622,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.044671319740610595,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.02657201977078497,
+      "fscore_0.02m": 0.4670424597582302,
+      "fscore_0.05m": 0.7216961421995322,
+      "fscore_0.1m": 0.8697080916642542,
+      "fusion_p95_ms": 288.4081000011065,
+      "gt_keyframes": "71/71",
+      "map_points": 265808,
+      "method": "P1-global",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.08870743177466912,
+      "ate_se3_rmse_m": 0.2148213015972098,
+      "chamfer_l1_m": 0.06061360751608032,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.03251978325749151,
+      "fscore_0.02m": 0.3860623154191101,
+      "fscore_0.05m": 0.6142837030132812,
+      "fscore_0.1m": 0.7765317224076765,
+      "fusion_p95_ms": 313.8538500006689,
+      "gt_keyframes": "71/71",
+      "map_points": 305364,
+      "method": "P1-raw",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.05279385358777588,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.012977819569322604,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.014633185994772403,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.016288552420222202,
+      "fscore_0.02m": 0.7940365383318059,
+      "fscore_0.05m": 0.9869954407128035,
+      "fscore_0.1m": 0.9995753652231567,
+      "fusion_p95_ms": 206.68710000245483,
+      "gt_keyframes": "71/71",
+      "map_points": 135663,
+      "method": "B1-oracle",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.05599777283658806,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.044842223534275034,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.03368667423196201,
+      "fscore_0.02m": 0.44439236272636284,
+      "fscore_0.05m": 0.7129209986502838,
+      "fscore_0.1m": 0.8793399396315318,
+      "fusion_p95_ms": 271.8048500000805,
+      "gt_keyframes": "71/71",
+      "map_points": 185173,
+      "method": "P1-keyframes-2",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.049401457881160724,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.053273658532587975,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.05714585918401522,
+      "fscore_0.02m": 0.3985669692328141,
+      "fscore_0.05m": 0.6619666327926299,
+      "fscore_0.1m": 0.8367373627943373,
+      "fusion_p95_ms": 274.68006999770296,
+      "gt_keyframes": "71/71",
+      "map_points": 98229,
+      "method": "P1-keyframes-5",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.03682093846787877,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.04973382259582683,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.0626467067237749,
+      "fscore_0.02m": 0.4743525737140136,
+      "fscore_0.05m": 0.7218911685098294,
+      "fscore_0.1m": 0.8672289779339574,
+      "fusion_p95_ms": 220.42790000159584,
+      "gt_keyframes": "71/71",
+      "map_points": 139733,
+      "method": "P1-confidence--0.691648",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.03020033750175922,
+      "ate_se3_rmse_m": 0.01675538011494112,
+      "chamfer_l1_m": 0.058282799974907464,
+      "comparison": "base (window 0)",
+      "completeness_mean_m": 0.0863652624480557,
+      "fscore_0.02m": 0.43764630854414355,
+      "fscore_0.05m": 0.6810273382419425,
+      "fscore_0.1m": 0.8297501836432878,
+      "fusion_p95_ms": 155.84195000155887,
+      "gt_keyframes": "71/71",
+      "map_points": 97613,
+      "method": "P1-confidence--0.645685",
+      "model": "UniDepth-rl0",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.01793126587761328,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.03477458705376323,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.14349423378883702,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.2522138805239108,
+      "fscore_0.02m": 0.02874823432199999,
+      "fscore_0.05m": 0.20727661563717437,
+      "fscore_0.1m": 0.4745044344413545,
+      "fusion_p95_ms": null,
+      "gt_keyframes": "71/71",
+      "map_points": 2006,
+      "method": "B0-shared-scale",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.10011181549845732,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.10573913871685756,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.11136646193525779,
+      "fscore_0.02m": 0.26534910114881877,
+      "fscore_0.05m": 0.443705419361377,
+      "fscore_0.1m": 0.6053344182267029,
+      "fusion_p95_ms": 177.01954999756708,
+      "gt_keyframes": "71/71",
+      "map_points": 205228,
+      "method": "P1-global",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.10005681803670803,
+      "ate_se3_rmse_m": 0.2148213015972098,
+      "chamfer_l1_m": 0.09894636281999336,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.09783590760327868,
+      "fscore_0.02m": 0.28808763918354247,
+      "fscore_0.05m": 0.4776973351450942,
+      "fscore_0.1m": 0.6451867295786641,
+      "fusion_p95_ms": 174.41390000021784,
+      "gt_keyframes": "71/71",
+      "map_points": 228126,
+      "method": "P1-raw",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.05279385358777588,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.015667181527437676,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.016610622723369696,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.01755406391930172,
+      "fscore_0.02m": 0.7376815520119939,
+      "fscore_0.05m": 0.9743780563652619,
+      "fscore_0.1m": 0.9999789530620522,
+      "fusion_p95_ms": 139.39564999782306,
+      "gt_keyframes": "71/71",
+      "map_points": 136434,
+      "method": "B1-oracle",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.09023347159214379,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.10567079877991567,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.12110812596768755,
+      "fscore_0.02m": 0.2560353860554614,
+      "fscore_0.05m": 0.4465133841894166,
+      "fscore_0.1m": 0.6121339652699133,
+      "fusion_p95_ms": 176.01747499975318,
+      "gt_keyframes": "71/71",
+      "map_points": 138957,
+      "method": "P1-keyframes-2",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.08363113881670357,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.12231989932422027,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.16100865983173698,
+      "fscore_0.02m": 0.20516472972689687,
+      "fscore_0.05m": 0.40591350135310444,
+      "fscore_0.1m": 0.5752081457511262,
+      "fusion_p95_ms": 173.21465999884822,
+      "gt_keyframes": "71/71",
+      "map_points": 75026,
+      "method": "P1-keyframes-5",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.09965039872347768,
+      "ate_se3_rmse_m": 0.06286416470466831,
+      "chamfer_l1_m": 0.10581459051987871,
+      "comparison": "window 60",
+      "completeness_mean_m": 0.11197878231627972,
+      "fscore_0.02m": 0.2655432952882614,
+      "fscore_0.05m": 0.44691028564211127,
+      "fscore_0.1m": 0.6068772042805534,
+      "fusion_p95_ms": 180.29845000091882,
+      "gt_keyframes": "71/71",
+      "map_points": 204959,
+      "method": "P1-window",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.022732235708195842,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.03477458705376323,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.14349423378883702,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.2522138805239108,
+      "fscore_0.02m": 0.02874823432199999,
+      "fscore_0.05m": 0.20727661563717437,
+      "fscore_0.1m": 0.4745044344413545,
+      "fusion_p95_ms": null,
+      "gt_keyframes": "71/71",
+      "map_points": 2006,
+      "method": "B0-shared-scale",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.10011181549845732,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.10573913871685756,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.11136646193525779,
+      "fscore_0.02m": 0.26534910114881877,
+      "fscore_0.05m": 0.443705419361377,
+      "fscore_0.1m": 0.6053344182267029,
+      "fusion_p95_ms": 173.8655999997718,
+      "gt_keyframes": "71/71",
+      "map_points": 205228,
+      "method": "P1-global",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.10005681803670803,
+      "ate_se3_rmse_m": 0.2148213015972098,
+      "chamfer_l1_m": 0.09894636281999336,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.09783590760327868,
+      "fscore_0.02m": 0.28808763918354247,
+      "fscore_0.05m": 0.4776973351450942,
+      "fscore_0.1m": 0.6451867295786641,
+      "fusion_p95_ms": 174.12845000217203,
+      "gt_keyframes": "71/71",
+      "map_points": 228126,
+      "method": "P1-raw",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.05279385358777588,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.015667181527437676,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.016610622723369696,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.01755406391930172,
+      "fscore_0.02m": 0.7376815520119939,
+      "fscore_0.05m": 0.9743780563652619,
+      "fscore_0.1m": 0.9999789530620522,
+      "fusion_p95_ms": 138.61489999908372,
+      "gt_keyframes": "71/71",
+      "map_points": 136434,
+      "method": "B1-oracle",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.09023347159214379,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.10567079877991567,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.12110812596768755,
+      "fscore_0.02m": 0.2560353860554614,
+      "fscore_0.05m": 0.4465133841894166,
+      "fscore_0.1m": 0.6121339652699133,
+      "fusion_p95_ms": 175.34230000001116,
+      "gt_keyframes": "71/71",
+      "map_points": 138957,
+      "method": "P1-keyframes-2",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.08363113881670357,
+      "ate_se3_rmse_m": 0.046632670727040894,
+      "chamfer_l1_m": 0.12231989932422027,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.16100865983173698,
+      "fscore_0.02m": 0.20516472972689687,
+      "fscore_0.05m": 0.40591350135310444,
+      "fscore_0.1m": 0.5752081457511262,
+      "fusion_p95_ms": 170.02425999962725,
+      "gt_keyframes": "71/71",
+      "map_points": 75026,
+      "method": "P1-keyframes-5",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.020538728042771556,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    },
+    {
+      "accuracy_mean_m": 0.09965103742907823,
+      "ate_se3_rmse_m": 0.06286201846192706,
+      "chamfer_l1_m": 0.10581545400655706,
+      "comparison": "window 150",
+      "completeness_mean_m": 0.11197987058403591,
+      "fscore_0.02m": 0.2655243746932383,
+      "fscore_0.05m": 0.44691627584877985,
+      "fscore_0.1m": 0.6068652246047151,
+      "fusion_p95_ms": 179.42650000077265,
+      "gt_keyframes": "71/71",
+      "map_points": 204947,
+      "method": "P1-window",
+      "model": "DA3-504",
+      "rpe_rotation_rmse_deg": 1.0024018214860813,
+      "rpe_translation_rmse_m": 0.02273240512516294,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "split": "development"
+    }
+  ],
+  "runs": {
+    "dev_da3": {
+      "dirty_worktree": false,
+      "git_commit": "cd642515a05c4a6ab15621d7fac34e60df23ad12",
+      "input_stages": {
+        "geometry": {
+          "command_sha256": null,
+          "elapsed_s": 0.0025630999989516567,
+          "manifest_sha256": "81ff7bc92391eb79c660c35463c3abc7f40b4fecdafeaa32784cccfa071ca521",
+          "mode": "reused",
+          "run_id": "nazar_n05_dev573_geom_da3_0dc5f7f_01"
+        },
+        "slam": {
+          "command_sha256": "a650b11e9bf4314f574b8de7a7f70f27e173e8e6f3e519de45ec6a8b0cd8e3c4",
+          "elapsed_s": 738.7088579999981,
+          "manifest_sha256": "d985a236fc0b80bb34148b6edf32f78ac34317b131cb88faa6b300254a36f255",
+          "mode": "launched",
+          "run_id": "nazar_n05_dev573_da3_cd64251_01.slam"
+        }
+      },
+      "reason": null,
+      "run_id": "nazar_n05_dev573_da3_cd64251_01",
+      "run_json_sha256": "4fc19c9047feacb22dede4a829c13cf587e2bcd30a8e99e80e455b84375c5010",
+      "stages": {
+        "nazar_n05_dev573_da3_cd64251_01.comparison": {
+          "dirty_worktree": false,
+          "git_commit": "cd642515a05c4a6ab15621d7fac34e60df23ad12",
+          "reason": null,
+          "run_json_sha256": "8925642cd6b5758a7f14e7188789ec39b619add6bff3b1532dab71a639699ff9",
+          "status": "ok"
+        },
+        "nazar_n05_dev573_da3_cd64251_01.slam": {
+          "dirty_worktree": false,
+          "git_commit": "cd642515a05c4a6ab15621d7fac34e60df23ad12",
+          "reason": null,
+          "run_json_sha256": "d985a236fc0b80bb34148b6edf32f78ac34317b131cb88faa6b300254a36f255",
+          "status": "ok"
+        }
+      },
+      "status": "ok"
+    },
+    "dev_ud": {
+      "dirty_worktree": false,
+      "git_commit": "580bba103347bdac4f3c520257d6b1a00b610d1e",
+      "input_stages": {
+        "geometry": {
+          "command_sha256": null,
+          "elapsed_s": 0.0022471999982371926,
+          "manifest_sha256": "1bff7202cc7d8fd05235c94fabe9c415317257268412623daf9ef8b610873658",
+          "mode": "reused",
+          "run_id": "nazar_n05_dev573_geom_unidepth_0dc5f7f_01"
+        },
+        "slam": {
+          "command_sha256": null,
+          "elapsed_s": 0.00249190000249655,
+          "manifest_sha256": "d985a236fc0b80bb34148b6edf32f78ac34317b131cb88faa6b300254a36f255",
+          "mode": "reused",
+          "run_id": "nazar_n05_dev573_da3_cd64251_01.slam"
+        }
+      },
+      "reason": null,
+      "run_id": "nazar_n05_dev573_unidepth_580bba1_01",
+      "run_json_sha256": "fbb3c7451df79ac011fa55a096989b6e44788bf62c0331cb8eac779ae9cda7ed",
+      "stages": {
+        "nazar_n05_dev573_unidepth_580bba1_01.comparison": {
+          "dirty_worktree": false,
+          "git_commit": "580bba103347bdac4f3c520257d6b1a00b610d1e",
+          "reason": null,
+          "run_json_sha256": "e4dcad1db875bac8a7d6a1cf20afcae73e3d76847cb7c1c3b69629d326b1a743",
+          "status": "ok"
+        }
+      },
+      "status": "ok"
+    },
+    "dev_w150": {
+      "dirty_worktree": false,
+      "git_commit": "580bba103347bdac4f3c520257d6b1a00b610d1e",
+      "reason": null,
+      "run_id": "nazar_n05_dev573_da3_window150_580bba1_01",
+      "run_json_sha256": "82f5643a8f1bc0ba8577c6549fcf7e26b5ef28495cfb2dfb998682d243f18734",
+      "status": "ok"
+    },
+    "dev_w60": {
+      "dirty_worktree": false,
+      "git_commit": "580bba103347bdac4f3c520257d6b1a00b610d1e",
+      "reason": null,
+      "run_id": "nazar_n05_dev573_da3_window60_580bba1_01",
+      "run_json_sha256": "b0fca62c365d4e3db4a55e017969250f40c48ee40d74405715b76acb44e244f3",
+      "status": "ok"
+    },
+    "sel_da3": {
+      "dirty_worktree": false,
+      "git_commit": "cd642515a05c4a6ab15621d7fac34e60df23ad12",
+      "input_stages": {
+        "geometry": {
+          "command_sha256": null,
+          "elapsed_s": 0.0025205999991158023,
+          "manifest_sha256": "f940e3115ecddbba218f358b43fcbc7b865d5cf4290feeddad5078b1c40aee88",
+          "mode": "reused",
+          "run_id": "nazar_n05_sel50_geom_da3_0dc5f7f_01"
+        },
+        "slam": {
+          "command_sha256": "da41d506c582d48dd21d9274c25edcd2e7abdc7d6e58b86886e9ac9af685e5f2",
+          "elapsed_s": 441.09696859999895,
+          "manifest_sha256": "61a466bf5de98266d00092e040170fe7975840005abf6c8853768e9329db7cdc",
+          "mode": "launched",
+          "run_id": "nazar_n05_sel50_da3_cd64251_01.slam"
+        }
+      },
+      "reason": "pipeline_failed: comparison_failed: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+      "run_id": "nazar_n05_sel50_da3_cd64251_01",
+      "run_json_sha256": "166762119c38841c1036e966004370264635bb94ae23d0298a5070c7acd6bfe8",
+      "stages": {
+        "nazar_n05_sel50_da3_cd64251_01.comparison": {
+          "dirty_worktree": false,
+          "git_commit": "cd642515a05c4a6ab15621d7fac34e60df23ad12",
+          "reason": "comparison_failed: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+          "run_json_sha256": "d8b2cf5b9a04d6bb0ed42777029d86687cfe2e43cdeffec9b2235d147e833101",
+          "status": "failed"
+        },
+        "nazar_n05_sel50_da3_cd64251_01.slam": {
+          "dirty_worktree": false,
+          "git_commit": "cd642515a05c4a6ab15621d7fac34e60df23ad12",
+          "reason": null,
+          "run_json_sha256": "61a466bf5de98266d00092e040170fe7975840005abf6c8853768e9329db7cdc",
+          "status": "ok"
+        }
+      },
+      "status": "failed"
+    },
+    "sel_ud": {
+      "dirty_worktree": false,
+      "git_commit": "580bba103347bdac4f3c520257d6b1a00b610d1e",
+      "input_stages": {
+        "geometry": {
+          "command_sha256": null,
+          "elapsed_s": 0.002302899996720953,
+          "manifest_sha256": "a727e423c3de988e214f38f3bbc5e678071741c70b166ce6852e34ebd0b0cc91",
+          "mode": "reused",
+          "run_id": "nazar_n05_sel50_geom_unidepth_0dc5f7f_01"
+        },
+        "slam": {
+          "command_sha256": null,
+          "elapsed_s": 0.0023982000020623673,
+          "manifest_sha256": "61a466bf5de98266d00092e040170fe7975840005abf6c8853768e9329db7cdc",
+          "mode": "reused",
+          "run_id": "nazar_n05_sel50_da3_cd64251_01.slam"
+        }
+      },
+      "reason": "pipeline_failed: comparison_failed: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+      "run_id": "nazar_n05_sel50_unidepth_580bba1_01",
+      "run_json_sha256": "2497da85ad14f821cda2f2ce366596bc01f844456ee75a8ab3beb626c2dde6ba",
+      "stages": {
+        "nazar_n05_sel50_unidepth_580bba1_01.comparison": {
+          "dirty_worktree": false,
+          "git_commit": "580bba103347bdac4f3c520257d6b1a00b610d1e",
+          "reason": "comparison_failed: trajectory needs finite strictly ordered timestamp tx ty tz qx qy qz qw",
+          "run_json_sha256": "3961a86436717c29382f196ea34acf89d265c1ccea565a85a054b54031fbe6f9",
+          "status": "failed"
+        }
+      },
+      "status": "failed"
+    }
+  },
+  "schema": "rt_mapping.nazar_n05_benchmark/v1",
+  "selection_rows_used_for_choice": false,
+  "skipped_ablations": {
+    "dev_da3": [
+      {
+        "ablation": "P1-window",
+        "reason": "conditional_on_development_comparison; disabled in config"
+      },
+      {
+        "ablation": "confidence",
+        "reason": "model_supplies_no_confidence; no fake confidence created"
+      }
+    ],
+    "dev_ud": [
+      {
+        "ablation": "P1-window",
+        "reason": "conditional_on_development_comparison; disabled in config"
+      }
+    ],
+    "dev_w150": [
+      {
+        "ablation": "confidence",
+        "reason": "model_supplies_no_confidence; no fake confidence created"
+      }
+    ],
+    "dev_w60": [
+      {
+        "ablation": "confidence",
+        "reason": "model_supplies_no_confidence; no fake confidence created"
+      }
+    ]
+  },
+  "units": {
+    "distances": "m",
+    "rpe_rotation": "deg",
+    "timing": "ms"
+  }
+}
