@@ -163,3 +163,7 @@ results/runs/<run_id>/
 - real-time claim: робиться лише якщо p95 end-to-end latency вкладається у визначений frame budget без необмеженого backlog.
 
 Якщо quality не покращується, це не технічний failure: зберігаємо negative result, робимо ablation і пояснюємо межі гіпотези.
+
+## 8. Frozen held-out protocol (IC3, 25 жовтня 2026)
+
+Held-out протокол заморожено до будь-якого доступу до fr3: `configs/benchmark_frozen.json` і `docs/BENCHMARK_PROTOCOL.md`. Значення механічно виведені за plan D-4 лише з development rows primary моделі (`docs/DEVELOPMENT_BENCHMARK.md` §7): DA3METRIC-LARGE `process_res` 504, keyframe interval 2, без P1-window, без confidence filter, merged alignment/fusion defaults, τ = {2, 5, 10} cm, crop none, GT association 20 ms з explicit exclusion policy, B0 `configs/wp2_pyslam_heldout.json`. Held-out runs мають `git_commit`, що містить freeze commit; кожна конфігурація запускається один раз.
