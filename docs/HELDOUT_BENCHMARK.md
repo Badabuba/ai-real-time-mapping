@@ -47,3 +47,10 @@ Held-out performance table недоступна: жоден stage не вико�
 - Цей run: failed на preflight (вище).
 - Superseded runner `wp2_heldout2488_4484fd7` (clean `4484fd7`) failed в upstream `local_mapping.py` (`TypeError: 'int' object is not iterable`); без trajectory і metrics; нічого не tuned.
 - Held-out результати нічого не вибирали і не змінювали. F-N1/F-N2 не розпочато.
+
+## 7. D-5 rerun authorization (записано до запуску)
+
+- **Bug fix власника коду:** Ярополк, PR #27 (`bd0a17e`, merge `c08833f`) і PR #29 (`78ecfe5`, merge `242c0cb`). `slam/setup.py` більше не вимагає повного покриття RGB time range GT: усі frozen RGB inputs лишаються в SLAM, coverage у межах 20 ms звітується явно (matched/unmatched, excluded frame IDs, reasons). Нуль GT overlap і далі дає failure (`NoGroundTruthOverlap`). Tolerance зафіксовано на 0.02 s (`GT_MATCH_TOLERANCE_S`). CI 4/4 green в обох PR.
+- **Аудит Nazar:** diff `e561d8c..242c0cb` у `src/`, `scripts/`, `configs/`, `containers/` зачіпає лише `slam/setup.py`, `evaluation/trajectory.py` (coverage helper), `evaluation/slam_run.py` і два WP2 CLI (звіт coverage, 20 ms enforced). Geometry, alignment, fusion і comparison code не змінено.
+- **Frozen protocol без змін:** SHA-256 `configs/benchmark_frozen.json` `bf990a4a…213407` = freeze `4021a02`. `configs/pipeline.nazar.heldout.json` `9cf9a0d7…0b97` = версія run `e561d8c`. `wp2_pyslam_heldout.json` `3545878e…71eb`, `offline_mapping.json` `93c0c363…f9fb`, `mapping_comparison.json` `06c4d5f5…e3aa2`, held-out manifest `42b1149d…0ee3`. Checkpoint `bbea5b0b…324776`, Docker image `sha256:f975805a…f5f6`, fr3 archive `c7cd8e1a…e9c`, `groundtruth.txt` `e255d5d9…533f` (= archive member і Y-06).
+- **Rerun:** один запуск з commit цього branch, новий run ID `nazar_n06_heldout2488_da3_<sha7>_01`; failed run `nazar_n06_heldout2488_da3_e561d8c_01` не змінюється. Модель, `process_res`, keyframe interval, window, confidence, thresholds і tolerance не змінюються. Held-out результат нічого не вибирає.
