@@ -19,7 +19,7 @@ DA3 isolated environment: `.local/da3-venv`, використовує наявн
 
 Незалежна перевірка trajectory evaluator через `evo` на 60 TUM poses із заданим scale/noise дала ATE/RPE RMSE різницю ≤1.3e-16 для SE(3) та Sim(3). Це parity перевірка математичного evaluator, не accuracy самого SLAM.
 
-Native pySLAM runtime готується в окремому Docker container `rt-mapping-wp2-yulian`, без system packages на Windows/Ubuntu host. Source pinned `96019cf`; контейнерна копія потрібна для коректних Unix symlinks. До завершення real pipeline run WP3/WP4 real validation не вважати done.
+Native pySLAM runtime зібрано в окремому Docker container `rt-mapping-wp2-yulian`, без system packages на Windows/Ubuntu host. Source pinned `96019cf`; контейнерна копія потрібна для коректних Unix symlinks. Opt-in test реальних Map/KeyFrame/MapPoint APIs та sparse export пройшов: **1 test, OK**. До завершення real pipeline run WP3/WP4 real validation не вважати done.
 
 Linux recipe та compatibility flags: [WP2_LINUX_CONTAINER.md](WP2_LINUX_CONTAINER.md). Відповідний full-stage config: `configs/pipeline.tum.windows-docker.json`.
 

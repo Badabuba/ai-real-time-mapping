@@ -14,7 +14,9 @@
 
 Hamming binding upstream використовує SSSE3/SSE4.1 intrinsics навіть у SSE2 branch. Для x86_64 йому явно задається `-msse4.1` без host-specific `-march=native`; CPU повинен підтримувати SSE4.1.
 
-Великий `volumetric_module.cpp` binding компілюється з `-O1`, щоб обмежити compile time/memory. Frozen classical baseline не вмикає upstream volumetric mapping. Solvers/core зберігають Release optimization; власний WP4 fusion знаходиться у `rt_mapping.fusion`.
+Великий `volumetric` binding та його static utility library збираються Clang 14 в окремому build directory; `volumetric_module.cpp` має `-O0 -fno-lto`. GCC 12 був надто тривалим із `-O3`, досяг 9.35 GiB RSS із `-O1` та лишався memory-intensive з `-O0`. Clang діагностує upstream int→float binding conversion як narrowing error; `-Wno-error=c++11-narrowing` зберігає warning і GCC-compatible conversion без source patch. Frozen classical baseline не вмикає upstream volumetric mapping. Solvers/core зберігають GCC Release optimization; власний WP4 fusion знаходиться у `rt_mapping.fusion`. Це runtime для frozen headless baseline, не перевірка upstream volumetric/GUI modes.
+
+CMake hook також явно додає `Qhull::qhullcpp` до binding: upstream helper не передає цю C++ library у parent scope, через що import мав undefined RTTI symbol `orgQhull::RoadError`. System Qt5 Core/Gui/Widgets preloaded через `LD_PRELOAD`, щоб PyQt wheel не підміняв private ABI Debian OpenCV/Qt5OpenGL. Цей environment задано в Dockerfile та explicit Docker argv pipeline config.
 
 ## Побудова і запуск
 

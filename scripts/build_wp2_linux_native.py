@@ -54,17 +54,33 @@ if selected in ('all','core','cpp'):
     # Only the optional bounding-box translation units need C++17; retain
     # upstream C++20 for solvers/core and keep all source files unchanged.
     compatibility = logs/'native-compatibility.cmake'
-    compatibility.write_text('if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")\n'
+    compatibility.write_text('if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")\n'
         '  set_source_files_properties("${PROJECT_SOURCE_DIR}/volumetric/bounding_boxes_3d.cpp" '
         '"${PROJECT_SOURCE_DIR}/volumetric/bounding_boxes_2d.cpp" '
         'PROPERTIES COMPILE_OPTIONS "-std=c++17")\n'
         '  set_source_files_properties("${PROJECT_SOURCE_DIR}/volumetric/volumetric_module.cpp" '
-        'PROPERTIES COMPILE_OPTIONS "-O1")\n'
+        'PROPERTIES COMPILE_OPTIONS "-O0;-fno-lto")\n'
+        '  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")\n'
+        '    set_property(SOURCE "${PROJECT_SOURCE_DIR}/volumetric/volumetric_module.cpp" '
+        'APPEND PROPERTY COMPILE_OPTIONS "-Wno-error=c++11-narrowing")\n'
+        '  endif()\n'
         '  if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")\n'
         '    set_source_files_properties("${PROJECT_SOURCE_DIR}/hamming/hamming_module.cpp" '
         'PROPERTIES COMPILE_OPTIONS "-msse4.1")\n'
-        '  endif()\nendif()\n')
-    build('cpp','cpp',options=['-DCMAKE_PROJECT_pyslam_utils_INCLUDE='+str(compatibility)])
+        '  endif()\nendif()\n'
+        'function(wp2_link_qhull_cpp)\n'
+        '  if(TARGET Qhull::qhullcpp)\n'
+        '    target_link_libraries(volumetric PRIVATE Qhull::qhullcpp)\n'
+        '  endif()\nendfunction()\n'
+        'cmake_language(DEFER CALL wp2_link_qhull_cpp)\n')
+    build('cpp','cpp',('pyslam_utils','sim3solver','pnpsolver','glutils','trajectory_tools','color_utils','hamming'),
+          options=['-DCMAKE_PROJECT_pyslam_utils_INCLUDE='+str(compatibility)])
+    if shutil.which('clang++') is None:
+        raise RuntimeError('Clang is required for the large volumetric binding; see containers/wp2.Dockerfile')
+    build('volumetric','cpp',('volumetric',),options=[
+        '-DCMAKE_PROJECT_pyslam_utils_INCLUDE='+str(compatibility),
+        '-DCMAKE_C_COMPILER=clang','-DCMAKE_CXX_COMPILER=clang++',
+        '-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF'],build_dir='build-yulian-clang')
 if selected in ('all','core','features'):
     build('orb','thirdparty/orbslam2_features',('orbslam2_features',))
     prefix=source/'thirdparty/pydbow3/modules/dbow3/install'
