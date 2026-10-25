@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -132,3 +133,35 @@ def build_tum_manifest(
 def dump_manifest(manifest: dict[str, Any]) -> str:
     """Serialise a manifest to stable JSON text ending with a newline."""
     return json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
+
+
+def build_tum_split_manifest(
+    sequence_dir: Path,
+    archive_path: Path,
+    repo_root: Path,
+    archive_url: str,
+    split: str,
+    num_frames: int | None = None,
+) -> dict[str, Any]:
+    """Freeze exact associations and input bytes for one documented split.
+
+    None freezes the whole sequence. Existing smoke manifests are never changed.
+    Hashes include GT files solely to make evaluation reproducible; no GT is
+    passed to a geometry adapter.
+    """
+    if split not in {"smoke", "development", "selection", "held-out"}:
+        raise ValueError(f"unsupported split {split!r}")
+    frames = tum.load_sequence(sequence_dir)
+    count = len(frames) if num_frames is None else num_frames
+    if isinstance(count, bool) or not isinstance(count, int) or count < 1:
+        raise ValueError("num_frames must be a positive integer or None")
+    manifest = build_tum_manifest(
+        sequence_dir, archive_path, repo_root, archive_url, smoke_frames=count
+    )
+    frozen = deepcopy(manifest["splits"]["smoke"])
+    frozen["rule"] = f"first {count} timestamp associations; unchanged RGB/depth bytes"
+    for entry in frozen["frames"]:
+        entry["rgb_sha256"] = sha256_file(sequence_dir / entry["rgb_path"])
+        entry["depth_sha256"] = sha256_file(sequence_dir / entry["depth_path"])
+    manifest["splits"] = {split: frozen}
+    return manifest
