@@ -22,6 +22,7 @@ def main() -> int:
     parser.add_argument("--pyslam-python", type=Path, default=ROOT / ".venv-pyslam/bin/python")
     parser.add_argument("--frames", type=int, default=200)
     parser.add_argument("--timeout", type=int, default=1800)
+    parser.add_argument("--output-root", type=Path, default=ROOT / "results/runs")
     parser.add_argument("--export-sparse", action="store_true",
                         help="Export retained landmarks/keyframe pixel links after shutdown (new run only)")
     parser.add_argument("--run-id", default=f"yaropolk_b0_fr1_xyz_{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}")
@@ -29,7 +30,7 @@ def main() -> int:
     try:
         directory = run_smoke(ROOT, args.pyslam_root, args.pyslam_python, load_setup_config(args.config),
                               run_id=args.run_id, frames=args.frames, timeout_s=args.timeout,
-                              export_sparse=args.export_sparse)
+                              export_sparse=args.export_sparse, output_root=args.output_root)
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print(f"Rejected: {exc}", file=sys.stderr)
         return 2

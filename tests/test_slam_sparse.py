@@ -149,7 +149,8 @@ def test_nonretained_views_are_counted():
 
 
 @pytest.mark.parametrize("enabled", [False, True])
-def test_bootstrap_survives_upstream_forced_exit(tmp_path, enabled):
+@pytest.mark.parametrize("relative_paths", [False, True])
+def test_bootstrap_survives_upstream_forced_exit(tmp_path, monkeypatch, enabled, relative_paths):
     """A real child os._exit proves export happens before runpy can return."""
     root = Path(__file__).resolve().parents[1]
     source = tmp_path / "fake_upstream"
@@ -171,7 +172,10 @@ def test_bootstrap_survives_upstream_forced_exit(tmp_path, enabled):
     prep = run / "input_setup"
     prep.mkdir(parents=True)
     (prep / "setup.json").write_text(json.dumps({"frames": make_slam()[1]}))
-    code = upstream_bootstrap(root, prep, run, seed=0, export_sparse=enabled)
+    monkeypatch.chdir(tmp_path)
+    code = upstream_bootstrap(root, prep.relative_to(tmp_path) if relative_paths else prep,
+                              run.relative_to(tmp_path) if relative_paths else run,
+                              seed=0, export_sparse=enabled)
     done = subprocess.run([sys.executable, "-c", code, str(entry)], cwd=source,
                           capture_output=True, text=True, timeout=20)
     assert done.returncode == 0, done.stdout + done.stderr

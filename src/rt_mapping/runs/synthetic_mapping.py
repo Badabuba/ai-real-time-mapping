@@ -15,7 +15,7 @@ from rt_mapping.slam.sparse import SparseSnapshot, write_sparse_snapshot
 KNOWN_SCALE = 2.5
 
 
-def create_synthetic_inputs(parent: Path, *, git_commit: str, dirty_worktree: bool = True):
+def create_synthetic_inputs(parent: Path, *, git_commit: str, dirty_worktree: bool = True, non_collinear=False):
     """A known plane seen from translated/rotated cameras, plus depth outliers."""
     parent = Path(parent)
     parent.mkdir(parents=True, exist_ok=False)
@@ -34,7 +34,7 @@ def create_synthetic_inputs(parent: Path, *, git_commit: str, dirty_worktree: bo
     for index, (frame_id, stamp) in enumerate(zip(frame_ids, stamps)):
         angle = index * 0.025
         c, s = np.cos(angle), np.sin(angle)
-        pose = np.array([[c, 0, s, index * 0.035], [0, 1, 0, index * 0.01],
+        pose = np.array([[c, 0, s, index * 0.035], [0, 1, 0, (index**2 if non_collinear else index) * 0.01],
                          [-s, 0, c, index * 0.005], [0, 0, 0, 1.]])
         poses.append(pose)
         camera = (xyz - pose[:3, 3]) @ pose[:3, :3]

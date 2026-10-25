@@ -99,7 +99,8 @@ def _trajectory(path, cameras, scale):
         writer = csv.writer(stream)
         writer.writerow(fields)
         for index in np.argsort(cameras["timestamp_s"]):
-            pose = metric_pose(cameras["T_wc"][index], scale)
+            current_scale = scale[int(cameras["frame_id"][index])] if isinstance(scale, dict) else scale
+            pose = metric_pose(cameras["T_wc"][index], current_scale)
             writer.writerow([cameras["timestamp_s"][index], int(cameras["frame_id"][index]),
                              *pose[:3, 3], *_quaternion(pose[:3, :3]), "keyframe_snapshot"])
 

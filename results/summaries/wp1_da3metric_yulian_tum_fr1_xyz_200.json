@@ -1,0 +1,84 @@
+{
+  "schema": "rt_mapping.evidence_summary/v1",
+  "scope": "Real DA3 inference on frozen 200-frame TUM smoke; not alignment or held-out evidence",
+  "run_id": "yulian_da3_f200_b43c384",
+  "git_commit": "b43c384cb0765c5cfdcda97683670c160bd9eacd",
+  "dirty_worktree": false,
+  "status": "ok",
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "model": {
+    "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+    "dtype": "bfloat16",
+    "repo": "depth-anything/DA3METRIC-LARGE",
+    "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+  },
+  "hardware": {
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "gpu": "NVIDIA GeForce RTX 3070 Ti Laptop GPU",
+    "ram_gb": 39.7
+  },
+  "environment": {
+    "cuda_runtime": "11.8",
+    "depth_anything_3": "0.0.0+git3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+    "huggingface_hub": "0.36.0",
+    "numpy": "1.26.4",
+    "opencv": "4.11.0.86",
+    "pillow": "11.2.1",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.8",
+    "torch": "2.7.1+cu118"
+  },
+  "mean_depth_metrics": {
+    "abs_rel": 0.09265534980550988,
+    "aggregation": "frame_mean",
+    "delta1": 0.9649486500371753,
+    "mae_m": 0.12100086238975281,
+    "n_evaluated": 16730870,
+    "n_frames": 200,
+    "n_gt_valid": 16730870,
+    "n_pixels": 22226400,
+    "n_pred_valid": 22226400,
+    "rmse_m": 0.17719629667187944,
+    "valid_coverage": 1.0
+  },
+  "model_inference_timing": {
+    "cold_start_ms": 1839.903400046751,
+    "n_total": 200,
+    "n_warm": 199,
+    "n_warmup": 1,
+    "percentile_method": "linear",
+    "stage": "model_inference",
+    "unit": "ms",
+    "warm_max_ms": 541.0481999861076,
+    "warm_mean_ms": 131.50814472435596,
+    "warm_median_ms": 125.46180002391338,
+    "warm_min_ms": 108.80369995720685,
+    "warm_p95_ms": 157.248269917909
+  },
+  "trajectory_evaluator_independent_evo_parity": [
+    {
+      "mode": "se3",
+      "ate_rmse_delta_m": 0.0,
+      "rpe_translation_rmse_delta_m": 8.153200337090993e-17,
+      "poses": 60
+    },
+    {
+      "mode": "sim3",
+      "ate_rmse_delta_m": 5.0306980803327406e-17,
+      "rpe_translation_rmse_delta_m": 1.214306433183765e-16,
+      "poses": 60
+    }
+  ],
+  "source_hashes": {
+    "run.json": "4b3b1dd9e16855230de28ddbaeaf9980a847bbfa6bbc0e40b5ea92c290161192",
+    "metrics.json": "58861f5c51ba1c6435017b38ebd2294010681fa6d033ea0021ef0c46da598f00",
+    "timing.json": "16755bbe89185ab6ce469c30d3f0ca7117503aad14d99a8739e8cbc20f18465f"
+  },
+  "real_time_claim": false
+}

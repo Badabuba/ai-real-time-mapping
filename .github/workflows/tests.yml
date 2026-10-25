@@ -25,3 +25,4 @@ jobs:
       - run: python -m pip install -e ".[dev,plots,filtering]"
       - run: python -m pytest tests -q
       - run: python scripts/run_alignment_smoke.py --plot
+      - run: python scripts/run_comparison_smoke.py --plot

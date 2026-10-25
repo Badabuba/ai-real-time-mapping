@@ -17,7 +17,7 @@ import numpy as np
 class NativeSparseExportTest(unittest.TestCase):
     def test_actual_map_keyframe_point_apis(self):
         root = Path(__file__).resolve().parents[1]
-        source = root / "external/pyslam"
+        source = Path(os.environ.get("WP2_PYSLAM_ROOT", root / "external/pyslam"))
         sys.path.insert(0, str(root / "src"))
         sys.path.insert(0, str(source))
         os.environ["PYSLAM_USE_CPP"] = "false"

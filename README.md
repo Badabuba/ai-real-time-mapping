@@ -2,7 +2,7 @@
 
 Навчальний дослідницький проєкт з побудови карти невідомого середовища за монокулярною RGB-послідовністю. Ми порівнюємо класичний feature-based SLAM із гібридним pipeline, у якому SLAM оцінює рух камери та sparse map, а foundation model прогнозує dense geometry/depth. Обидва представлення вирівнюються та об'єднуються в узгоджену 3D-карту.
 
-> Статус на 25 жовтня 2026: WP1 C1–C5 та WP2 sparse baseline інтегровані в main (PR #6). Реалізовано WP3 scale/Sim(3), correspondences та WP4 offline artifact fusion із synthetic smoke. Real alignment/fusion потребує повних SLAM/DA3 runs; input-to-output launcher і benchmark ще не завершені. Деталі — [docs/YULIAN_HANDOFF.md](docs/YULIAN_HANDOFF.md).
+> Статус на 25 жовтня 2026: WP1/WP2 інтегровані; WP3/WP4 alignment/fusion та one-config offline pipeline перевірені на real 200-frame TUM smoke (clean 4952e37). Є metric cloud, B0/B1/P1 comparisons та ATE/RPE/map reports. Full held-out benchmark і demo залишаються спільною роботою. [Результати](docs/WP3_WP4_COMPLETION.md), [handoff / remaining tasks](docs/YULIAN_HANDOFF.md).
 
 ## Дослідницьке питання
 
@@ -98,7 +98,7 @@ WP2 (Ярополк): [native setup і запуск](docs/WP2_SETUP.md) пере
 
 Кожен запуск пише новий `results/runs/<run_id>/` (run.json, predictions, metrics.json, timing.json; див. docs/EXPERIMENTS.md §5.1) і не перезаписує наявні runs.
 
-Короткий versioned результат є в [results/summaries/wp1_da3metric_tum_fr1_xyz_20.json](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json); великі per-frame artifacts залишаються поза Git. Наступний integration milestone — DA3 predictions для matching SLAM keyframes → robust scale alignment → fused metric cloud. Це WP3 Юліана за участі Назара/Ярополка для adapters і спільного benchmark.
+Historical WP1 [20-frame result](results/summaries/wp1_da3metric_tum_fr1_xyz_20.json) збережено. Новий clean [200-frame full-pipeline summary](results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.json) включає matching SLAM/DA3, real scale, fused map і controls. Великі artifacts залишаються поза Git.
 
 ## CPU alignment/fusion smoke (Юліан)
 
@@ -110,3 +110,13 @@ python scripts/run_alignment_smoke.py
 ```
 
 Synthetic scale 2.5 відновлюється з outliers; команда створює metric PLY/NPZ, keyframe trajectory, residual diagnostics і run.json. Для plots: встановити `.[plots]` та додати `--plot`. Це correctness fixture, не TUM benchmark. Real запуск `run_offline_mapping.py` та input runs описані у [handoff](docs/YULIAN_HANDOFF.md).
+
+## Реальний one-config pipeline
+
+Після [Linux/Docker setup](docs/WP2_LINUX_CONTAINER.md), CUDA environment та cached inputs:
+
+```powershell
+python scripts/run_pipeline.py --config configs/pipeline.tum.windows-docker.json --run-id new_unique_real_run
+```
+
+Recorded smoke: 22 keyframes, 72,887 metric voxels; [map](results/plots/yulian_tum_map.png), [residuals](results/plots/yulian_tum_residuals.png), [comparison](results/plots/yulian_tum_comparison.png). Global scale покращив trajectory ATE, але map accuracy/completeness мають tradeoff. [Числа та scope](docs/WP3_WP4_COMPLETION.md). Це offline smoke, не real-time або full held-out study.
