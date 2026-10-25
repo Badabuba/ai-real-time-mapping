@@ -3,6 +3,8 @@
 Owner: Назар. Base `ce095fa` включає merged PR #4 (C5) і PR #5 (WP2 Ярополка).
 UniDepth/frozen splits/selection — локальна робота для review, не team-approved merge.
 
+**N-03 update (25 жовтня 2026).** Frozen splits на `develop` з N-01 (PR #10). UniDepth adapter, generic benchmark CLI, verifier, scorecard і ADR001 перенесено на `develop` у branch `feature/nazar-n03-n04` (clean commit `c130626`). Clean selection50 re-run: `nazar_n03_sel50_{da3,unidepth}_c130626_01`, scorecard `results/summaries/nazar_n03_selection50_c130626_scorecard.json`, depth bit-identical з `463b446` (деталі в ADR001). Import hygiene для WP1 modules/CLIs — `tests/test_import_hygiene_wp1.py`. Нижче — історичний стан 24 жовтня.
+
 ## Контракти
 
 - `FrameRecord`: raw RGB, integer-centre calibrated K, exact timestamp/frame_id.

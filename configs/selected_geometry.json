@@ -1,7 +1,7 @@
 {
   "schema": "rt_mapping.selected_geometry/v1",
   "decision": "docs/decisions/ADR001_geometry_model.md",
-  "decision_status": "locally implemented and verified; proposed for external team review",
+  "decision_status": "accepted by pre-registered rubric (plan D-3) on the N-03 clean re-run",
   "primary": {
     "adapter": "rt_mapping.adapters.unidepth_v2.UniDepthV2Adapter",
     "model": "lpiccinelli/unidepth-v2-vitl14",
@@ -20,5 +20,6 @@
     "device": "cuda",
     "dtype": "bfloat16"
   },
-  "source_summary": "results/summaries/wp1_integrated_selection50_20261024_scorecard.json"
+  "source_summary": "results/summaries/nazar_n03_selection50_c130626_scorecard.json",
+  "fallback_trigger": "primary fails the N-04 pipeline gate: any child run not ok, OOM, or model-ID/grid rejection by the unchanged mapping code (plan D-3)"
 }

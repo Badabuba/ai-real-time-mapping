@@ -1,6 +1,27 @@
 # ADR001 — UniDepth V2 для non-commercial course MVP
 
-Дата: 23 жовтня 2026; integration update 24 жовтня. Owner: Назар (бос). **Локальне рішення реалізації; proposed for team review, external reproduction pending.** Team approval не записане.
+Дата: 23 жовтня 2026; integration update 24 жовтня; N-03 update 25 жовтня. Owner: Назар (бос).
+
+**Status: accepted by pre-registered rubric (plan D-3).** Primary = переможець weighted rubric на clean N-03 re-run selection50 (`docs/TWO_PERSON_COMPLETION_PLAN.md` D-3). Рубрика не змінювалась після результатів. Owner review (Юліан, Ярополк) запитано для attribution; він non-blocking (plan D-8).
+
+## N-03 clean re-run на `develop` (25 жовтня 2026)
+
+Код перенесено file-by-file з `5e542d7` у branch `feature/nazar-n03-n04`, clean commit `c130626`. Обидва runs: `status=ok`, `dirty_worktree=false`, той самий `tum_fr2_desk_selection50.json` (`--split selection --frames 50 --prewarm 10`), DA3 `process_res=504`, UniDepth `resolution_level=0`. Checkpoint SHA-256 перевірено до запуску і `verify_geometry_run.py --checkpoint-file` після: DA3 `bbea5b0b…324776`, UniDepth `ba73d3de…3e67c6` (config `09eb0ea8…30816`), UniDepth source `8d8cfe4c`.
+
+| Selection fr2/desk (50) | DA3METRIC-LARGE | UniDepth V2 ViT-L |
+|---|---:|---:|
+| Run ID | `nazar_n03_sel50_da3_c130626_01` | `nazar_n03_sel50_unidepth_c130626_01` |
+| AbsRel / RMSE m / MAE m | 0.114524 / 0.421077 / 0.231596 | 0.064587 / 0.449941 / 0.140899 |
+| δ1 | 0.956997 | 0.967088 |
+| Warm median / p95 ms | 84.00 / 90.35 | 77.48 / 78.69 |
+| Peak allocated VRAM GiB | 1.5449 | 1.7969 |
+| Weighted score /5 | 4.3729 | **4.6198** |
+
+- Scorecard: `results/summaries/nazar_n03_selection50_c130626_scorecard.json` → `selected_model = lpiccinelli/unidepth-v2-vitl14`. Переможець не змінився.
+- `verify_geometry_run.py --assets-root` повторно обчислив metrics/masks з GT: різниця зі scorecard 0.0. Незалежний NumPy перерахунок quality/runtime/memory і weighted score: max abs diff 0.0 (≤ 1e-12).
+- Depth identity з `wp1_integrated_selection50_{da3,unidepth}_463b446`: `depth_m` і `valid_mask` bit-identical на 50/50 кадрах для обох моделей, UniDepth confidence bit-identical 50/50, `evaluation_mask_sha256` однакові 50/50, mean metrics diff 0.0. Відрізняється лише timing (GPU variation; DA3 p95 90.35 проти 98.55 ms, UniDepth 78.69 проти 80.03 ms).
+- **Fallback trigger (D-3, pre-registered):** якщо UniDepth не проходить N-04 pipeline gate (будь-який child run не `ok`, OOM, rejection model-ID/grid незміненим mapping code), primary для N-05/N-06 автоматично стає DA3METRIC-LARGE `process_res=504`, без окремого рішення.
+- **Licence state (D-6, лише limitation):** UniDepth code CC-BY-NC-4.0, checkpoint card не декларує окремої licence; DA3 Apache-2.0; pySLAM GPLv3 (не vendored); weights і upstream sources не комітяться; project LICENSE немає.
 
 ## Докази
 
@@ -55,4 +76,4 @@ UniDepth виграє за precommitted weighted rubric, але **не за ко
 - Internal native resolutions і bf16/fp16 різні та задокументовані; це ready-to-use model/config comparison.
 - Held-out fr3/long_office_household заморожений, inference/tuning на ньому не проводився.
 - End-to-end mapping/SLAM latency та map quality залежать від WP2/WP3. Current model p95 >33.3 ms при уявному 30 Hz budget; real-time pipeline не заявляємо.
-- Юліан (піндос) / Ярополк (дубєнь) мають відтворити smoke й переглянути PRs до team approval.
+- Second-machine smoke reproduction (N-02) завершився disclosed failure на GT-based comparison stage; DA3 depth там відтворився (див. `docs/NAZAR_REPRODUCTION.md`). Owner review non-blocking (D-8).
