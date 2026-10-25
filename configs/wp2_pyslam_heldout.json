@@ -1,0 +1,20 @@
+{
+  "schema": "rt_mapping.wp2_setup/v1",
+  "upstream": {
+    "repo": "https://github.com/luigifreda/pyslam.git",
+    "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+    "version": "2.10.8"
+  },
+  "dataset_manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+  "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household",
+  "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household.tgz",
+  "split": "held-out",
+  "sensor_type": "mono",
+  "feature_tracker": "ORB2",
+  "num_features": 1000,
+  "loop_detector": "DBOW3",
+  "use_cpp_core": false,
+  "python_optimization": 1,
+  "seed": 0,
+  "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated."
+}
