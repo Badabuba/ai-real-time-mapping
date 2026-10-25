@@ -1,0 +1,15 @@
+{
+  "schema": "rt_mapping.pipeline_config/v1",
+  "dataset_manifest": "data/manifests/tum_fr1_xyz.json",
+  "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz",
+  "split": "smoke",
+  "slam": {
+    "reuse_run": "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam"
+  },
+  "geometry": {
+    "command": [".venv\\unidepth\\Scripts\\python.exe", "scripts/run_geometry_benchmark.py", "--model", "unidepth", "--manifest", "data/manifests/tum_fr1_xyz.json", "--split", "smoke", "--frames", "200", "--prewarm", "10", "--resolution-level", "0"]
+  },
+  "mapping": {"plot": true},
+  "comparison": {"thresholds_m": [0.02, 0.05, 0.1], "crop_bounds_m": null, "keyframe_intervals": [2, 5], "confidence_thresholds": [-0.6916478276252747, -0.6456854343414307], "max_timestamp_delta_s": 0.02},
+  "timeout_s": 3600
+}

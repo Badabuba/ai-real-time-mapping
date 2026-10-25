@@ -1,0 +1,66 @@
+{
+  "schema": "rt_mapping.confidence_ablation/v1",
+  "source_run": "nazar_n04_dev50_unidepth_5d11ce6_01",
+  "source_commit": "5d11ce60f6461e2a717e5e19af167a8b816d78e9",
+  "dataset": {
+    "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+    "manifest": "data/manifests/tum_fr1_desk_spike50.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_desk",
+    "split": "development"
+  },
+  "source_run_sha256": "70c4cf1d8859ef0ef4b828bc0dcbebf243ee51ee2d8529f5a343708016120abf",
+  "mode": "raw metric depth; depth-only diagnostic, not map F-score/completeness",
+  "status": "ok",
+  "results": [
+    {
+      "keep_fraction_requested": 1.0,
+      "metrics": {
+        "aggregation": "frame_mean",
+        "n_frames": 50,
+        "abs_rel": 0.04115206000165939,
+        "rmse_m": 0.12474342623987907,
+        "mae_m": 0.05963219722244434,
+        "delta1": 0.9849596361218093,
+        "n_pixels": 15360000,
+        "n_gt_valid": 11738990,
+        "n_pred_valid": 15360000,
+        "n_evaluated": 11738990,
+        "valid_coverage": 1.0
+      }
+    },
+    {
+      "keep_fraction_requested": 0.75,
+      "metrics": {
+        "aggregation": "frame_mean",
+        "n_frames": 50,
+        "abs_rel": 0.03667324267512631,
+        "rmse_m": 0.09414105723355513,
+        "mae_m": 0.04581956661137937,
+        "delta1": 0.988356074773425,
+        "n_pixels": 15360000,
+        "n_gt_valid": 11738990,
+        "n_pred_valid": 11520008,
+        "n_evaluated": 9486777,
+        "valid_coverage": 0.808142523334631
+      }
+    },
+    {
+      "keep_fraction_requested": 0.5,
+      "metrics": {
+        "aggregation": "frame_mean",
+        "n_frames": 50,
+        "abs_rel": 0.03475324470169958,
+        "rmse_m": 0.08051000550685325,
+        "mae_m": 0.042094716620394976,
+        "delta1": 0.9897391007765965,
+        "n_pixels": 15360000,
+        "n_gt_valid": 11738990,
+        "n_pred_valid": 7680010,
+        "n_evaluated": 6415164,
+        "valid_coverage": 0.5464834708948555
+      }
+    }
+  ],
+  "limitation": "thresholds fixed at 100/75/50%; no GT used to select pixels or tune thresholds"
+}
