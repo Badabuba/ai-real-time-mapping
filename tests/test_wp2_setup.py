@@ -370,3 +370,26 @@ def test_preflight_still_rejects_decreasing_gt_timestamps(dataset):
         "0.9 0 0 0 0 0 0 1\n0.8 0 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
     with pytest.raises(ValueError, match="nondecreasing"):
         verify_dataset(root, config)
+
+
+@pytest.mark.parametrize("start,end", [(1.05, 1.3), (0.9, 1.15), (1.05, 1.15)])
+def test_preflight_reports_gt_boundary_gaps_without_changing_inputs(dataset, start, end):
+    root, seq, _, config = dataset
+    (seq / "groundtruth.txt").write_text(
+        f"{start} 0 0 0 0 0 0 1\n{end} 0 0 0 0 0 0 1\n")
+    before = {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
+    report = verify_dataset(root, config)
+    assert report["status"] == "ok"
+    assert report["associations"] == 3
+    assert report["associated_rgb_frames_outside_gt_time_range"] == (2 if start > 1 and end < 1.2 else 1)
+    assert any("beyond the GT time range" in reason for reason in report["limitations"])
+    assert before == {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
+
+
+@pytest.mark.parametrize("start,end", [(0.8, 0.9), (1.3, 1.4)])
+def test_preflight_rejects_gt_without_time_overlap(dataset, start, end):
+    root, seq, _, config = dataset
+    (seq / "groundtruth.txt").write_text(
+        f"{start} 0 0 0 0 0 0 1\n{end} 0 0 0 0 0 0 1\n")
+    with pytest.raises(ValueError, match="does not overlap"):
+        verify_dataset(root, config)
