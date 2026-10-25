@@ -1,0 +1,24 @@
+{
+  "schema": "rt_mapping.selected_geometry/v1",
+  "decision": "docs/decisions/ADR001_geometry_model.md",
+  "decision_status": "locally implemented and verified; proposed for external team review",
+  "primary": {
+    "adapter": "rt_mapping.adapters.unidepth_v2.UniDepthV2Adapter",
+    "model": "lpiccinelli/unidepth-v2-vitl14",
+    "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9",
+    "resolution_level": 0,
+    "device": "cuda",
+    "dtype": "float16",
+    "camera_mode": "calibrated_pinhole",
+    "confidence_filter": null
+  },
+  "fallback": {
+    "adapter": "rt_mapping.adapters.da3_metric.Da3MetricAdapter",
+    "model": "depth-anything/DA3METRIC-LARGE",
+    "revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+    "process_res": 504,
+    "device": "cuda",
+    "dtype": "bfloat16"
+  },
+  "source_summary": "results/summaries/wp1_integrated_selection50_20261024_scorecard.json"
+}
