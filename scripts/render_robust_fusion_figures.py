@@ -80,8 +80,8 @@ def render_pointcloud(path, u03_run, sources):
         order = np.argsort(distances)  # large errors drawn last, on top
         cloud = axis.scatter(points[order, axes_pair[0]], points[order, axes_pair[1]], c=distances[order], s=0.6,
                              cmap=cmap, vmin=0, vmax=limit, linewidths=0, rasterized=True)
-        axis.set_title(f"{label}: {total:,} fused voxels\nmean voxel-to-reference distance {mean:.4f} m "
-                       "(before evaluate_map re-voxelization)", fontsize=8.5, color=INK)
+        axis.set_title(f"{label}: {total:,} fused voxels\nmean distance {mean:.4f} m "
+                       "(before evaluation re-voxelization)", fontsize=8.5, color=INK)
         axis.set_xlabel(f"Evaluation-frame {names[0]} [m]", fontsize=8, color=MUTED)
         axis.set_aspect("equal")
         _style(axis)
