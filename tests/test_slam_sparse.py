@@ -228,7 +228,7 @@ def test_runner_records_sparse_artifacts_only_when_requested(tmp_path, monkeypat
     monkeypatch.setattr(smoke, "prepare_baseline", prepare)
     monkeypatch.setattr(smoke, "execute_upstream", execute)
     run = smoke.run_smoke(root, root, interpreter, config, run_id="test_sparse", frames=2,
-                          export_sparse=enabled)
+                          export_sparse=enabled, export_tracking=False)
     manifest = json.loads((run / "run.json").read_text())
     assert manifest["status"] == "ok", manifest["reason"]
     assert manifest["config"]["export_sparse"] is enabled

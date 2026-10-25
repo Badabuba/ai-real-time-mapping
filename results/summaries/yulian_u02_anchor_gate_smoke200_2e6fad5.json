@@ -1,0 +1,258 @@
+{
+  "accepted": 22,
+  "all_frames_rejected": false,
+  "anchoring": {
+    "anchor_ratio_max": 1.058995514458713,
+    "anchor_ratio_min": 0.946982164545543,
+    "applied": 22,
+    "max_abs_log_anchor_ratio": 0.057320830971690086,
+    "not_applied": 0
+  },
+  "chunk": "U-02",
+  "config_file": "configs/robust_fusion.json",
+  "config_schema": "rt_mapping.p1_robust_config/v1",
+  "config_sha256": "90567529160ec9913ba2cd756980046ba28f19c547180482358e2e906a395486",
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "decisions": [
+    {
+      "applied_scale": 0.9615699265991519,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 0
+    },
+    {
+      "applied_scale": 0.9827033808469962,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 2
+    },
+    {
+      "applied_scale": 0.9799190909564472,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 3
+    },
+    {
+      "applied_scale": 1.013800658511587,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 11
+    },
+    {
+      "applied_scale": 1.0280839770921744,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 15
+    },
+    {
+      "applied_scale": 1.0203069345659936,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 17
+    },
+    {
+      "applied_scale": 1.058995514458713,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 20
+    },
+    {
+      "applied_scale": 1.017540710304227,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 22
+    },
+    {
+      "applied_scale": 0.9843265560968973,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 25
+    },
+    {
+      "applied_scale": 1.0386329358427293,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 28
+    },
+    {
+      "applied_scale": 1.0199634198036271,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 31
+    },
+    {
+      "applied_scale": 1.0160435357753053,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 35
+    },
+    {
+      "applied_scale": 1.0078412172720401,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 38
+    },
+    {
+      "applied_scale": 0.9983153758470591,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 72
+    },
+    {
+      "applied_scale": 0.9990540679201354,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 80
+    },
+    {
+      "applied_scale": 0.9672921769983085,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 84
+    },
+    {
+      "applied_scale": 0.9755930847169103,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 177
+    },
+    {
+      "applied_scale": 0.9620054859948429,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 181
+    },
+    {
+      "applied_scale": 0.9812224177004447,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 185
+    },
+    {
+      "applied_scale": 0.9857613024997316,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 189
+    },
+    {
+      "applied_scale": 0.946982164545543,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 193
+    },
+    {
+      "applied_scale": 0.9495114138647692,
+      "decision": "accept",
+      "flags": "",
+      "frame_id": 197
+    }
+  ],
+  "dirty_worktree": false,
+  "environment": {
+    "numpy": "2.2.4",
+    "python": "3.12.8"
+  },
+  "flag_counts": {
+    "A1": {
+      "clear": 22,
+      "fired": 0,
+      "unavailable": 0
+    },
+    "A2": {
+      "clear": 22,
+      "fired": 0,
+      "unavailable": 0
+    },
+    "A3": {
+      "clear": 22,
+      "fired": 0,
+      "unavailable": 0
+    },
+    "A4": {
+      "clear": 22,
+      "fired": 0,
+      "unavailable": 0
+    },
+    "S1": {
+      "clear": 0,
+      "fired": 0,
+      "unavailable": 22
+    }
+  },
+  "frame_signals_identical_to_u01_run": {
+    "identical": true,
+    "u01_run_id": "yulian_u01_diag_smoke200_8b5b8a7_01"
+  },
+  "gate": {
+    "anchor_band": 1.25,
+    "min_anchor_inlier_ratio": 0.5,
+    "min_anchor_inliers": 30,
+    "min_coverage_bins": 4,
+    "min_withheld_pairs": 1,
+    "residual_threshold_m": 0.1,
+    "tracking_ok_state": "OK"
+  },
+  "git_commit": "2e6fad5971e63d99c314ab5214c0fcd31be09878",
+  "global_scale": 1.1920834129618625,
+  "gt_accessed": false,
+  "keyframes": 22,
+  "limitations": [
+    "one easy sequence (TUM fr1/xyz smoke-200), 22 retained keyframes",
+    "anchors come from the final BA sparse snapshot: offline and non-causal",
+    "withheld before/after residuals are a GT-free consistency check against the SLAM map, not a depth or map accuracy metric",
+    "historical SLAM run predates the Y-01 tracking export (be9bff2): S1 unavailable for every keyframe, the gate ran on A1-A4 only",
+    "no map was built and no ground truth was opened; the map effect is measured in U-03",
+    "no real-time claim"
+  ],
+  "owner": "Yulian (WP3/WP4)",
+  "real_time_claim": false,
+  "rejected": 0,
+  "residuals_crosscheck": {
+    "frame_point_withheld_identical": true,
+    "max_abs_source_z_difference": 0.0,
+    "max_abs_target_z_difference_m": 0.0,
+    "rows": 8308
+  },
+  "run_artifact_sha256": {
+    "anchor_gate.csv": "311961929ff77ad056f6c54808fdc9992bc7e21ae5a28a6dd08c82cd96d48e89",
+    "anchor_gate.json": "4da6f405a142a3644f383943aa8cccab63ca927b1c984512a55d2131b9ba5592",
+    "frame_signals.csv": "492b9c1d228d8f82b665c675dfe07c1f7a99c85cf3902a607862211655dbe5f3"
+  },
+  "run_id": "yulian_u02_anchor_gate_smoke200_2e6fad5_01",
+  "schema": "rt_mapping.p1_robust_u02_summary/v1",
+  "scope": "GT-free; offline final-snapshot anchors; no map built; no real-time claim",
+  "sources": {
+    "alignment_sha256": "518e3ff94cdb369cca0f6906a5de4c814f93943d4061ac1a6bffbe279241dcd9",
+    "comparison_run_id": "yulian_tum_e2e_f200_20261025_01.comparison",
+    "comparison_run_sha256": "83bd22b803adb4645b9c01c0b0ac088ee2661950cfbab88b65cebb500c6936ea",
+    "geometry_run_id": "yulian_tum_e2e_f200_20261025_01.geometry",
+    "geometry_run_sha256": "c15ad670eab06cc46020d123ebccd2940b3d83bb55aebef455ff985aac0dbf79",
+    "global_run_id": "yulian_tum_e2e_f200_20261025_01.comparison.global",
+    "global_run_sha256": "2a3a2624c06ddb8f3fa4aec1eec56f1d6942673a626ff3544c0339bb3e287ea0",
+    "residuals_sha256": "3536260f53f394b147d83463e34511d171e16d72a3506a5d5f215167c6605421",
+    "slam_run_id": "yulian_tum_e2e_f200_20261025_01.slam",
+    "slam_run_sha256": "dac27aad70e06d7d501ea17e5dc2017b26f1b0ccaed20a6aaf1489c5d45ff08d"
+  },
+  "status": "ok",
+  "tracking": {
+    "available": false,
+    "reason": "source SLAM run predates Y-01 tracking export (be9bff2)"
+  },
+  "withheld_validation": {
+    "frames_evaluable": 22,
+    "frames_improved": 18,
+    "frames_worse": 4,
+    "median_of_frame_medians_after_m": 0.031732314581223664,
+    "median_of_frame_medians_before_m": 0.04069400528608402,
+    "note": "GT-free validation only; reported, never used for tuning",
+    "pooled_median_abs_residual_after_m": 0.03009891795882147,
+    "pooled_median_abs_residual_before_m": 0.038771344874799385,
+    "pooled_pairs": 1737
+  }
+}

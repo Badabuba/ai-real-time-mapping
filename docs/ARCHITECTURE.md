@@ -70,6 +70,8 @@ SlamExport + GeometryPrediction ─> Alignment
 | timing.csv | frame_id, tracking_ms, mapping_ms, total_ms |
 | run.json | config, code revision, environment, transform convention |
 
+Y-01 runtime export: `trajectory_all.csv` має один causal observation на **кожний** frozen input frame, explicit native state та порожній pose з reason для initialization/LOST/unobservable frames. `is_keyframe_created` і source frame IDs є insertion events під час track call, не final retained membership. `timing.csv::tracking_ms` вимірює `Slam.track` wall time; unattributed `mapping_ms` та unmeasured whole-loop `total_ms` порожні з reasons. UTF-8/LF, float17, checksum/read-back validation: `contracts/slam.py`, `slam/tracking_log.py`, [WP2_TRACKING_EXPORT.md](WP2_TRACKING_EXPORT.md). Online poses мають upstream world/SLAM units; не змішувати їх із normalized stopped sparse snapshot. Existing optimized `input_setup/trajectory/trajectory_final.txt` зберігається окремо.
+
 ### AlignmentResult
 
 Мінімум: source_frame, target_frame, scale, R, t, transform_direction, method, number_of_pairs, inlier_count, inlier_ratio, median_residual_m, p95_residual_m, thresholds, failure_reason. Матриця без явно записаного напрямку перетворення не приймається.
