@@ -31,12 +31,19 @@ def main(argv=None):
     parser.add_argument("--assets-root", type=Path, default=ROOT,
                         help="checkout holding data/raw, checkpoints and results/runs")
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--output-root", type=Path,
+                        help="run parent directory (relative paths resolve against this checkout); "
+                             "scripts/run_pipeline.py appends it; default <assets-root>/results/runs")
     args = parser.parse_args(argv)
     try:
         manifest_path = args.manifest.resolve()
         manifest_rel = manifest_path.relative_to(ROOT).as_posix()
         manifest = load_dataset_manifest(manifest_path)
         sequence = args.assets_root / manifest["extracted_dir"]
+        if args.output_root is None:
+            output_root = args.assets_root / "results/runs"
+        else:
+            output_root = args.output_root if args.output_root.is_absolute() else ROOT / args.output_root
         if args.model == "da3":
             from rt_mapping.adapters.da3_metric import Da3MetricConfig, Da3MetricAdapter
             config = Da3MetricConfig(device=args.device, process_res=args.process_res, seed=args.seed,
@@ -51,7 +58,7 @@ def main(argv=None):
             factory = lambda: UniDepthV2Adapter(config, sequence)
             initial = {"repo": REPO, "revision": REVISION, "dtype": "float16", "checkpoint": "unresolved"}
         spec = RunSpec(
-            run_id=args.run_id, output_root=args.assets_root / "results/runs", sequence_dir=sequence,
+            run_id=args.run_id, output_root=output_root, sequence_dir=sequence,
             manifest_path=manifest_path, manifest_rel=manifest_rel, split=args.split, frames=args.frames,
             warmup=0, prewarm_calls=args.prewarm, evaluation_grid="raw_rgb", seed=args.seed,
             initial_model=initial, config={"runner": "scripts/run_geometry_benchmark.py", "batch": 1,

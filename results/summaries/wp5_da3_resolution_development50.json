@@ -1,0 +1,140 @@
+{
+  "schema": "rt_mapping.resolution_ablation/v1",
+  "comparison": "DA3 process_res 504 vs 384 on exact development50 frames, raw-grid evaluation",
+  "paired_masks_verified": true,
+  "scale_alignment": "none",
+  "runs": [
+    {
+      "run_id": "wp1_dev50_da3_a9ccd5d",
+      "git_commit": "a9ccd5d6e0350cda5a21f4215055d6785740cddc",
+      "dirty_worktree": false,
+      "dataset": {
+        "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+        "manifest": "data/manifests/tum_fr1_desk_spike50.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg1_desk",
+        "split": "development"
+      },
+      "model": {
+        "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "dtype": "bfloat16",
+        "repo": "depth-anything/DA3METRIC-LARGE",
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+      },
+      "model_config": {
+        "autocast_dtype": "bfloat16",
+        "checkpoint_file": "model.safetensors",
+        "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "k_convention": "pixel_centers_integer",
+        "local_files_only": true,
+        "metric_conversion": "raw * mean(fx, fy) / 300 (processed K)",
+        "process_res": 504,
+        "process_res_method": "upper_bound_resize",
+        "repo": "depth-anything/DA3METRIC-LARGE",
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+        "seed": 0,
+        "timing_scope": "one DA3 inference() call (preprocess + forward + postprocess), CUDA-synchronized; image decode excluded",
+        "weights_dtype": "float32"
+      },
+      "metrics": {
+        "abs_rel": 0.09405990563747442,
+        "aggregation": "frame_mean",
+        "delta1": 0.9649099761861619,
+        "mae_m": 0.13627798519933665,
+        "n_evaluated": 11738990,
+        "n_frames": 50,
+        "n_gt_valid": 11738990,
+        "n_pixels": 15360000,
+        "n_pred_valid": 15360000,
+        "rmse_m": 0.18839780002014847,
+        "valid_coverage": 1
+      },
+      "timing": {
+        "cold_start_ms": 89.01840000180528,
+        "n_total": 50,
+        "n_warm": 50,
+        "n_warmup": 0,
+        "percentile_method": "linear",
+        "stage": "model_inference",
+        "unit": "ms",
+        "warm_max_ms": 510.82309999037534,
+        "warm_mean_ms": 91.03594000102021,
+        "warm_median_ms": 80.59599998523481,
+        "warm_min_ms": 76.58799999626353,
+        "warm_p95_ms": 95.15357499185484
+      },
+      "peak_vram_gb": 1.5448637008666992,
+      "run_sha256": "29b1b8ed120af8883f0de171702881d441abd4cb206706a132f699ca67318dc6"
+    },
+    {
+      "run_id": "wp5_dev50_da3_r384_a9ccd5d",
+      "git_commit": "a9ccd5d6e0350cda5a21f4215055d6785740cddc",
+      "dirty_worktree": false,
+      "dataset": {
+        "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+        "manifest": "data/manifests/tum_fr1_desk_spike50.json",
+        "name": "TUM RGB-D",
+        "sequence": "rgbd_dataset_freiburg1_desk",
+        "split": "development"
+      },
+      "model": {
+        "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "dtype": "bfloat16",
+        "repo": "depth-anything/DA3METRIC-LARGE",
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+      },
+      "model_config": {
+        "autocast_dtype": "bfloat16",
+        "checkpoint_file": "model.safetensors",
+        "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+        "device": "cuda",
+        "dtype": "bfloat16",
+        "k_convention": "pixel_centers_integer",
+        "local_files_only": true,
+        "metric_conversion": "raw * mean(fx, fy) / 300 (processed K)",
+        "process_res": 384,
+        "process_res_method": "upper_bound_resize",
+        "repo": "depth-anything/DA3METRIC-LARGE",
+        "revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+        "seed": 0,
+        "timing_scope": "one DA3 inference() call (preprocess + forward + postprocess), CUDA-synchronized; image decode excluded",
+        "weights_dtype": "float32"
+      },
+      "metrics": {
+        "abs_rel": 0.09612245046490131,
+        "aggregation": "frame_mean",
+        "delta1": 0.9471974554323846,
+        "mae_m": 0.14768699627011322,
+        "n_evaluated": 11738990,
+        "n_frames": 50,
+        "n_gt_valid": 11738990,
+        "n_pixels": 15360000,
+        "n_pred_valid": 15360000,
+        "rmse_m": 0.21225331680716458,
+        "valid_coverage": 1
+      },
+      "timing": {
+        "cold_start_ms": 76.14690001355484,
+        "n_total": 50,
+        "n_warm": 50,
+        "n_warmup": 0,
+        "percentile_method": "linear",
+        "stage": "model_inference",
+        "unit": "ms",
+        "warm_max_ms": 282.9951000167057,
+        "warm_mean_ms": 81.54330799588934,
+        "warm_median_ms": 76.66829999652691,
+        "warm_min_ms": 73.60260002315044,
+        "warm_p95_ms": 84.73605000181122
+      },
+      "peak_vram_gb": 1.4244098663330078,
+      "run_sha256": "21c9e341ab2884abc2d15392f529ccff4400622b8f16e20c534eea13f805984b"
+    }
+  ],
+  "limitations": [
+    "One seed/run per resolution; noisy runtime including rare spikes",
+    "Depth-only accuracy/latency; no SLAM/fusion measurements"
+  ]
+}

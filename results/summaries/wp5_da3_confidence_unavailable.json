@@ -1,0 +1,17 @@
+{
+  "schema": "rt_mapping.confidence_ablation/v1",
+  "source_run": "wp1_dev50_da3_a9ccd5d",
+  "source_commit": "a9ccd5d6e0350cda5a21f4215055d6785740cddc",
+  "dataset": {
+    "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+    "manifest": "data/manifests/tum_fr1_desk_spike50.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_desk",
+    "split": "development"
+  },
+  "source_run_sha256": "29b1b8ed120af8883f0de171702881d441abd4cb206706a132f699ca67318dc6",
+  "mode": "raw metric depth; depth-only diagnostic, not map F-score/completeness",
+  "status": "skipped",
+  "reason": "model supplies no confidence",
+  "results": []
+}
