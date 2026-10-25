@@ -80,7 +80,9 @@ def render_pointcloud(path, u03_run, sources):
         order = np.argsort(distances)  # large errors drawn last, on top
         cloud = axis.scatter(points[order, axes_pair[0]], points[order, axes_pair[1]], c=distances[order], s=0.6,
                              cmap=cmap, vmin=0, vmax=limit, linewidths=0, rasterized=True)
-        axis.set_title(f"{label}: {total:,} voxels, mean distance {mean:.4f} m", fontsize=9, color=INK)
+        axis.set_title(f"{label}: {total:,} fused voxels
+mean voxel-to-reference distance {mean:.4f} m "
+                       "(before evaluate_map re-voxelization)", fontsize=8.5, color=INK)
         axis.set_xlabel(f"Evaluation-frame {names[0]} [m]", fontsize=8, color=MUTED)
         axis.set_aspect("equal")
         _style(axis)
@@ -127,7 +129,7 @@ def render_failures(path, u01_run, u03_run, sources, sequence_dir, manifest_path
         gt = oracle[frame_id].depth_m
         error = np.where(prediction.valid_mask & np.isfinite(gt), np.abs(prediction.depth_m - gt), np.nan)
         shown = row_axes[2].imshow(error, cmap=cmap, vmin=0, vmax=0.5)
-        row_axes[2].set_title("|pred - GT| [m] (evaluation only)", fontsize=8, color=INK)
+        row_axes[2].set_title("|pred - GT| [m] (evaluation only; white = no valid GT)", fontsize=8, color=INK)
         bar = fig.colorbar(shown, ax=row_axes[2], shrink=0.8, extend="max")
         bar.ax.tick_params(labelsize=6, colors=MUTED)
         for axis in row_axes[:3]:
