@@ -181,3 +181,80 @@ python scripts/run_anchor_gate.py `
 ```powershell
 python -m pytest tests/test_anchoring.py tests/test_import_hygiene_robust.py -q
 ```
+
+## 4. U-03 — real smoke: control, P1-anchored, P1-anchored+gate
+
+### 4.1 Метод
+
+Код: `src/rt_mapping/runs/robust_fusion_run.py`, CLI `scripts/run_robust_fusion.py`.
+
+**Preflight (без run dir, без GT):**
+- sha256 `configs/robust_fusion.json` має дорівнювати hash у committed U-02 summary, інакше відмова;
+- provenance source runs має дорівнювати записаній у U-02 summary;
+- `residuals.csv` cross-check з U-01;
+- рішення gate перераховуються незміненими U-01/U-02 функціями і мають точно збігатися з committed рішеннями U-02.
+
+**Фаза A, GT-free:**
+1. Control: незмінений публічний `run_mapping` із записаним mapping config; відрізняється лише `plot`. Перевірка §3.5 плану: `map.npz` побайтово тотожний записаному P1-global, інакше voxel keys/counts і межа похибки float64.
+2. Цикл fusion для варіантів спершу відтворює control map побайтово на некоригованій depth. Тому варіанти відрізняються від control лише anchored depth і gating.
+3. `P1-anchored`: `z' = a_f · z_pred` для кожного кадру з `a_f`. `P1-anchored+gate`: ті самі кадри без rejected. Пози — незмінений global scale `s`.
+4. `phase_a.json`, усі карти й `run.json` записуються **до** відкриття GT (тест ordering).
+
+**Фаза B, evaluation only:** незмінений `evaluate_map` для кожного варіанта, з тим самим voxel size 0.02 m, τ = {2, 5, 10} cm, crop, записаним SE(3) transform і `reference_evaluation_only.npz`. Метрики control мають дорівнювати записаному рядку P1-global. Рядки B0/B1/P1-raw копіюються після перевірки, що вони мають той самий evaluation transform. Per-frame AbsRel/RMSE/δ1 і map contribution рахуються до і після anchoring на oracle GT grid.
+
+### 4.2 Результати (run `yulian_u03_robust_smoke200_cc7a4d9_01`)
+
+**Перевірки:**
+- статус `ok`, clean commit `cc7a4d9`, `dirty_worktree=false`; Python 3.12.8, numpy 2.2.4;
+- config sha256 `90567529160ec9913ba2cd756980046ba28f19c547180482358e2e906a395486` = U-02 summary; рішення = U-02 (22 accept, 0 reject);
+- control map **побайтово тотожний** записаному P1-global (72,887 voxels), `residuals.csv` теж тотожний; метрики control точно дорівнюють записаним; reference, перебудована з GT, тотожна записаній;
+- усі три варіанти мають однаковий набір із 22 keyframes, ті самі пози, reference і правила оцінки.
+
+**Карти (evaluation only, менше — краще для відстаней):**
+
+| Метод | Кадри | Accuracy mean [m] | Completeness mean [m] | Chamfer-L1 [m] | F@2 cm | F@5 cm | F@10 cm |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| P1-global control | 22 | 0.0924 | 0.0849 | 0.0887 | 0.240 | 0.480 | 0.694 |
+| P1-anchored | 22 | 0.1068 | 0.1035 | 0.1051 | 0.187 | 0.407 | 0.613 |
+| P1-anchored+gate | 22 (0 rejected) | 0.1068 | 0.1035 | 0.1051 | 0.187 | 0.407 | 0.613 |
+| B0-shared-scale (sparse) | — | 0.0494 | 0.2261 | 0.1377 | 0.043 | 0.265 | 0.499 |
+| B1-oracle (GT depth) | 22 | 0.0323 | 0.0335 | 0.0329 | 0.465 | 0.790 | 0.953 |
+| P1-raw | 22 | 0.0913 | 0.0839 | 0.0876 | 0.242 | 0.475 | 0.700 |
+
+**Негативний результат.** Per-frame anchoring **погіршив** карту: Chamfer-L1 +0.0165 m (0.0887 → 0.1051), accuracy +0.0144 m, completeness +0.0185 m, F-score нижчий на всіх τ. Gate не відкинув жодного кадру (A1–A4 не спрацювали, S1 недоступний), тому gated variant — та сама карта, що й anchored (sha256 `map.npz` однаковий). Retention: 22/22 кадри, 0 відкинутих точок.
+
+**Depth (per-frame, evaluation only):** median AbsRel 0.0902 → 0.0948; AbsRel покращився у 9/22 кадрах. Знак чіткий (описово, n = 22):
+- усі 9 кадрів з `a_f > 1` покращилися і за AbsRel, і за map contribution;
+- усі 13 кадрів з `a_f < 1` погіршилися за обома.
+
+**Три різні речі, три різні відповіді:**
+1. *Узгодженість зі SLAM map* покращилася (U-02: withheld median |residual| 0.0388 → 0.0301 m).
+2. *Точність depth* погіршилася (median AbsRel +0.0046).
+3. *Точність злитої карти* погіршилася (Chamfer +0.0165 m).
+
+Отже, менший sparse residual тут **не** означає кращої геометрії. Причина — гіпотеза: `s` оцінено так, що `s·z_slam` у середньому збігається з DA3, тож `a_f` лише перерозподіляє кадри навколо спільного зміщення DA3/SLAM, а не наближає їх до GT; anchors також несуть власну per-frame похибку SLAM depth.
+
+**CPU overhead** (CPU artifact processing only; excludes SLAM and model inference; not real-time): signals + gate 42.4 ms на 22 кадри (1.9 ms/кадр у середньому, batch); anchoring p50/p95 0.56/1.19 ms; fusion per keyframe p50/p95 37.6/49.0 ms (anchored) проти 37.9/50.1 ms (control).
+
+Графік: [comparison](../results/plots/yulian_u03_comparison.png). Дані: [summary](../results/summaries/yulian_u03_robust_smoke200_cc7a4d9.json) (включно з per-frame до/після), [comparison CSV](../results/summaries/yulian_u03_robust_smoke200_cc7a4d9.csv).
+
+### 4.3 Обмеження
+
+- Одна проста послідовність, 22 keyframes. Anchors із фінального BA snapshot — offline і non-causal.
+- S1 не оцінювався (немає tracking export). Gate не відкинув жодного кадру, тому на реальних збоях він не перевірений.
+- GT reference — наближення; per-frame depth рахується через oracle grid (до 6.24e-4 AbsRel від geometry metrics, U-01).
+- Пороги не змінювалися після перегляду GT; повторних запусків не було. Held-out (fr3) не використовувався. Немає real-time claims.
+
+### 4.4 Команда
+
+```powershell
+python scripts/run_robust_fusion.py `
+  --comparison-run results/runs/yulian_tum_e2e_f200_20261025_01/stages/yulian_tum_e2e_f200_20261025_01.comparison `
+  --slam-run results/runs/yulian_tum_e2e_f200_20261025_01/stages/yulian_tum_e2e_f200_20261025_01.slam `
+  --geometry-run results/runs/yulian_tum_e2e_f200_20261025_01/stages/yulian_tum_e2e_f200_20261025_01.geometry `
+  --sequence-dir data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz --manifest data/manifests/tum_fr1_xyz.json `
+  --u02-summary results/summaries/yulian_u02_anchor_gate_smoke200_2e6fad5.json `
+  --run-id <new_unique_run_id> --plot
+```
+
+CPU-тести: `python -m pytest tests/test_robust_fusion_run.py -q`.
