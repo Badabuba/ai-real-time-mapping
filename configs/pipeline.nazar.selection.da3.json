@@ -1,0 +1,53 @@
+{
+  "schema": "rt_mapping.pipeline_config/v1",
+  "dataset_manifest": "data/manifests/tum_fr2_desk_selection50.json",
+  "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg2_desk",
+  "split": "selection",
+  "slam": {
+    "command": [
+      "docker",
+      "exec",
+      "--env",
+      "LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libQt5Core.so.5:/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5:/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5",
+      "--workdir",
+      "/workspace",
+      "rt-mapping-wp2-nazar",
+      "python",
+      "-O",
+      "scripts/run_wp2_pyslam.py",
+      "--pyslam-root",
+      "/opt/pyslam",
+      "--pyslam-python",
+      "/usr/local/bin/python",
+      "--config",
+      "configs/wp2_pyslam_selection.json",
+      "--all-frames",
+      "--export-sparse"
+    ]
+  },
+  "geometry": {
+    "reuse_run": "results/runs/nazar_n05_sel50_geom_da3_0dc5f7f_01"
+  },
+  "mapping": {
+    "plot": true
+  },
+  "comparison": {
+    "thresholds_m": [
+      0.02,
+      0.05,
+      0.1
+    ],
+    "crop_bounds_m": null,
+    "keyframe_intervals": [
+      2,
+      5
+    ],
+    "confidence_thresholds": [
+      -0.6916478276252747,
+      -0.6456854343414307
+    ],
+    "max_timestamp_delta_s": 0.02,
+    "causal_window_frames": 0
+  },
+  "timeout_s": 7200
+}
