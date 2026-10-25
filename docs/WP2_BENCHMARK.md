@@ -1,8 +1,8 @@
-# WP2: ширший B0 benchmark (Y-05)
+# WP2: B0 development/selection і held-out benchmark (Y-05 / Y-06)
 
 Owner / реалізація: Ярополк (WP2/WP5). Branch `feature/yaropolk-b0-development`; source/base `422172a4cf821d4a838d43426e1acd31c27827f5` (merged Y-04, PR #19). Усі чотири source runs та derived evaluations мають `dirty_worktree=false`. Source/algorithm code у Y-05 не змінено.
 
-**Висновок для презентації:** baseline працює на ширших desk inputs, але development має тривалий relocalization gap і лише ~76% OK frames. Низька ATE на available poses не означає повне успішне tracking. Цей результат offline; held-out study не виконано.
+**Висновок Y-05 для презентації:** baseline працює на ширших desk inputs, але development має тривалий relocalization gap і лише ~76% OK frames. Низька ATE на available poses не означає повне успішне tracking. Цей результат offline. Подальший Y-06 held-out run завершено: 98.67% OK frames, causal ATE 3.86 cm / final ATE 1.61 cm (evaluation-only Sim(3)); 1.80 FPS. Повний Y-06 result і startup failure disclosure — нижче.
 
 [JSON із hashes/provenance](../results/summaries/yaropolk_y05_benchmark.json), [CSV](../results/summaries/yaropolk_y05_benchmark.csv), [comparison plot](../results/plots/yaropolk_y05_benchmark.png), [state timeline](../results/plots/yaropolk_y05_tracking_states.png).
 
@@ -103,18 +103,57 @@ python scripts/evaluate_wp2_run.py --source-run results/runs/<source_run_id> --g
 - 4 source runs + 4 evaluations: clean source commit, status ok. Additional dev01 re-evaluation: metrics.json, inputs.json та PNG **byte-identical**; run_id/started_at закономірно нові.
 - Full CPU suite на тому самому source перед evidence-only Y-05: **688 passed, 1 native skip**. Plot legends/state ranges перевірено візуально; source/evaluation hashes перевірені.
 - Frozen configs, seed і frame counts незмінні; жодного install/download або source edit у Y-05.
-- Held-out input/Y-06 skipped за deadline decision користувача; це не held-out validation, не повний WP5 і не real-time system. Dense B0/B1/P1 wider comparison лишається окремою роботою Назара / команди.
+- На момент Y-05 held-out input/Y-06 був skipped за deadline decision користувача; historical Y-05 summaries збережені. Подальший Y-06 виконано нижче. Y-05 не є held-out validation, повним WP5 чи real-time system. Dense B0/B1/P1 wider comparison лишається окремою роботою Назара / команди.
 - Contribution: Ярополк — WP2/WP5 benchmark execution/evidence; незмінені evaluators Юліана та contracts команди reused. Shared status docs залишено для integration checkpoint.
 
-## Y-06: held-out fr3 (25 жовтня 2026)
+## Y-06: initial startup failure (25 жовтня 2026)
 
-**Поточний результат: startup failure, zero tracked frames.** Run `yaropolk_y06_heldout2488_c08833f_01`, clean source `c08833f0b287cecbdb72953796cd0dcd253b296b`, містить IC3 freeze (PR #25, `4021a02`) та окремий preflight fix PR #27 (`bd0a17e`). Це замінює попередній deadline skip як поточний held-out status; Y-05 historical summaries не змінено.
+**Первинна спроба: startup failure, zero tracked frames.** Run `yaropolk_y06_heldout2488_c08833f_01`, clean source `c08833f0b287cecbdb72953796cd0dcd253b296b`, містить IC3 freeze (PR #25, `4021a02`) та окремий preflight fix PR #27 (`bd0a17e`). Y-05 historical summaries не змінено; актуальний successful Y-06 retry наведено після цієї первинної failure disclosure.
 
 - Archive: 1,483,556,251 bytes, SHA-256 `c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c`; усі 5,098 extracted files побайтово збігаються. Frozen inputs: 2,488 frames / 4,976 RGB-depth image hashes; index hashes та manifest збігаються.
 - Config SHA-256 `3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb` = IC3 hash; seed 0, pySLAM `96019cf`, ORB2/1000, DBOW3, Python core `-O`, native macOS arm64. Algorithm/config/source не змінено в Y-06; timeout 14,400 s — operational guard.
 - До створення run: archive був відсутній, потім valid official GT boundary помилково блокував preflight. Окремий PR #27 виправив лише metadata validation: три initial RGB frames раніше GT range тепер записуються як limitation, всі inputs збережені. Full CPU suite: **698 passed, 1 native integration skipped**; чотири CI checks passed.
-- Після запуску native worker видав `OMP: Error #179: Function Can't open SHM failed` під час initialization. Loop-closing readiness не настала; `trajectory_all.csv` та `timing.csv` містять нуль observations. **Гіпотеза:** shared-memory restriction execution sandbox; unrestricted retry ще не виконано. Stalled upstream process зупинено SIGTERM, runner сам записав terminal `failed` (`upstream_exit: -15`). Finished `run.json` не редагувався.
+- Після запуску native worker видав `OMP: Error #179: Function Can't open SHM failed` під час initialization. Loop-closing readiness не настала; `trajectory_all.csv` та `timing.csv` містять нуль observations. **Гіпотеза:** shared-memory restriction execution sandbox; unrestricted retry на момент цієї первинної спроби ще не виконано; подальший результат нижче. Stalled upstream process зупинено SIGTERM, runner сам записав terminal `failed` (`upstream_exit: -15`). Finished `run.json` не редагувався.
 - Wall clock до зупинки: 199.445 s; peak individual-process RSS: 743,489,536 bytes. Це startup-failure diagnostics; FPS, ATE/RPE, tracking success та p50/p95 **null**, не нульова якість і не performance benchmark. Cold start to first tracked frame не instrumented. Real-time claim відсутній.
 - Evidence: [JSON](../results/summaries/yaropolk_y06_heldout.json), [CSV](../results/summaries/yaropolk_y06_heldout.csv), [startup-failure plot](../results/plots/yaropolk_y06_tracking_states.png). Full runs/logs локальні й ignored. Native launch/resource driver — локальний `outputs/wp2/` / temporary orchestration; resource schema та unchanged APIs ті самі, що Y-05.
 
-**Disclosures.** Superseded runner `wp2_heldout2488_4484fd7` failed у upstream `local_mapping.py` (`TypeError: 'int' object is not iterable`), без trajectory/metrics, нічого не tuned. Committed N-06 `nazar_n06_heldout2488_da3_e561d8c_01` failed на GT preflight з нулем SLAM frames; PR #27 виправив цей blocker. Поточна local startup failure також збережена; жодного retry чи tuning станом на цей звіт. За D-5 retry після execution-environment failure потребує explicit user exception або documented merged code fix. GT прочитано тільки для integrity/timestamp validation; evaluation не запускалось, жодна GT pose/depth не вплинула на SLAM.
+**Disclosures.** Superseded runner `wp2_heldout2488_4484fd7` failed у upstream `local_mapping.py` (`TypeError: 'int' object is not iterable`), без trajectory/metrics, нічого не tuned. Committed N-06 `nazar_n06_heldout2488_da3_e561d8c_01` failed на GT preflight з нулем SLAM frames; PR #27 виправив цей blocker. Поточна local startup failure також збережена; ця первинна спроба не містить retry чи tuning. Користувач згодом явно дозволив execution-environment exception до D-5: retry поза sandbox з незмінними параметрами та новим run ID (нижче). GT прочитано тільки для integrity/timestamp validation; evaluation не запускалось, жодна GT pose/depth не вплинула на SLAM.
+
+
+## Y-06: authorized native retry — final held-out evidence
+
+**Source process: ok; evaluation: ok.** Run `yaropolk_y06_heldout2488_9714957_02`, clean source `9714957c0b5925d8f2e756f143028a7f6309ffed`; він містить IC3 freeze та merged preflight fix PR #27. Користувач явно дозволив retry поза execution sandbox після zero-frame OpenMP failure. Config/source алгоритму, frame set, seed, GT та evaluator не змінювалися; це виправлення launch context, не tuning. Попередні run та failure summaries збережені.
+
+| Metric | Held-out result |
+|---|---|
+| Frozen / observed frames | 2,488 / 2488 |
+| OK-state tracking fraction | 98.67% (2455 frames) |
+| Initialization / LOST / relocalizing / UNKNOWN | 33 / 0 / 0 / 0 |
+| Causal poses / GT-associated | 2455 / 2455 |
+| Final optimized poses / GT-associated | 2455 / 2455 |
+| Causal Sim(3) ATE RMSE | 0.038586 m |
+| Final optimized Sim(3) ATE RMSE | 0.016064 m |
+| Gap-aware causal RPE translation / rotation | 0.006621 m / 0.2815 deg |
+| Eligible RPE pairs / excluded gap pairs | 2454 / 0 |
+| Warm tracking p50 / p95 | 244.162 / 1804.090 ms |
+| Whole-run wall clock / throughput | 1385.355 s / 1.796 FPS |
+| Peak individual-process RSS | 4583178240 bytes |
+
+ATE оцінюється лише на доступних poses з GT association до 20 ms; tracking denominator — усі 2,488 frozen input frames. Evaluation-only Sim(3) не відновлює метричний scale. Causal та final optimized poses мають окремі global Sim(3) fits; final quality не є causal online quality. RPE не перетинає non-OK/missing-pose gaps. Whole-run throughput включає preflight/startup/export/shutdown; p50/p95 — лише `Slam.track`, warmup = один input frame. Peak RSS — OS maximum individual child process, не сума concurrent workers; cold-start-to-first-track не instrumented. **Offline; real-time claim відсутній.**
+
+GT reference — повний незмінений official `groundtruth.txt`, SHA-256 `e255d5d9c5bab915132c7ac5ec4e23f9f1efe98f765b0c9b26ac74e40b02533f`; GT тільки для evaluation та metadata verification. Жодних averages/deduplication/cropping/pose edits. Initial RGB/GT boundary mismatch збережено, unmatched usable poses наведені у JSON failure table. Тільки одна completed benchmark attempt після startup failure; variance не оцінюється. Не робили parameter selection чи rerun через якість.
+
+Відтворення (той самий source commit, новий run ID; повторне виконання held-out потребує дотримання протоколу):
+
+```bash
+.venv-wp2/bin/python scripts/run_wp2_pyslam.py --config configs/wp2_pyslam_heldout.json --all-frames --export-sparse --timeout 14400 --pyslam-root external/pyslam --pyslam-python .venv-pyslam/bin/python --run-id <new_run_id>
+.venv-pyslam/bin/python scripts/evaluate_wp2_run.py --source-run results/runs/<new_run_id> --groundtruth data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household/groundtruth.txt --run-id <new_eval_id> --plot
+```
+
+Resource sidecar створено тим самим existing `measure_process` API в окремому fresh Python wrapper, як Y-05: CLI `measure_wp2_resources.py` не приймає split config. Для приєднання виміряного resource sidecar додати evaluator flag `--resources results/runs/<new_run_id>.resources.json`; без нього повторюються accuracy/tracking metrics, resources залишаються unavailable. Exact local drivers збережено в ignored `outputs/wp2/`; tracked source/config edits у Y-06 відсутні. Upstream shutdown містив warning про 46 leaked semaphore objects; source та evaluation завершилися зі status ok.
+
+Evidence: [retry JSON](../results/summaries/yaropolk_y06_retry.json), [retry CSV](../results/summaries/yaropolk_y06_retry.csv), [tracking/latency plot](../results/plots/yaropolk_y06_retry_tracking_states.png). Initial failure: [JSON](../results/summaries/yaropolk_y06_heldout.json). All source/evaluation artifact hashes перевірені; plots візуально перевірені. Preflight fix validation: 698 passed / 1 native integration skipped; source/data/config hashes та `git diff --check` перевірено для цього evidence-only change. CI result — у PR.
+
+Cross-platform: цей run — native macOS arm64 B0. Committed N-06 `nazar_n06_heldout2488_da3_e561d8c_01` зупинився до SLAM на preflight, тому paired Docker held-out accuracy/speed comparison поки неможливий. Попередня двоплатформна smoke validation лишається в Y-05; цей run сам по собі не доводить wider pipeline reproduction чи P1 quality.
+
+Attribution: Ярополк — WP2 held-out execution/evidence та preflight correction; unchanged evaluators Юліана / team contracts reused. Disclosure `wp2_heldout2488_4484fd7` та N-06 failure вище лишаються чинними, нічого з них не tuned. Raw datasets, full logs/runs, sparse map та archives не включено в Git.

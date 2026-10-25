@@ -1,0 +1,550 @@
+{
+  "causal_metrics": {
+    "alignment_mode": "sim3",
+    "association_max_actual_delta_s": 0.009094953536987305,
+    "ate_median_m": 0.0223235152403211,
+    "ate_rmse_m": 0.03858551272604214,
+    "evaluation_transform": {
+      "R": [
+        [
+          -0.9982456263823711,
+          -0.001652370057688239,
+          -0.059185632392154075
+        ],
+        [
+          0.05111898642623769,
+          0.48032323025298757,
+          -0.8756006188360591
+        ],
+        [
+          0.029875050380223363,
+          -0.8770899977496766,
+          -0.4793960963673477
+        ]
+      ],
+      "direction": "reference_world = scale * R @ estimate_world + t",
+      "scale": 2.984586374956911,
+      "t": [
+        -0.5600238625145579,
+        2.6817309968073895,
+        1.7419813844648502
+      ]
+    },
+    "input_poses": 2455,
+    "matched_poses": 2455,
+    "max_timestamp_delta_s": 0.02,
+    "scale_fitted_for_evaluation": true
+  },
+  "chunk": "Y-06",
+  "data_preflight": {
+    "archive_sha256": "c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c",
+    "archive_size_bytes": 1483556251,
+    "associated_rgb_frames_outside_gt_time_range": 3,
+    "associations": 2488,
+    "checks": [
+      "frozen_manifest",
+      "archive_sha256",
+      "index_sha256",
+      "PNG_headers",
+      "timestamps",
+      "evaluation_GT",
+      "selected_rgb_depth_sha256"
+    ],
+    "depth_frames": 2509,
+    "extracted_files_verified": 5098,
+    "groundtruth_poses": 8710,
+    "limitations": [
+      "Associated RGB frames extend beyond the GT time range; all frozen inputs are retained. Evaluation must report unmatched poses using its unchanged timestamp tolerance."
+    ],
+    "quaternion_norm_squared_tolerance": 0.0005,
+    "rgb_frames": 2585,
+    "selected_input_hashes_verified": 4976,
+    "sequence": "rgbd_dataset_freiburg3_long_office_household",
+    "split": "held-out",
+    "split_frames": 2488,
+    "status": "ok"
+  },
+  "disclosures": [
+    {
+      "reason": "superseded v2.2.1 runner: upstream local_mapping.py TypeError: int object is not iterable; no trajectory/metrics; nothing tuned",
+      "run_id": "wp2_heldout2488_4484fd7",
+      "status": "failed"
+    },
+    {
+      "reason": "committed N-06 evidence: preflight GT endpoint check, zero SLAM frames; fixed separately in PR #27; no tuning",
+      "run_id": "nazar_n06_heldout2488_da3_e561d8c_01",
+      "status": "failed"
+    },
+    {
+      "reason": "first original archive missing, then official GT boundary gap rejected by preflight; no experiment/run created before fix PR #27",
+      "scope": "local Y-06 preliminary verification",
+      "status": "blocked then resolved"
+    }
+  ],
+  "failure_table": [
+    {
+      "category": "initializing",
+      "frame_count": 33
+    },
+    {
+      "category": "lost",
+      "frame_count": 0
+    },
+    {
+      "category": "relocalizing",
+      "frame_count": 0
+    },
+    {
+      "category": "unknown_state",
+      "frame_count": 0
+    },
+    {
+      "category": "ok_without_pose",
+      "frame_count": 0
+    },
+    {
+      "category": "track_exception",
+      "frame_count": 0
+    },
+    {
+      "category": "keyframe_observation_error",
+      "frame_count": 0
+    },
+    {
+      "category": "gt_unassociated_usable_pose",
+      "frame_count": 0
+    }
+  ],
+  "gap_aware_rpe_metrics": {
+    "rpe_pairs": 2454,
+    "rpe_rotation_rmse_deg": 0.281466465643006,
+    "rpe_translation_rmse_m": 0.00662126614947332
+  },
+  "hashes": {
+    "configs/benchmark_frozen.json": "bf990a4ab459ca1db4457530e18c378a1e4219e89e943aaa7bc17ffb29213407",
+    "configs/wp2_pyslam_heldout.json": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "data/manifests/tum_fr3_long_office_heldout.json": "42b1149db6b48874b0b24f0b5a260f624139afc63fa4573cdee607dd5ca80ee3",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02.eval/inputs.json": "4aa63170f8eebb5ad6a455c56a059afc91687262f6ac6c110d3a944df8b0088b",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02.eval/metrics.json": "b7e3e564252c08f99f67172b11988e07bf21b65639865d6793776ab16b9554ee",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02.eval/run.json": "0a746dcb8502b70c1bb130827e27203868438dcc817868dc7baca8902bff68f7",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02.resources.json": "e060c7db6a42502c56f1f7649e41b5b78c4da335e15d5da9a61781593db0cfa8",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/input_setup/setup.json": "9d4bf64e75e6c25e17f47fca8fe290565cd15b76f2fd945d59ca99c0a2de465e",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/metrics.json": "c908576f72c37068cde80780eb9bf9b129eafaf726c324a4ec120a5cea703767",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/run.json": "c3b92a3339a08e640d61addeece1bc1a228cbd3c4a56fdb113f59c310f75c754",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/timing.csv": "fee947b1fb017aae0e37f4b7dcd08abe04778e2a60f7158628ca361b3c2a866f",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/tracking_export.json": "4d9da536fb50c4e424730b507969569de6e30f9abeda7a4eb3694a7d279e8367",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/trajectory_all.csv": "72f5d49a370bb8678111ba03611f61c5e52751232743c98767f0bd96fd970277",
+    "results/runs/yaropolk_y06_heldout2488_9714957_02/upstream.log": "822fda091e195914643e62e67ad75ed4d5dfddff1272160fd5089b3308f6dd40"
+  },
+  "limitations": [
+    "One completed benchmark attempt after a preserved zero-frame startup failure; no variance estimate or tuning.",
+    "Pose ATE applies to evaluable poses; tracking coverage is separately reported.",
+    "Peak RSS is the maximum individual-process RSS, not summed concurrent worker RAM.",
+    "Cold start to first tracked frame is not instrumented."
+  ],
+  "metrics": {
+    "final_trajectory": {
+      "coverage": {
+        "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
+        "gt_associated_poses": 2455,
+        "input_frames": 2488,
+        "pose_count": 2455,
+        "pose_fraction": 0.9867363344051447,
+        "tracking_success": null,
+        "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success"
+      },
+      "metrics": {
+        "alignment_mode": "sim3",
+        "association_max_actual_delta_s": 0.009094953536987305,
+        "ate_median_m": 0.011508281527829602,
+        "ate_rmse_m": 0.016064189699812995,
+        "evaluation_transform": {
+          "R": [
+            [
+              -0.9983835773825119,
+              -0.003508866458247722,
+              -0.0567267156556445
+            ],
+            [
+              0.048102273716096856,
+              0.4794480370726729,
+              -0.8762509634862053
+            ],
+            [
+              0.030272160085462404,
+              -0.8775632556137131,
+              -0.4785042619668305
+            ]
+          ],
+          "direction": "reference_world = scale * R @ estimate_world + t",
+          "scale": 3.029709882876188,
+          "t": [
+            -0.5893674968351686,
+            2.7155034748057245,
+            1.7547219774208447
+          ]
+        },
+        "input_poses": 2455,
+        "matched_poses": 2455,
+        "max_timestamp_delta_s": 0.02,
+        "rpe_delta": 1,
+        "rpe_delta_unit": "matched_pose_rows",
+        "rpe_pairs": 2454,
+        "rpe_rotation_rmse_deg": 0.30563853963799154,
+        "rpe_translation_rmse_m": 0.006974171682927071,
+        "scale_fitted_for_evaluation": true
+      },
+      "reason": null,
+      "rpe_scope": "matched pose rows; not gap-aware (Y-03); not input-frame delta",
+      "scale_use": "evaluation-only Sim(3); does not recover metric scale",
+      "scope": "upstream final trajectory; optimized snapshot, not causal all-frame history"
+    },
+    "real_time_claim": false,
+    "resources": {
+      "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+      "cold_start_s": null,
+      "effective_fps": 1.795929896454733,
+      "effective_fps_reason": null,
+      "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+      "exit_code": 0,
+      "launch_error": null,
+      "peak_rss_bytes": 4583178240,
+      "peak_rss_reason": null,
+      "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+      "real_time_claim": false,
+      "requested_frames": 2488,
+      "schema": "rt_mapping.slam_resources/v1",
+      "source_run_id": "yaropolk_y06_heldout2488_9714957_02",
+      "source_run_sha256": "c3b92a3339a08e640d61addeece1bc1a228cbd3c4a56fdb113f59c310f75c754",
+      "source_status": "ok",
+      "status": "ok",
+      "throughput_frames": 2488,
+      "wall_clock_s": 1385.3547429169994,
+      "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+    },
+    "retained_keyframes": {
+      "coverage": {
+        "denominator": "frozen associated RGB-depth input frames actually submitted to SLAM",
+        "gt_associated_poses": 272,
+        "input_frames": 2488,
+        "pose_count": 272,
+        "pose_fraction": 0.10932475884244373,
+        "tracking_success": null,
+        "tracking_success_reason": "not evaluated in Y-02; pose coverage is not tracking success"
+      },
+      "metrics": {
+        "alignment_mode": "sim3",
+        "association_max_actual_delta_s": 0.006943941116333008,
+        "ate_median_m": 0.010677379843636415,
+        "ate_rmse_m": 0.012583151167167295,
+        "evaluation_transform": {
+          "R": [
+            [
+              -0.9983630396829015,
+              -0.0031189344140969246,
+              -0.057109659806712704
+            ],
+            [
+              0.04860377168807344,
+              0.4800655194558055,
+              -0.8758851353958009
+            ],
+            [
+              0.03014820679263567,
+              -0.8772270910532505,
+              -0.47912807927467643
+            ]
+          ],
+          "direction": "reference_world = scale * R @ estimate_world + t",
+          "scale": 3.031202041858661,
+          "t": [
+            -0.5888042839550851,
+            2.716352449367548,
+            1.756290032260408
+          ]
+        },
+        "input_poses": 272,
+        "matched_poses": 272,
+        "max_timestamp_delta_s": 0.02,
+        "rpe_delta": 1,
+        "rpe_delta_unit": "matched_pose_rows",
+        "rpe_pairs": 271,
+        "rpe_rotation_rmse_deg": 0.35628419672488326,
+        "rpe_translation_rmse_m": 0.0064300201976621165,
+        "scale_fitted_for_evaluation": true
+      },
+      "reason": null,
+      "rpe_scope": "matched pose rows; not gap-aware (Y-03); not input-frame delta",
+      "scale_use": "evaluation-only Sim(3); does not recover metric scale",
+      "scope": "stopped retained-keyframe snapshot; separate Sim(3) fit, same evaluator as comparison B0_sim3"
+    },
+    "schema": "rt_mapping.slam_evaluation/v1",
+    "tracking_success": 0.9867363344051447,
+    "tracking_success_reason": null
+  },
+  "non_ok_segments": [
+    {
+      "first_frame_id": 0,
+      "first_timestamp_s": 1341847980.722988,
+      "frame_count": 33,
+      "last_frame_id": 32,
+      "last_timestamp_s": 1341847981.794659,
+      "state": "NOT_INITIALIZED",
+      "timestamp_span_s": 1.0716710090637207
+    }
+  ],
+  "owner": "Yaropolk (WP2)",
+  "prior_attempt": {
+    "execution_failure": {
+      "diagnosis": "OpenMP shared-memory initialization failed; sandbox restriction is the suspected cause, not yet confirmed by an unrestricted retry",
+      "launch_context": "restricted execution sandbox",
+      "metrics_reason": "No tracked frames or trajectory; ATE/RPE/tracking success/throughput unavailable",
+      "observed_frames": 0,
+      "phase": "native worker initialization before any tracking frame",
+      "signature": "OMP: Error #179: Function Can't open SHM failed",
+      "termination": "Only stalled upstream PID 16910 received SIGTERM; runner finalized failed manifest; no finished manifest edited"
+    },
+    "row": {
+      "causal_ate_sim3_rmse_m": null,
+      "causal_matched_gt_poses": null,
+      "causal_pose_count": null,
+      "causal_rpe_rotation_rmse_deg": null,
+      "causal_rpe_translation_rmse_m": null,
+      "evaluation_status": "unavailable",
+      "excluded_gap_pairs": null,
+      "final_ate_sim3_rmse_m": null,
+      "final_matched_gt_poses": null,
+      "final_pose_count": null,
+      "initializing_frames": 0,
+      "lost_frames": 0,
+      "observed_tracking_rows": 0,
+      "ok_frames": null,
+      "peak_rss_bytes": 743489536,
+      "reason": "smoke_failed: upstream_exit: -15; see upstream.log",
+      "relocalizing_frames": 0,
+      "requested_frames": 2488,
+      "rpe_pairs": null,
+      "run_id": "yaropolk_y06_heldout2488_c08833f_01",
+      "source_status": "failed",
+      "split": "held-out",
+      "tracking_p50_ms": null,
+      "tracking_p95_ms": null,
+      "tracking_success": null,
+      "unknown_frames": 0,
+      "wall_clock_s": 199.44500675000018,
+      "whole_run_fps": null
+    },
+    "summary_sha256": "956a59a59ed21ce04190b0d4cabb8ca6889b0da0d34e0cf674367a4bf1bd60d1"
+  },
+  "prior_attempt_summary": "results/summaries/yaropolk_y06_heldout.json",
+  "protocol": {
+    "baseline_settings_changed": false,
+    "freeze_commit": "4021a02",
+    "freeze_pr": 25,
+    "frozen_config_sha256": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "gt_use": "evaluation-only trajectory association; preflight integrity/timestamp checks; no fitting in SLAM",
+    "input_frames": 2488,
+    "inputs_changed": false,
+    "max_timestamp_delta_s": 0.02,
+    "preflight_fix_commit": "bd0a17e660d40d67bd2c0e7bd861719ac93b26ed",
+    "preflight_fix_pr": 27,
+    "rerun": true,
+    "retry_scope": "only launch outside restricted sandbox; no algorithm/source/config change",
+    "rpe_delta": 1,
+    "runtime": "native macOS arm64, same pySLAM revision; second platform relative to Docker; not a matched speed comparison",
+    "runtime_timeout_s": 14400,
+    "seed": 0,
+    "sim3": "evaluation-only; does not recover metric scale",
+    "tracking_warmup_input_frames": 1
+  },
+  "real_time_claim": false,
+  "resource_scope": {
+    "cold_start_reason": "time to first tracked frame is not instrumented; whole-run wall clock is reported separately",
+    "cold_start_s": null,
+    "effective_fps": 1.795929896454733,
+    "effective_fps_reason": null,
+    "effective_fps_scope": "validated frozen input frames / whole-run wall clock, including startup/export",
+    "exit_code": 0,
+    "launch_error": null,
+    "peak_rss_bytes": 4583178240,
+    "peak_rss_reason": null,
+    "peak_rss_scope": "RUSAGE_CHILDREN ru_maxrss; maximum individual-process RSS reported by OS, not concurrent process-tree RAM; descendant accounting OS-dependent",
+    "real_time_claim": false,
+    "requested_frames": 2488,
+    "schema": "rt_mapping.slam_resources/v1",
+    "source_run_id": "yaropolk_y06_heldout2488_9714957_02",
+    "source_run_sha256": "c3b92a3339a08e640d61addeece1bc1a228cbd3c4a56fdb113f59c310f75c754",
+    "source_status": "ok",
+    "status": "ok",
+    "throughput_frames": 2488,
+    "wall_clock_s": 1385.3547429169994,
+    "wall_clock_scope": "whole B0 runner child: preflight, startup, tracking, export and shutdown; no warm-up excluded"
+  },
+  "retry_authorization": "Explicit user approval for execution-environment retry outside sandbox; same frozen parameters",
+  "row": {
+    "causal_ate_sim3_rmse_m": 0.03858551272604214,
+    "causal_matched_gt_poses": 2455,
+    "causal_pose_count": 2455,
+    "causal_rpe_rotation_rmse_deg": 0.281466465643006,
+    "causal_rpe_translation_rmse_m": 0.00662126614947332,
+    "evaluation_status": "ok",
+    "excluded_gap_pairs": 0,
+    "final_ate_sim3_rmse_m": 0.016064189699812995,
+    "final_matched_gt_poses": 2455,
+    "final_pose_count": 2455,
+    "initializing_frames": 33,
+    "lost_frames": 0,
+    "observed_tracking_rows": 2488,
+    "ok_frames": 2455,
+    "peak_rss_bytes": 4583178240,
+    "reason": null,
+    "relocalizing_frames": 0,
+    "requested_frames": 2488,
+    "rpe_pairs": 2454,
+    "run_id": "yaropolk_y06_heldout2488_9714957_02",
+    "source_status": "ok",
+    "split": "held-out",
+    "tracking_p50_ms": 244.162167,
+    "tracking_p95_ms": 1804.0899293999994,
+    "tracking_success": 0.9867363344051447,
+    "unknown_frames": 0,
+    "wall_clock_s": 1385.3547429169994,
+    "whole_run_fps": 1.795929896454733
+  },
+  "run_count": 2,
+  "run_progress": {
+    "commit": "9714957c0b5925d8f2e756f143028a7f6309ffed",
+    "driver_exit_code": 0,
+    "evaluation_exit_code": 0,
+    "evaluation_gt": {
+      "path": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household/groundtruth.txt",
+      "rule": "full unmodified official trajectory; frozen 20 ms timestamp association",
+      "sha256": "e255d5d9c5bab915132c7ac5ec4e23f9f1efe98f765b0c9b26ac74e40b02533f"
+    },
+    "evaluation_run_id": "yaropolk_y06_heldout2488_9714957_02.eval",
+    "evaluation_status": "ok",
+    "frozen_config_sha256": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "retry_authorization": "Explicit user approval to retry outside sandbox; failed attempt retained",
+    "retry_of": "yaropolk_y06_heldout2488_c08833f_01",
+    "run_id": "yaropolk_y06_heldout2488_9714957_02",
+    "source_reason": null,
+    "source_status": "ok",
+    "stage": "finished"
+  },
+  "runtime_observations": [
+    "Upstream resource_tracker warned about 46 leaked semaphore objects at shutdown; source and evaluation completed with status ok."
+  ],
+  "schema": "rt_mapping.wp2_heldout_benchmark/v1",
+  "source_commit": "9714957c0b5925d8f2e756f143028a7f6309ffed",
+  "source_manifest": {
+    "alignment": null,
+    "artifacts": {
+      "keyframes": "sparse/keyframes.npz",
+      "landmarks": "sparse/landmarks.npz",
+      "metrics": "metrics.json",
+      "observations": "sparse/observations.csv",
+      "preparation": "input_setup/setup.json",
+      "sparse_export": "sparse/export.json",
+      "sparse_map": "sparse/sparse_map.ply",
+      "tracking_export": "tracking_export.json",
+      "tracking_timing": "timing.csv",
+      "trajectory": "input_setup/trajectory/trajectory_final.txt",
+      "trajectory_all": "trajectory_all.csv",
+      "upstream_counts": "input_setup/trajectory/other_metrics_info.txt",
+      "upstream_log": "upstream.log"
+    },
+    "config": {
+      "baseline": {
+        "archive": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household.tgz",
+        "dataset_manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+        "feature_tracker": "ORB2",
+        "loop_detector": "DBOW3",
+        "notes": "Candidate WP2 baseline: upstream classical defaults, Python sparse core, no learned depth/semantics. Runtime and quality not yet validated.",
+        "num_features": 1000,
+        "python_optimization": 1,
+        "schema": "rt_mapping.wp2_setup/v1",
+        "seed": 0,
+        "sensor_type": "mono",
+        "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household",
+        "split": "held-out",
+        "upstream": {
+          "repo": "https://github.com/luigifreda/pyslam.git",
+          "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+          "version": "2.10.8"
+        },
+        "use_cpp_core": false
+      },
+      "export_sparse": true,
+      "export_tracking": true,
+      "frames": 2488,
+      "runner": "scripts/run_wp2_pyslam.py",
+      "seed_policy": "parent Python/NumPy/OpenCV seeded; upstream threads/workers may remain nondeterministic",
+      "timeout_s": 14400
+    },
+    "dataset": {
+      "checksum": "c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c",
+      "manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+      "name": "TUM RGB-D",
+      "sequence": "rgbd_dataset_freiburg3_long_office_household",
+      "split": "held-out"
+    },
+    "dirty_worktree": false,
+    "environment": {
+      "numpy": "1.26.4",
+      "opencv_python": "4.11.0.86",
+      "python": "3.11.16",
+      "torch": "2.6.0"
+    },
+    "git_commit": "9714957c0b5925d8f2e756f143028a7f6309ffed",
+    "hardware": {
+      "cpu": "arm64",
+      "gpu": null,
+      "ram_gb": 32.0
+    },
+    "method": "B0",
+    "model": null,
+    "reason": null,
+    "run_id": "yaropolk_y06_heldout2488_9714957_02",
+    "schema": "rt_mapping.run_manifest/v1",
+    "seed": 0,
+    "slam": {
+      "config": "configs/wp2_pyslam_baseline.json",
+      "pose_convention": "T_wc",
+      "repo": "https://github.com/luigifreda/pyslam.git",
+      "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+    },
+    "started_at": "2026-10-25T19:56:32.533522Z",
+    "status": "ok"
+  },
+  "state_counts": {
+    "NOT_INITIALIZED": 33,
+    "OK": 2455
+  },
+  "tracking_latency": {
+    "cold_sample_scope": "first Slam.track invocation only; not process/model startup",
+    "mapping_ms": null,
+    "mapping_reason": "background mapping is not attributable per input frame",
+    "reason": null,
+    "scope": "Slam.track wall time including waits/hook overhead, excluding decode and post-call CSV work",
+    "summary": {
+      "cold_start_ms": 259.406,
+      "n_total": 2488,
+      "n_warm": 2487,
+      "n_warmup": 1,
+      "percentile_method": "linear",
+      "stage": "slam_track",
+      "unit": "ms",
+      "warm_max_ms": 9847.838625,
+      "warm_mean_ms": 518.3765900112586,
+      "warm_median_ms": 244.162167,
+      "warm_min_ms": 10.30875,
+      "warm_p50_ms": 244.162167,
+      "warm_p95_ms": 1804.0899293999994
+    },
+    "total_ms": null,
+    "total_reason": "whole input-loop latency is not instrumented",
+    "warmup_frames": 1,
+    "warmup_policy": "exclude the first N frozen input rows regardless of state; remaining initialization/lost rows are included"
+  },
+  "tracking_success_reason": null
+}
