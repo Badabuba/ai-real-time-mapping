@@ -1,0 +1,490 @@
+{
+  "schema": "rt_mapping.nazar_n06_heldout/v1",
+  "chunk": "N-06 (D-5 rerun)",
+  "run_id": "nazar_n06_heldout2488_da3_48ddd4c_01",
+  "status": "failed",
+  "reason": "pipeline_failed: comparison_failed: fusion_failed: map_capacity_exceeded: voxel limit exceeded; increase size/limit explicitly",
+  "git_commit": "48ddd4c340e4d62793106ccb663b370b923c60bc",
+  "dirty_worktree": false,
+  "started_at": "2026-10-25T20:54:31.630841Z",
+  "ended_at_run_json_mtime": "2026-10-25T22:36:54.847509+00:00",
+  "previous_attempt": {
+    "run_id": "nazar_n06_heldout2488_da3_e561d8c_01",
+    "status": "failed",
+    "reason": "SLAM preflight: groundtruth time range does not cover associated RGB frames",
+    "summary": "results/summaries/nazar_n06_heldout2488_e561d8c.json (not edited)",
+    "run_json_sha256_unchanged": true
+  },
+  "rerun_justification": {
+    "rule": "plan D-5: rerun only after a documented code-bug fix merged via its owner's PR; new run_id; same frozen parameters; both runs reported",
+    "fix": "Yaropolk PR #27 (bd0a17e, merge c08833f) + PR #29 (78ecfe5, merge 242c0cb): slam/setup.py accepts partial GT coverage and reports it, keeps every RGB input, fails on zero overlap; 20 ms enforced",
+    "code_diff_since_first_attempt": "e561d8c..242c0cb in src/scripts/configs/containers touches only slam/setup.py, evaluation/trajectory.py, evaluation/slam_run.py, scripts/check_wp2_environment.py, scripts/evaluate_wp2_run.py",
+    "authorization_commit": "48ddd4c (docs/HELDOUT_BENCHMARK.md section 7, committed before execution)",
+    "parameters_changed": false
+  },
+  "freeze": {
+    "freeze_commit": "4021a02",
+    "freeze_merge": "847c662 (PR #25)",
+    "configs": [
+      {
+        "path": "configs/benchmark_frozen.json",
+        "sha256": "bf990a4ab459ca1db4457530e18c378a1e4219e89e943aaa7bc17ffb29213407"
+      },
+      {
+        "path": "configs/pipeline.nazar.heldout.json",
+        "sha256": "9cf9a0d733cbb6cd8266e76ac48e43d341f2ff463e5b0a0aec39f4a4d17f0b97"
+      },
+      {
+        "path": "configs/wp2_pyslam_heldout.json",
+        "sha256": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb"
+      },
+      {
+        "path": "configs/offline_mapping.json",
+        "sha256": "93c0c363b3c01b955fd424e92824a97ade8c0bf8abf2852a1e985e1cedd9f9fb"
+      },
+      {
+        "path": "configs/mapping_comparison.json",
+        "sha256": "06c4d5f5868fea31181feb79df25871147d46c1c7adb9fd71449be487f5e3aa2"
+      },
+      {
+        "path": "data/manifests/tum_fr3_long_office_heldout.json",
+        "sha256": "42b1149db6b48874b0b24f0b5a260f624139afc63fa4573cdee607dd5ca80ee3"
+      }
+    ],
+    "benchmark_frozen_sha256_matches_freeze": true
+  },
+  "provenance": {
+    "model": {
+      "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+      "dtype": "bfloat16",
+      "repo": "depth-anything/DA3METRIC-LARGE",
+      "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+    },
+    "process_res": 504,
+    "environment": {
+      "cuda_runtime": "12.8",
+      "depth_anything_3": "0.0.0+git3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+      "huggingface_hub": "2.2.0",
+      "numpy": "1.26.4",
+      "opencv": "4.11.0.86",
+      "pillow": "12.3.0",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "python": "3.11.16",
+      "torch": "2.11.0+cu128"
+    },
+    "hardware": {
+      "cpu": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "ram_gb": 31.2
+    },
+    "slam_runtime": "Docker image rt-mapping-wp2:96019cf (sha256:f975805a9c6cc4be3d4741053d5b2150dd4578a3f7b254bc28807acfd5e7b5f6), container rt-mapping-wp2-nazar --memory=10g --cpus=4, pySLAM 96019cf",
+    "dataset_archive_sha256": "c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c",
+    "groundtruth_sha256": "e255d5d9c5bab915132c7ac5ec4e23f9f1efe98f765b0c9b26ac74e40b02533f",
+    "run_from": "standalone runtime clone checked out at 48ddd4c (Docker cannot resolve a git-worktree .git file)"
+  },
+  "preflight": {
+    "status": "ok",
+    "selected_input_hashes_verified": 4976,
+    "associations": 2488,
+    "associated_rgb_frames_outside_gt_time_range": 3,
+    "gt_coverage": {
+      "max_timestamp_delta_s": 0.02,
+      "association": "greedy one-to-one by timestamp distance, inclusive tolerance; no interpolation",
+      "total_rgb_frames": 2488,
+      "matched_gt_frames": 2486,
+      "unmatched_gt_frames": 2,
+      "coverage_percent": 99.91961414790997,
+      "excluded_frame_ids": [
+        0,
+        1
+      ],
+      "excluded": [
+        {
+          "frame_id": 0,
+          "timestamp_s": 1341847980.722988,
+          "nearest_gt_delta_s": 0.06701207160949707,
+          "reason": "no_gt_pose_within_tolerance"
+        },
+        {
+          "frame_id": 1,
+          "timestamp_s": 1341847980.754743,
+          "nearest_gt_delta_s": 0.03525686264038086,
+          "reason": "no_gt_pose_within_tolerance"
+        }
+      ],
+      "exclusion_scope": "GT-dependent evaluation metrics only; retain every RGB input for SLAM",
+      "scope": "configured frozen RGB split; raw RGB index count is reported separately as rgb_frames",
+      "raw_rgb_index_frames": 2585
+    }
+  },
+  "stages": {
+    "slam": {
+      "status": "ok",
+      "elapsed_s": 5316.3533589
+    },
+    "geometry": {
+      "status": "ok",
+      "elapsed_s": 619.5680382999999
+    },
+    "comparison": {
+      "status": "failed",
+      "reason": "comparison_failed: fusion_failed: map_capacity_exceeded: voxel limit exceeded; increase size/limit explicitly",
+      "children": {
+        "global (P1-global)": "ok",
+        "raw (P1-raw ablation)": "failed: fusion_failed: map_capacity_exceeded: voxel limit exceeded; increase size/limit explicitly",
+        "k2 (P1-keyframes-2), oracle (B1)": "not started"
+      }
+    }
+  },
+  "failure": {
+    "stage": "comparison -> P1-raw ablation fusion child",
+    "message": "fusion_failed: map_capacity_exceeded: voxel limit exceeded; increase size/limit explicitly",
+    "check": "src/rt_mapping/fusion/voxel.py:66 (WP4, Yulian)",
+    "limit": {
+      "max_voxels": 2000000,
+      "voxel_size_m": 0.02,
+      "source": "configs/offline_mapping.json (frozen, hashed in benchmark_frozen.json)"
+    },
+    "context": {
+      "p1_global_map_points": 1818552,
+      "p1_global_input_points": 13416415,
+      "fused_keyframes": 282,
+      "alignment_scale": 2.1932010835703535,
+      "hypothesis": "P1-raw keeps pose scale 1 while recovered metric scale is 2.19, so metric depth is fused at too-short pose translations; surfaces from different keyframes stop overlapping and occupy more voxels. The raw voxel count at failure was not recorded."
+    },
+    "consequence": "comparison aborted before map evaluation: no B0-shared-scale/B1/P1-global/P1-raw/P1-keyframes-2 map rows, no comparison.csv or report.md",
+    "not_rerun": "fixing requires raising frozen max_voxels (forbidden by D-5) or a WP4 code change by its owner; no automatic rerun"
+  },
+  "gt_coverage": {
+    "all_frames_b0_evaluator": {
+      "association": "greedy one-to-one by timestamp distance, inclusive tolerance; no interpolation",
+      "coverage_percent": 99.91961414790997,
+      "excluded": [
+        {
+          "frame_id": 0,
+          "nearest_gt_delta_s": 0.06701207160949707,
+          "reason": "no_gt_pose_within_tolerance",
+          "timestamp_s": 1341847980.722988
+        },
+        {
+          "frame_id": 1,
+          "nearest_gt_delta_s": 0.03525686264038086,
+          "reason": "no_gt_pose_within_tolerance",
+          "timestamp_s": 1341847980.754743
+        }
+      ],
+      "excluded_frame_ids": [
+        0,
+        1
+      ],
+      "exclusion_scope": "GT-dependent evaluation metrics only; retain every RGB input for SLAM",
+      "matched_gt_frames": 2486,
+      "max_timestamp_delta_s": 0.02,
+      "scope": "all frozen RGB frames submitted to SLAM, including initialization and tracking loss",
+      "total_rgb_frames": 2488,
+      "unmatched_gt_frames": 2
+    },
+    "retained_keyframes_comparison": {
+      "association": "one-to-one nearest timestamp, inclusive tolerance; no interpolation, no farther pose",
+      "candidate_keyframes": 282,
+      "coverage_fraction": 1.0,
+      "evaluated_keyframes": 282,
+      "excluded": [],
+      "excluded_frame_ids": [],
+      "excluded_keyframes": 0,
+      "max_timestamp_delta_s": 0.02,
+      "policy": "exclude_keyframes_without_gt_pose_within_tolerance"
+    }
+  },
+  "depth": {
+    "model": "DA3METRIC-LARGE @504",
+    "mean": {
+      "abs_rel": 0.07883198344420375,
+      "aggregation": "frame_mean",
+      "delta1": 0.9507551556977921,
+      "mae_m": 0.1768440181783308,
+      "n_evaluated": 637196001,
+      "n_frames": 2488,
+      "n_gt_valid": 637196001,
+      "n_pixels": 764313600,
+      "n_pred_valid": 764313600,
+      "rmse_m": 0.34372042363333044,
+      "valid_coverage": 1.0
+    },
+    "protocol": {
+      "aggregation": "frame_mean",
+      "ground_truth": "TUM depth PNG / 5000 (rt_mapping.evaluation.tum_depth), evaluation only",
+      "gt_resize": "none; prediction bilinear to raw RGB grid",
+      "mask": "finite(gt) & gt > 0 & prediction.valid_mask",
+      "scale_alignment": "none (raw metric depth)"
+    },
+    "independent_recompute": {
+      "abs_rel": 0.07883198344420375,
+      "rmse_m": 0.34372042363333044,
+      "delta1": 0.9507551556977921,
+      "n_frames": 2488,
+      "n_evaluated": 637196001
+    }
+  },
+  "trajectory": {
+    "b0_final_trajectory_sim3": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.009094953536987305,
+      "ate_median_m": 0.022701777160221506,
+      "ate_rmse_m": 0.03713072332781239,
+      "evaluation_transform": {
+        "R": [
+          [
+            -0.9989590151210743,
+            0.001916003425026759,
+            -0.045576474624608676
+          ],
+          [
+            0.041305110354990474,
+            0.4620036385138817,
+            -0.8859156426311124
+          ],
+          [
+            0.019359079701638797,
+            -0.8868759591570909,
+            -0.46160184044509134
+          ]
+        ],
+        "direction": "reference_world = scale * R @ estimate_world + t",
+        "scale": 2.2685799002870004,
+        "t": [
+          -0.6144357676709905,
+          2.662196992477983,
+          1.6875321422769627
+        ]
+      },
+      "input_poses": 2458,
+      "matched_poses": 2458,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 2457,
+      "rpe_rotation_rmse_deg": 0.2830752534168144,
+      "rpe_translation_rmse_m": 0.006151219079561093,
+      "scale_fitted_for_evaluation": true
+    },
+    "b0_online_trajectory_sim3": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.009094953536987305,
+      "ate_median_m": 0.028141827179738503,
+      "ate_rmse_m": 0.03993986935402562,
+      "input_poses": 2458,
+      "matched_poses": 2458,
+      "max_timestamp_delta_s": 0.02,
+      "scale_fitted_for_evaluation": true
+    },
+    "b0_gap_aware_rpe": {
+      "rpe_pairs": 2457,
+      "rpe_rotation_rmse_deg": 0.2774689734065609,
+      "rpe_translation_rmse_m": 0.005992670546911206
+    },
+    "b0_retained_keyframes_sim3": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.005980968475341797,
+      "ate_median_m": 0.016360648551599598,
+      "ate_rmse_m": 0.028815301794887057,
+      "evaluation_transform": {
+        "R": [
+          [
+            -0.99896360806752,
+            0.00252060442865842,
+            -0.04544619136998106
+          ],
+          [
+            0.04143792797277726,
+            0.4634525640998677,
+            -0.8851523139858934
+          ],
+          [
+            0.01883103507632088,
+            -0.8861181452732882,
+            -0.4630766942261099
+          ]
+        ],
+        "direction": "reference_world = scale * R @ estimate_world + t",
+        "scale": 2.270264081803091,
+        "t": [
+          -0.6130529127378315,
+          2.6661278885875093,
+          1.6934554122582461
+        ]
+      },
+      "input_poses": 282,
+      "matched_poses": 282,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 281,
+      "rpe_rotation_rmse_deg": 0.3539554819630797,
+      "rpe_translation_rmse_m": 0.006406555630703269,
+      "scale_fitted_for_evaluation": true
+    },
+    "comparison_B0_sim3_keyframes": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.005980968475341797,
+      "ate_median_m": 0.016360648551599598,
+      "ate_rmse_m": 0.028815301794887057,
+      "input_poses": 282,
+      "matched_poses": 282,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 281,
+      "rpe_rotation_rmse_deg": 0.3539554819630797,
+      "rpe_translation_rmse_m": 0.006406555630703269,
+      "scale_fitted_for_evaluation": true
+    },
+    "comparison_P1_global_se3_keyframes": {
+      "alignment_mode": "se3",
+      "association_max_actual_delta_s": 0.005980968475341797,
+      "ate_median_m": 0.057902149664164154,
+      "ate_rmse_m": 0.0728926917780756,
+      "input_poses": 282,
+      "matched_poses": 282,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 281,
+      "rpe_rotation_rmse_deg": 0.3539554819630797,
+      "rpe_translation_rmse_m": 0.008309563986951521,
+      "scale_fitted_for_evaluation": false
+    },
+    "independent_b0_final_sim3": {
+      "matched_poses": 2458,
+      "ate_rmse_m": 0.03713072332781239,
+      "ate_median_m": 0.022701777160221506,
+      "scale": 2.2685799002870004,
+      "method": "independent numpy Umeyama Sim(3), trajectory_final.txt vs groundtruth.txt, greedy one-to-one 20 ms"
+    },
+    "note": "Sim(3) ATE uses an evaluation-only scale and does not prove metric scale; P1-global SE(3) ATE uses the recovered metric scale"
+  },
+  "tracking": {
+    "tracking_success": 0.9879421221864951,
+    "state_counts": {
+      "NOT_INITIALIZED": 30,
+      "OK": 2458
+    },
+    "non_ok_segments": [
+      {
+        "first_frame_id": 0,
+        "first_timestamp_s": 1341847980.722988,
+        "frame_count": 30,
+        "last_frame_id": 29,
+        "last_timestamp_s": 1341847981.69472,
+        "state": "NOT_INITIALIZED",
+        "timestamp_span_s": 0.9717321395874023
+      }
+    ],
+    "input_frames": 2488,
+    "final_poses": 2458,
+    "retained_keyframes": 282
+  },
+  "alignment_fusion_p1_global": {
+    "scale": 2.1932010835703535,
+    "inlier_count": 47084,
+    "number_of_pairs": 76996,
+    "inlier_ratio": 0.6115122863525378,
+    "map_points": 1818552,
+    "fused_keyframes": 282,
+    "ground_truth_evaluation": "not performed"
+  },
+  "map_metrics": {
+    "status": "unavailable",
+    "reason": "comparison failed before map evaluation (see failure)"
+  },
+  "performance": {
+    "hardware": "NVIDIA GeForce RTX 5070 Laptop GPU 8 GiB, AMD Ryzen 9 8940HX, 31.2 GB RAM; SLAM in Linux Docker (4 CPUs, 10 GiB)",
+    "resolution": "640x480 input; DA3 process_res 504",
+    "input_fps": 30,
+    "slam_track_ms": {
+      "p50": 1212.368192,
+      "p95": 4577.940087399997,
+      "mean": 1733.3044945500603,
+      "max": 7191.9902,
+      "n_warm": 2487
+    },
+    "da3_inference_ms": {
+      "p50": 92.26069999931497,
+      "p95": 130.32700999938243,
+      "mean": 99.8212382636976,
+      "n": 2488,
+      "independent_recompute": {
+        "p50_ms": 92.26069999931497,
+        "p95_ms": 130.32700999938243
+      },
+      "model_load_s": 4.9755610000029264
+    },
+    "alignment_and_input_ms": 33996.117999999115,
+    "fusion_per_keyframe_ms": {
+      "median": 154.91155000017898,
+      "p95": 223.6351149969778,
+      "keyframes": 282
+    },
+    "stage_elapsed_s": {
+      "slam_incl_preflight": 5316.3533589,
+      "geometry": 619.5680382999999
+    },
+    "wall_clock_to_failure_s": 6143.216668,
+    "effective_fps_to_failure": 0.40499955226387924,
+    "peak_vram_torch_gb": 1.5448637008666992,
+    "sampled_5s": {
+      "samples": 917,
+      "min_host_free_ram_gb": 1.79,
+      "max_gpu_mem_used_mib_all_processes": 7083,
+      "max_slam_container_mem_mib": 3736.576
+    },
+    "end_to_end_p95_ms": null,
+    "end_to_end_reason": "sequential offline pipeline; per-frame end-to-end latency not measured; components alone exceed 33.3 ms",
+    "real_time_verdict": "offline (D-7): Slam.track warm p95 4578 ms and DA3 warm p95 130.3 ms each exceed the 33.3 ms budget; throughput to failure 0.40 FPS < 30"
+  },
+  "real_time_claim": false,
+  "evidence_sha256": {
+    "nazar_n06_heldout2488_da3_48ddd4c_01/run.json": "c28bf0dcb0022dc51a152cd1f1943e962f18d65ad30d435c8a6f4dae020f689c",
+    "nazar_n06_heldout2488_da3_48ddd4c_01/input_stages.json": "0f8e10a66988e2c881db19a90bc5ca3da01acae53949c0e4269b26ebaec628a6",
+    "slam/run.json": "04afb89b463cc6815faffd2d70b99635eb53cbe8d23e1f4f09dcb7d067c8e424",
+    "slam/trajectory_final.txt": "cc06b0f2e17af3bb994dcf85cc7b482fce6fbe27e413351cce206e9aa6c4cfb6",
+    "slam/trajectory_all.csv": "a686def947d43eae34e8ee8a84b11646ab64118994c1d06d3265cf75be5592cf",
+    "geometry/run.json": "a882ee64cacc10e4e54f442b68db4c849ee4e509271074ad017f9199e5070325",
+    "geometry/metrics.json": "0920200533bcd6265c6d34874bd7ea584925d8d186e0b29e6f09f9cb25899714",
+    "geometry/timing.json": "995c8a6255347b8c1b6a745836fdd80ee3bea8742f2acd60ee24e42f7b34b624",
+    "comparison/run.json": "6a23308c7fcb62d4026ea7ef6e4346f0a9d9777e55487ab4b953c79c234b9d76",
+    "comparison/inputs.json": "906bed353bf98e5e627070ae997a38d4ba2481f5abede9159d0518a4d9e192cf",
+    "comparison/trajectory_evaluation.json": "956e1d4a077aaddef1d08a23a99ceafde9caef69b6fcb42c159ccaec3a6a9da9",
+    "comparison.global/alignment.json": "00589c79331eb28d1c30f70140757b63d79a4a85cfc6d3c21361cf9e8d6626f4",
+    "comparison.global/metrics.json": "7655b4236f43c8511ad399a3babea38d4dbec82b68e0f3ed8a8e05d01e8dbfac",
+    "comparison.raw/run.json": "b65272f4ec24de96fa0f126d8686b75edac7e96521b52e6ec37da66dcd5a2571",
+    "nazar_n06_heldout2488_b0eval_48ddd4c_01/run.json": "8adf822834a24031bb842e61271a05b3ab3b4cc11a10046f8ee92a10b3608b60",
+    "nazar_n06_heldout2488_b0eval_48ddd4c_01/metrics.json": "30d7b9590d2770d6a6908205a3708b69e97f1df99cc0b2f73c3e4f44e91260bc"
+  },
+  "b0_eval_run_id": "nazar_n06_heldout2488_b0eval_48ddd4c_01",
+  "checks": {
+    "pipeline_failed_in_comparison": true,
+    "slam_ok": true,
+    "geometry_ok": true,
+    "p1_global_child_ok": true,
+    "p1_raw_child_failed_capacity": true,
+    "b0eval_ok": true,
+    "clean_commit_48ddd4c": true,
+    "tolerance_0.02_everywhere": true,
+    "b0_keyframe_sim3_matches_comparison": true,
+    "independent_b0_final_ate_matches": true,
+    "independent_depth_means_match": true,
+    "independent_inference_p95_matches": true,
+    "max_voxels_frozen_2000000": true,
+    "old_run_unchanged": true
+  },
+  "disclosures": [
+    "First attempt nazar_n06_heldout2488_da3_e561d8c_01 failed at SLAM preflight (partial GT coverage); preserved unchanged.",
+    "Superseded-runner attempt wp2_heldout2488_4484fd7 (clean 4484fd7) failed in upstream local_mapping.py (TypeError: 'int' object is not iterable); no trajectory, no metrics, nothing tuned.",
+    "A user game (cs2) started at about 2026-10-25T22:27Z during the DA3 stage and shared the GPU and host RAM (sampled host free RAM min 1.79 GB; total GPU memory peak 7083 MiB across all processes). DA3 timing may be inflated by this contention (hypothesis).",
+    "Claude Code stopped an idle background wait loop under memory pressure; the detached pipeline process was not affected.",
+    "This D-5 rerun failed for a new reason (fusion capacity in the P1-raw ablation); per protocol it is final evidence and was not rerun."
+  ],
+  "tuning_from_heldout": false,
+  "gt_access": "GT poses/depth only in evaluation (depth metrics, B0 evaluator, comparison GT evaluation); the labelled B1 oracle did not start"
+}

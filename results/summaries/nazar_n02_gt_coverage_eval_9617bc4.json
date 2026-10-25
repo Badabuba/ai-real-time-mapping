@@ -1,0 +1,284 @@
+{
+  "schema": "rt_mapping.nazar_n02_gt_coverage_eval/v1",
+  "chunk": "N-02 supplemental (comparison-only)",
+  "run_id": "nazar_n02_gt_coverage_eval_9617bc4_01",
+  "status": "ok",
+  "reason": null,
+  "git_commit": "9617bc4e2b916b4580bb46768ae714bbc4adb318",
+  "dirty_worktree": false,
+  "checkout": "separate clean detached git worktree at 9617bc4 (PR #21 merge), as required by docs/GT_POSE_COVERAGE.md section 6; run directory local and ignored",
+  "procedure": "docs/GT_POSE_COVERAGE.md section 6; only scripts/run_mapping_comparison.py executed (CPU alignment/fusion children + GT evaluation). SLAM, DA3, original alignment/fusion not rerun.",
+  "source_run": "nazar_n02_e2e_smoke200_0fc564f_02",
+  "source_run_status": "failed (comparison stage); preserved unchanged",
+  "source_summary": "results/summaries/nazar_n02_e2e_smoke200_0fc564f.json (not edited)",
+  "evaluator_fix": "Yulian PR #21 (fix/yulian-missing-gt-pose), merge 9617bc4",
+  "config": {
+    "path": "configs/mapping_comparison.json",
+    "sha256": "06c4d5f5868fea31181feb79df25871147d46c1c7adb9fd71449be487f5e3aa2"
+  },
+  "manifest": {
+    "path": "data/manifests/tum_fr1_xyz.json",
+    "sha256": "f82096c0edc40478d605a93045c6793f53b01ce933e0f2dbd701410b4b338217"
+  },
+  "source_hashes": {
+    "before": {
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/run.json": "3ec7a60790f4765b6cdb87a8ca0c36103647fdc7aa19131df58c68bdae9e8b48",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/run.json": "2e4afa27929392509e4ebe2403e7978ea6237d54f3921cccfff3a8d3cfa2943f",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/sparse/export.json": "fcfef9d27ea51ce3d985ae5e31d51844b75c53ccd8af411416fdc62ee9d829c7",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/sparse/keyframes.npz": "0a7d64c94f414eb97ad8f2ec06f334ce8f951fc3b058412f886aefb617a7f13c",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/run.json": "c2e0a7a7ad452da2a65ac4d4cd379af84f37da27a56cc41c59b8c68d581a2967",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/metrics.json": "b238569ccb861bf6e1b2b6fd34186fb80c12efce0b4c5dfa9284676476d7eb69",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/run.json": "df0d719bc4f94507f5d3d8cc3c6a669cf353b16761fb16cbfd2d5d42d550e9ed",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/alignment.json": "d0c457c0af68afa5aaa373852fcc7b8527bb3840e70322c39c163608b7ea4f92",
+      "data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz/groundtruth.txt": "aac0319a6ef4e1cdf61e779d2152b95aa7e9f7b1749d6d18717b43ddabffede2",
+      "data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz.tgz": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98"
+    },
+    "after": {
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/run.json": "3ec7a60790f4765b6cdb87a8ca0c36103647fdc7aa19131df58c68bdae9e8b48",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/run.json": "2e4afa27929392509e4ebe2403e7978ea6237d54f3921cccfff3a8d3cfa2943f",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/sparse/export.json": "fcfef9d27ea51ce3d985ae5e31d51844b75c53ccd8af411416fdc62ee9d829c7",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/sparse/keyframes.npz": "0a7d64c94f414eb97ad8f2ec06f334ce8f951fc3b058412f886aefb617a7f13c",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/run.json": "c2e0a7a7ad452da2a65ac4d4cd379af84f37da27a56cc41c59b8c68d581a2967",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/metrics.json": "b238569ccb861bf6e1b2b6fd34186fb80c12efce0b4c5dfa9284676476d7eb69",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/run.json": "df0d719bc4f94507f5d3d8cc3c6a669cf353b16761fb16cbfd2d5d42d550e9ed",
+      "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/alignment.json": "d0c457c0af68afa5aaa373852fcc7b8527bb3840e70322c39c163608b7ea4f92",
+      "data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz/groundtruth.txt": "aac0319a6ef4e1cdf61e779d2152b95aa7e9f7b1749d6d18717b43ddabffede2",
+      "data/raw/tum_rgbd/rgbd_dataset_freiburg1_xyz.tgz": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98"
+    },
+    "all_equal": true,
+    "full_source_run_tree": {
+      "files": 240,
+      "sha256_of_sorted_listing_before": "210b8ce57e619a43a475297c1ec93608596b21dc4a48a9a2b968befbaa8e9469",
+      "sha256_of_sorted_listing_after": "210b8ce57e619a43a475297c1ec93608596b21dc4a48a9a2b968befbaa8e9469",
+      "identical": true
+    }
+  },
+  "alignment": {
+    "new": {
+      "scale": 1.224085382515751,
+      "inlier_count": 3746,
+      "number_of_pairs": 5334
+    },
+    "original": {
+      "scale": 1.224085382515751,
+      "inlier_count": 3746,
+      "number_of_pairs": 5334
+    },
+    "match": true
+  },
+  "gt_pose_coverage": {
+    "association": "one-to-one nearest timestamp, inclusive tolerance; no interpolation, no farther pose",
+    "candidate_keyframes": 18,
+    "coverage_fraction": 0.9444444444444444,
+    "evaluated_frame_ids": [
+      0,
+      2,
+      3,
+      7,
+      9,
+      11,
+      14,
+      17,
+      20,
+      72,
+      80,
+      175,
+      179,
+      183,
+      187,
+      191,
+      199
+    ],
+    "evaluated_keyframes": 17,
+    "excluded": [
+      {
+        "frame_id": 195,
+        "nearest_gt_delta_s": 0.040814876556396484,
+        "reason": "no_gt_pose_within_tolerance",
+        "timestamp_s": 1305031108.876515
+      }
+    ],
+    "excluded_frame_ids": [
+      195
+    ],
+    "excluded_keyframes": 1,
+    "max_timestamp_delta_s": 0.02,
+    "policy": "exclude_keyframes_without_gt_pose_within_tolerance"
+  },
+  "independent_gap_check": {
+    "nearest_gt_delta_s": 0.040814876556396484,
+    "gt_before_s": 1305031108.8357,
+    "gt_after_s": 1305031108.9458,
+    "gt_gap_s": 0.11010003089904785,
+    "within_0.02s": false
+  },
+  "trajectory": {
+    "B0_sim3": {
+      "alignment_mode": "sim3",
+      "ate_rmse_m": 0.009661629893326468,
+      "ate_median_m": 0.006697756604205732,
+      "rpe_translation_rmse_m": 0.013204194098986688,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "matched_poses": 17,
+      "rpe_pairs": 16,
+      "scale_fitted_for_evaluation": true
+    },
+    "P1_global_se3": {
+      "alignment_mode": "se3",
+      "ate_rmse_m": 0.017744491180960883,
+      "ate_median_m": 0.012439093734598547,
+      "rpe_translation_rmse_m": 0.014757989011082634,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "matched_poses": 17,
+      "rpe_pairs": 16,
+      "scale_fitted_for_evaluation": false
+    }
+  },
+  "trajectory_scope": "retained keyframes, not all-frame trajectory/tracking evaluation",
+  "rows": [
+    {
+      "method": "B0-shared-scale",
+      "map_points": 982,
+      "accuracy_mean_m": 0.06186848661766405,
+      "completeness_mean_m": 0.23221249129648874,
+      "chamfer_l1_m": 0.1470404889570764,
+      "ate_se3_rmse_m": 0.017744491180960883,
+      "rpe_translation_rmse_m": 0.014757989011082634,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "fusion_median_ms": null,
+      "fusion_p95_ms": null,
+      "gt_evaluated_keyframes": 17,
+      "gt_candidate_keyframes": 18,
+      "gt_coverage_fraction": 0.9444444444444444,
+      "fscore_0.02m": 0.03412949224270394,
+      "fscore_0.05m": 0.24891308501385623,
+      "fscore_0.1m": 0.5217614639863822
+    },
+    {
+      "method": "P1-global",
+      "map_points": 57837,
+      "accuracy_mean_m": 0.0975787093565425,
+      "completeness_mean_m": 0.07936981221216537,
+      "chamfer_l1_m": 0.08847426078435394,
+      "ate_se3_rmse_m": 0.017744491180960883,
+      "rpe_translation_rmse_m": 0.014757989011082634,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "fusion_median_ms": 95.11420000126236,
+      "fusion_p95_ms": 119.19088499817006,
+      "gt_evaluated_keyframes": 17,
+      "gt_candidate_keyframes": 18,
+      "gt_coverage_fraction": 0.9444444444444444,
+      "fscore_0.02m": 0.22813897541851172,
+      "fscore_0.05m": 0.47876863940413444,
+      "fscore_0.1m": 0.6954638305899775
+    },
+    {
+      "method": "P1-raw",
+      "map_points": 61209,
+      "accuracy_mean_m": 0.09850272795603963,
+      "completeness_mean_m": 0.08096651505872893,
+      "chamfer_l1_m": 0.08973462150738429,
+      "ate_se3_rmse_m": 0.041790676602479385,
+      "rpe_translation_rmse_m": 0.029221926409054962,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "fusion_median_ms": 99.37440000067,
+      "fusion_p95_ms": 117.80993000083981,
+      "gt_evaluated_keyframes": 17,
+      "gt_candidate_keyframes": 18,
+      "gt_coverage_fraction": 0.9444444444444444,
+      "fscore_0.02m": 0.21152687776209309,
+      "fscore_0.05m": 0.4563224796209477,
+      "fscore_0.1m": 0.6901146835289094
+    },
+    {
+      "method": "B1-oracle",
+      "map_points": 33939,
+      "accuracy_mean_m": 0.02444853538422293,
+      "completeness_mean_m": 0.025751108682038965,
+      "chamfer_l1_m": 0.02509982203313095,
+      "ate_se3_rmse_m": 0.017744491180960883,
+      "rpe_translation_rmse_m": 0.014757989011082634,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "fusion_median_ms": 70.14920000074198,
+      "fusion_p95_ms": 90.60006999861797,
+      "gt_evaluated_keyframes": 17,
+      "gt_candidate_keyframes": 18,
+      "gt_coverage_fraction": 0.9444444444444444,
+      "fscore_0.02m": 0.5456067626534541,
+      "fscore_0.05m": 0.87582947353127,
+      "fscore_0.1m": 0.9941879804364738
+    },
+    {
+      "method": "P1-keyframes-2",
+      "map_points": 38358,
+      "accuracy_mean_m": 0.09458952585682763,
+      "completeness_mean_m": 0.09335775621161546,
+      "chamfer_l1_m": 0.09397364103422154,
+      "ate_se3_rmse_m": 0.017744491180960883,
+      "rpe_translation_rmse_m": 0.014757989011082634,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "fusion_median_ms": 96.64999999949941,
+      "fusion_p95_ms": 113.09936000034213,
+      "gt_evaluated_keyframes": 17,
+      "gt_candidate_keyframes": 18,
+      "gt_coverage_fraction": 0.9444444444444444,
+      "fscore_0.02m": 0.18419075752051164,
+      "fscore_0.05m": 0.44580820553770134,
+      "fscore_0.1m": 0.6877056579999916
+    },
+    {
+      "method": "P1-keyframes-5",
+      "map_points": 26400,
+      "accuracy_mean_m": 0.09380577242497802,
+      "completeness_mean_m": 0.09958252780445762,
+      "chamfer_l1_m": 0.09669415011471783,
+      "ate_se3_rmse_m": 0.017744491180960883,
+      "rpe_translation_rmse_m": 0.014757989011082634,
+      "rpe_rotation_rmse_deg": 0.7647344713456213,
+      "fusion_median_ms": 98.58129999884113,
+      "fusion_p95_ms": 122.21481000015045,
+      "gt_evaluated_keyframes": 17,
+      "gt_candidate_keyframes": 18,
+      "gt_coverage_fraction": 0.9444444444444444,
+      "fscore_0.02m": 0.21049112805322479,
+      "fscore_0.05m": 0.44690273516089085,
+      "fscore_0.1m": 0.6654480899950826
+    }
+  ],
+  "evidence_sha256": {
+    "run.json": "3cab13c8d10f6f51958dbfa49227012b63381d77e7f3da9d4b190915128b15ef",
+    "metrics.json": "e6dc25bcefed7b698b5f63a83fb0a676722443a88867acd270bde20dea1d8ef0",
+    "comparison.csv": "2dffc315699c8512a65b0bd6250acdd3b237437e2050af389f966596d1e5c2d6",
+    "report.md": "7b5b9fe11f14e6641466bde2b981857a88a0ea7731ad341cf5e06652165e5587",
+    "trajectory_evaluation.json": "e2ab528a4e3d5ec9a6fd2433de242f23c8805a5a997a7d7cc1cbf57ac314b66a",
+    "inputs.json": "f95ed58a68326c434a3faf4c3926fd0f64b50cbb7c1a7ee189c0891973f05218",
+    "evaluation/B0-shared-scale.json": "0f4652a3598a8c4d66cd9f5c2b8486e877fb813850abf277fbcbf99bf78a02cc",
+    "evaluation/B1-oracle.json": "dd64ea4959e44a8ad017fc1f3932f3cddb19aa986b87b3ac67bb22322c3a3ada",
+    "evaluation/P1-global.json": "7c0a11c2b2f52b56a2c45ac756d1408fd51ad72a6199d873ab9e43bbd60d1c65",
+    "evaluation/P1-keyframes-2.json": "c733c780c0ad892aae524ca9443453c53c0b5413f546ec2adcce4f9982f3a374",
+    "evaluation/P1-keyframes-5.json": "e2d1c9bc01f18efbe7a2ed131f2e3e9a66bf2a22fd81e6d2b18785620465c887",
+    "evaluation/P1-raw.json": "d0e5d52e158f6cc95f9d241ceff34bf046b0aba03813e2a55b339c3dc661dc3c",
+    "methods/nazar_n02_gt_coverage_eval_9617bc4_01.global/alignment.json": "d0c457c0af68afa5aaa373852fcc7b8527bb3840e70322c39c163608b7ea4f92"
+  },
+  "checks": {
+    "status_ok": true,
+    "dirty_worktree_false": true,
+    "git_commit_9617bc4": true,
+    "alignment_matches_original": true,
+    "coverage_expected": true,
+    "nearest_gt_delta_approx_0.0408": true,
+    "independent_nearest_gt_delta_matches": true,
+    "source_doc_hashes_unchanged": true,
+    "source_run_tree_unchanged": true
+  },
+  "labels": [
+    "cross-machine reproduction of the merged smoke pipeline (Nazar machine)",
+    "GT-eligible coverage 17/18 retained keyframes (frame 195 excluded, no GT pose within 0.02 s)",
+    "not a direct equality comparison with Yulian reference yulian_tum_e2e_f200_20261025_01 (22/22): keyframe sets and eligible frames differ",
+    "B1-oracle uses GT depth (labelled oracle control)",
+    "Sim(3)-aligned B0 ATE does not prove metric scale",
+    "no real-time claim"
+  ],
+  "real_time_claim": false,
+  "tuning": "none; GT used only in evaluation"
+}

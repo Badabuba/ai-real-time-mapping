@@ -5,6 +5,7 @@
 - **Reference:** `results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.json`, run `yulian_tum_e2e_f200_20261025_01`, clean `4952e37`.
 - **Підсумок:** **disclosed failure.** SLAM, DA3 geometry і global alignment/fusion завершилися `ok` з clean commit. GT-based comparison stage (B0/B1/P1 rows, ATE/RPE, map metrics) впав, тому pipeline run має status `failed`. Зміна evaluation rules виходить за межі N-02, а повторні запуски заради іншого набору keyframes заборонені, тож PR містить evidence і blocker report.
 - **Evidence:** `results/summaries/nazar_n02_e2e_smoke200_0fc564f.json` (з source hashes), `results/plots/nazar_n02_residuals.png`, config `configs/pipeline.nazar.smoke200.docker.json`.
+- **Оновлення (supplemental, §10):** після окремого evaluator fix Юліана (PR #21, `9617bc4`) comparison-only run `nazar_n02_gt_coverage_eval_9617bc4_01` завершився `ok` на тих самих незмінених outputs. GT coverage 17/18 retained keyframes. Оригінальний failed run і текст вище не змінено.
 
 ## 1. Середовище
 
@@ -114,3 +115,26 @@ Docker команди з `--env /opt/...` треба запускати з Power
 - Інше DA3 environment (torch 2.11+cu128), ніж у reference.
 - GT використовується лише в evaluation code; на результатах нічого не тюнилось.
 - Немає real-time claim і немає metric-scale claim з alignment.
+
+## 10. Supplemental comparison-only evaluation (після PR #21)
+
+- **Підстава:** `docs/GT_POSE_COVERAGE.md` §6 (handoff Юліана). N-02 завершений лише після окремого missing-GT evaluator fix (PR #21, merge `9617bc4`), а не через зміну N-02 runtime.
+- **Run:** `nazar_n02_gt_coverage_eval_9617bc4_01`, status **`ok`**, `git_commit` `9617bc4`, `dirty_worktree` false. Запущено один раз з окремого clean detached worktree на `9617bc4`. Run directory локальний і ignored.
+- **Що виконано:** лише `scripts/run_mapping_comparison.py` (CPU alignment/fusion children + GT evaluation) на SLAM і geometry stages run `nazar_n02_e2e_smoke200_0fc564f_02`. SLAM, DA3 і оригінальний alignment/fusion не перезапускались. Config `configs/mapping_comparison.json` (tolerance 0.02 s без змін).
+- **Незмінність source:** 10 SHA-256 з §6 (run, SLAM stage, sparse export, keyframes, geometry run/metrics, comparison run, `alignment.json`, `groundtruth.txt`, fr1/xyz archive) збіглися до і після run. Хеші всіх 240 файлів source run directory до і після побайтово однакові.
+- **Alignment:** scale 1.224085382515751, inliers 3746 / 5334 pairs. Збігається з оригінальним `comparison.global`.
+- **GT coverage:** 17/18 retained keyframes (0.944444). Виключено frame 195 (t = 1305031108.876515), reason `no_gt_pose_within_tolerance`, nearest GT pose за 0.040815 s. Незалежна перевірка по `groundtruth.txt`: розрив 110.1 ms між 1305031108.8357 і 1305031108.9458. Той самий eligible set для всіх методів.
+
+| Method | Points | Accuracy, m | Completeness, m | Chamfer-L1, m | F@5cm | ATE SE(3), m | RPE trans, m |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| B0-shared-scale | 982 | 0.0619 | 0.2322 | 0.1470 | 0.249 | 0.0177 | 0.0148 |
+| P1-global | 57837 | 0.0976 | 0.0794 | 0.0885 | 0.479 | 0.0177 | 0.0148 |
+| P1-raw | 61209 | 0.0985 | 0.0810 | 0.0897 | 0.456 | 0.0418 | 0.0292 |
+| B1-oracle (GT depth) | 33939 | 0.0244 | 0.0258 | 0.0251 | 0.876 | 0.0177 | 0.0148 |
+| P1-keyframes-2 | 38358 | 0.0946 | 0.0934 | 0.0940 | 0.446 | 0.0177 | 0.0148 |
+| P1-keyframes-5 | 26400 | 0.0938 | 0.0996 | 0.0967 | 0.447 | 0.0177 | 0.0148 |
+
+B0 Sim(3) diagnostic (evaluation-only scale 1.3535): ATE RMSE 0.00966 m, RPE translation 0.01320 m, rotation 0.765°, 17 poses / 16 pairs. Scope: retained keyframes, не all-frame tracking.
+
+- **Evidence:** `results/summaries/nazar_n02_gt_coverage_eval_9617bc4.json` (pre/post source hashes, SHA-256 `run.json`, `metrics.json`, `comparison.csv`, `report.md`, `trajectory_evaluation.json`, `inputs.json`, `evaluation/*.json`, coverage, rows).
+- **Позначення:** cross-machine reproduction на машині Nazar. Це не пряма рівність із reference Юліана (`yulian_tum_e2e_f200_20261025_01`, 22/22 keyframes): набори keyframes і eligible frames різні. Sim(3) ATE не доводить metric scale. B1 — oracle control. Real-time claim немає. Нічого не тюнилось.
