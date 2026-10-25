@@ -7,7 +7,7 @@
     "command": ["docker", "exec", "--env", "LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libQt5Core.so.5:/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5:/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5", "--workdir", "/workspace", "rt-mapping-wp2-nazar", "python", "-O", "scripts/run_wp2_pyslam.py", "--pyslam-root", "/opt/pyslam", "--pyslam-python", "/usr/local/bin/python", "--frames", "200", "--export-sparse"]
   },
   "geometry": {
-    "command": [".venv/Scripts/python.exe", "scripts/run_tum_da3_metric.py", "--frames", "200", "--warmup", "1"]
+    "command": [".venv\\Scripts\\python.exe", "scripts/run_tum_da3_metric.py", "--frames", "200", "--warmup", "1"]
   },
   "mapping": {"plot": true},
   "comparison": {"keyframe_intervals": [2, 5]},
