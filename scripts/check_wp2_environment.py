@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from rt_mapping.slam.setup import host_report, inspect_source, load_setup_config, probe_runtime, verify_dataset
+from rt_mapping.evaluation.trajectory import NoGroundTruthOverlap
 
 
 def main() -> int:
@@ -33,6 +34,8 @@ def main() -> int:
         )
     except (OSError, ValueError, KeyError) as exc:
         report["status"], report["reason"] = "failed", str(exc)
+        if isinstance(exc, NoGroundTruthOverlap):
+            report["gt_coverage"] = exc.coverage
     print(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False))
     return 0 if report["status"] == "ok" else 1
 

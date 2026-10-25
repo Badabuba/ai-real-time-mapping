@@ -16,7 +16,19 @@
 
 ## Dataset verification
 
-Y-06 preflight уточнення (25 жовтня): official fr3 archive SHA-256 `c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c`, 5,098 extracted files побайтово збігаються. RGB interval починається `1341847980.722988`, а GT — `1341847980.790000`: три associated RGB frames лежать перед GT interval. Попередня вимога повного GT time coverage помилково блокувала valid dataset ще до SLAM. Preflight тепер записує `associated_rgb_frames_outside_gt_time_range` та limitation; повна відсутність time overlap досі є помилкою. Frozen inputs, baseline/config hashes, 20 ms evaluation association та source GT bytes не змінено; жодного SLAM run до виправлення не запускали. Внутрішні GT gaps та кількість unmatched poses перевіряє evaluator.
+### Partial GT coverage: shared preflight / evaluator
+
+Preflight тепер використовує той самий inclusive greedy one-to-one timestamp matcher, що й evaluator, з фіксованою GT tolerance **0.020 s**. Перетин лише крайніх timestamps недостатній: якщо жоден frozen RGB frame не має GT match у 20 ms, preflight явно повертає `no_valid_gt_overlap`. CLI записує `status=failed`, reason та structured `gt_coverage`. Duplicate GT timestamps поза matching interval frozen split не впливають на нього; ambiguous duplicates усередині interval відхиляються, poses не deduplicate/average.
+
+`dataset.gt_coverage` містить `total_rgb_frames`, `matched_gt_frames`, `unmatched_gt_frames`, `coverage_percent`, `matched_frame_ids`, `excluded_frame_ids`, а також `excluded[]` з `frame_id`, timestamp, diagnostic nearest-GT delta та причиною (`no_gt_pose_within_tolerance` або `gt_pose_within_tolerance_assigned_to_other_frame`). `raw_rgb_index_frames` / existing `rgb_frames` — повний RGB index; denominator coverage — configured frozen RGB split. Existing RGB-depth associations, split, IDs, timestamps і всі RGB inputs для SLAM не змінюються. `excluded` стосується тільки GT-dependent evaluation, не SLAM input selection, tracking success чи latency.
+
+Read-only preflight fr3: raw RGB index = **2,585**, frozen input = **2,488**, GT-matched = **2,486**, unmatched = **2**, coverage = **99.919614%**. Excluded IDs **0, 1**: nearest GT delta 67.012 ms / 35.257 ms. Frame 2 теж перед GT interval, але має match за 3.144 ms, тому не виключається. Endpoint count (3) не дорівнює unmatched count (2). Це лише integrity/timestamp verification; **N-06 не перезапускався**, original failed N-06 record та benchmark evidence не змінені.
+
+```bash
+.venv-wp2/bin/python scripts/check_wp2_environment.py --config configs/wp2_pyslam_heldout.json --dataset-only
+```
+
+Історичне Y-06 виправлення PR #27 прибрало вимогу повного GT endpoint coverage: official fr3 archive SHA-256 `c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c`, 5,098 extracted files перевірено побайтово; перший RGB timestamp `1341847980.722988`, перший GT `1341847980.790000`. Поточне правило вище уточнює цю перевірку: потрібен хоча б один match у 20 ms, а не лише геометричний перетин time ranges. Frozen inputs, baseline та GT bytes не змінювалися.
 
 TUM `rgbd_dataset_freiburg1_xyz` лежить у `data/raw/tum_rgbd/` разом із `.tgz` archive. Raw data не змінювалися.
 
