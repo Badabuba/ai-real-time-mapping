@@ -1,0 +1,95 @@
+{
+  "schema": "rt_mapping.nazar_n04_ported_evidence_check/v1",
+  "chunk": "N-04 step 5",
+  "ported_from": "local feature/nazar-depth-ablations @ 047992e",
+  "unidepth_confidence": {
+    "source_run_ported": "wp1_dev50_unidepth_a9ccd5d",
+    "source_run_ported_sha256": "f4a0417d726d9f292f7246d828fc39c6ed99ae79f00a6881f51a59f9d8796784",
+    "rerun": "nazar_n04_dev50_unidepth_5d11ce6_01",
+    "rerun_sha256": "70c4cf1d8859ef0ef4b828bc0dcbebf243ee51ee2d8529f5a343708016120abf",
+    "rerun_summary": "results/summaries/nazar_n04_unidepth_confidence_development50_5d11ce6.json",
+    "depth_and_valid_mask_bit_identical_frames": 50,
+    "evaluation_mask_sha256_identical_frames": 50,
+    "frames": 50,
+    "rank_equivalence": "old c=1/(1+e), new c=-e; -e = 1-1/c is strictly increasing in c, so pixel rankings agree up to float32 ties",
+    "max_abs_diff_new_vs_mapped_old": 6.214060249476461e-06,
+    "unique_values_new_total": 14183488,
+    "unique_values_old_total": 12893525,
+    "independent_mask_check_note": "per_frame_quantile_masks recompute per-frame quantiles in float64 on float64-cast confidences; analyze_run (metrics_vs_ported) quantiles native float32 arrays, so the two counts differ by a few pixels. Both show the old 1/(1+e) mapping keeps slightly more tied pixels.",
+    "per_frame_quantile_masks": {
+      "0.75": {
+        "kept_new": 11520008,
+        "kept_old": 11520012,
+        "disagreeing_pixels": 4,
+        "kept_only_by_old_mapping": 4
+      },
+      "0.5": {
+        "kept_new": 7680006,
+        "kept_old": 7680013,
+        "disagreeing_pixels": 7,
+        "kept_only_by_old_mapping": 7
+      }
+    },
+    "metrics_vs_ported": [
+      {
+        "keep_fraction_requested": 1.0,
+        "ported_n_pred_valid": 15360000,
+        "rerun_n_pred_valid": 15360000,
+        "ported_n_evaluated": 11738990,
+        "rerun_n_evaluated": 11738990,
+        "delta_n_pred_valid": 0,
+        "delta_n_evaluated": 0,
+        "max_abs_metric_diff": 0.0
+      },
+      {
+        "keep_fraction_requested": 0.75,
+        "ported_n_pred_valid": 11520012,
+        "rerun_n_pred_valid": 11520008,
+        "ported_n_evaluated": 9486781,
+        "rerun_n_evaluated": 9486777,
+        "delta_n_pred_valid": -4,
+        "delta_n_evaluated": -4,
+        "max_abs_metric_diff": 3.4074481702894843e-07
+      },
+      {
+        "keep_fraction_requested": 0.5,
+        "ported_n_pred_valid": 7680022,
+        "rerun_n_pred_valid": 7680010,
+        "ported_n_evaluated": 6415175,
+        "rerun_n_evaluated": 6415164,
+        "delta_n_pred_valid": -12,
+        "delta_n_evaluated": -11,
+        "max_abs_metric_diff": 9.370482468851193e-07
+      }
+    ]
+  },
+  "da3_resolution": {
+    "rows": [
+      {
+        "run_id": "wp1_dev50_da3_a9ccd5d",
+        "run_sha256_matches": true,
+        "max_abs_metric_diff": 0.0,
+        "count_fields_equal": true,
+        "warm_p95_abs_diff_ms": 0.0,
+        "peak_vram_abs_diff_gb": 0.0,
+        "process_res": 504
+      },
+      {
+        "run_id": "wp5_dev50_da3_r384_a9ccd5d",
+        "run_sha256_matches": true,
+        "max_abs_metric_diff": 0.0,
+        "count_fields_equal": true,
+        "warm_p95_abs_diff_ms": 0.0,
+        "peak_vram_abs_diff_gb": 0.0,
+        "process_res": 384
+      }
+    ],
+    "paired_masks_verified": true
+  },
+  "da3_confidence_unavailable": {
+    "source_run": "wp1_dev50_da3_a9ccd5d",
+    "all_predictions_confidence_none": true,
+    "source_run_sha256_matches": true
+  },
+  "ground_truth_use": "GT read only by analyze_run for depth scoring; thresholds/masks are prediction-only"
+}

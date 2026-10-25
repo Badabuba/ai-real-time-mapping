@@ -1,0 +1,50 @@
+{
+  "schema": "rt_mapping.wp1_integration_verification/v1",
+  "date": "2026-10-24",
+  "base_commit": "ce095fa7832a7cddc789dd7e96d6870c1c9b6935",
+  "experiment_commit": "463b44624ef50587f76d109a5cd82324815e1398",
+  "pair": [
+    {
+      "run_id": "wp1_integrated_selection50_da3_463b446",
+      "direct_numpy_metrics_match": true,
+      "mask_hashes_match": true,
+      "historical_run": "wp1_selection50_da3_a9ccd5d",
+      "depth_identical_frames": 50,
+      "max_abs_depth_difference_m": 0.0,
+      "historical_p95_ms": 91.4913199696457,
+      "new_p95_ms": 98.55078999826219,
+      "model_load_s": 5.628082099952735,
+      "cold_inference_ms": 1149.0657000103965
+    },
+    {
+      "run_id": "wp1_integrated_selection50_unidepth_463b446",
+      "direct_numpy_metrics_match": true,
+      "mask_hashes_match": true,
+      "historical_run": "wp1_selection50_unidepth_final_f9c181a",
+      "depth_identical_frames": 50,
+      "max_abs_depth_difference_m": 0.0,
+      "historical_p95_ms": 78.30191500543151,
+      "new_p95_ms": 80.02780999231618,
+      "model_load_s": 6.570334699994419,
+      "cold_inference_ms": 1087.291399948299
+    }
+  ],
+  "independent_score_recomputation": "matches at absolute tolerance 1e-12",
+  "historical_da3_files_unchanged": 48,
+  "pr5_code_tests_artifacts_unchanged": 18,
+  "frozen_manifests_byte_identical": 4,
+  "datasets_downloaded": false,
+  "environments_modified": false,
+  "native_pyslam_reproduced": false,
+  "failed_probe": {
+    "run_id": "wp1_integrated_unidepth_f1_6fa2f55",
+    "reason": "source-verification namespace-package bug; fixed in 463b446; original failure preserved"
+  },
+  "limits": [
+    "One new selection pair compared with historical runs; no held-out inference.",
+    "Cold inference and model load reported separately; Python import/source/hash validation overhead is not model latency.",
+    "Historical confidence mapping was reciprocal; new output only reverses official error sign.",
+    "WP2 Windows portability failures in unchanged PR5 remain outside this branch.",
+    "External team review/reproduction pending."
+  ]
+}

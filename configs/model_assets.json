@@ -1,0 +1,35 @@
+{
+  "schema": "rt_mapping.model_assets/v1",
+  "models": [
+    {
+      "id": "da3-metric-large",
+      "source_repo": "https://github.com/ByteDance-Seed/Depth-Anything-3",
+      "code_revision": "3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+      "model_repo": "depth-anything/DA3METRIC-LARGE",
+      "model_revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+      "checkpoint_file": "model.safetensors",
+      "checkpoint_size_bytes": 1336734448,
+      "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+      "license": "Apache-2.0",
+      "license_source": "https://huggingface.co/depth-anything/DA3METRIC-LARGE",
+      "downloads_during_inference": false
+    },
+    {
+      "id": "unidepth-v2-vitl14",
+      "source_repo": "https://github.com/lpiccinelli-eth/UniDepth",
+      "code_revision": "8d8cfe4c7ee15297099983607febf0d4f32eb3d6",
+      "model_repo": "lpiccinelli/unidepth-v2-vitl14",
+      "model_revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9",
+      "checkpoint_file": "model.safetensors",
+      "checkpoint_size_bytes": 1415383604,
+      "checkpoint_sha256": "ba73d3de735302ccc64a50f1e557122050c4b1893e6060b28dba05d6af3e67c6",
+      "config_sha256": "09eb0ea8de53a6c9a1d428ac98c79847fe2602ea417701261f3f628099a30816",
+      "code_license": "CC-BY-NC-4.0",
+      "checkpoint_license": "not separately declared on the official model card",
+      "license_source": "https://github.com/lpiccinelli-eth/UniDepth/blob/8d8cfe4c7ee15297099983607febf0d4f32eb3d6/LICENSE",
+      "model_source": "https://huggingface.co/lpiccinelli/unidepth-v2-vitl14/tree/52b349b514bd8b47642f67ac78cb7b5dc5c51dd9",
+      "redistribution_claim": "none; local non-commercial course experiments only",
+      "downloads_during_inference": false
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "rt_mapping.confidence_ablation/v1",
+  "source_run": "wp1_dev50_unidepth_a9ccd5d",
+  "source_commit": "a9ccd5d6e0350cda5a21f4215055d6785740cddc",
+  "dataset": {
+    "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+    "manifest": "data/manifests/tum_fr1_desk_spike50.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_desk",
+    "split": "development"
+  },
+  "source_run_sha256": "f4a0417d726d9f292f7246d828fc39c6ed99ae79f00a6881f51a59f9d8796784",
+  "mode": "raw metric depth; depth-only diagnostic, not map F-score/completeness",
+  "status": "ok",
+  "results": [
+    {
+      "keep_fraction_requested": 1.0,
+      "metrics": {
+        "aggregation": "frame_mean",
+        "n_frames": 50,
+        "abs_rel": 0.04115206000165939,
+        "rmse_m": 0.12474342623987907,
+        "mae_m": 0.05963219722244434,
+        "delta1": 0.9849596361218093,
+        "n_pixels": 15360000,
+        "n_gt_valid": 11738990,
+        "n_pred_valid": 15360000,
+        "n_evaluated": 11738990,
+        "valid_coverage": 1.0
+      }
+    },
+    {
+      "keep_fraction_requested": 0.75,
+      "metrics": {
+        "aggregation": "frame_mean",
+        "n_frames": 50,
+        "abs_rel": 0.03667324507204742,
+        "rmse_m": 0.09414104317808648,
+        "mae_m": 0.045819562528856,
+        "delta1": 0.9883560789209028,
+        "n_pixels": 15360000,
+        "n_gt_valid": 11738990,
+        "n_pred_valid": 11520012,
+        "n_evaluated": 9486781,
+        "valid_coverage": 0.808142864079448
+      }
+    },
+    {
+      "keep_fraction_requested": 0.5,
+      "metrics": {
+        "aggregation": "frame_mean",
+        "n_frames": 50,
+        "abs_rel": 0.03475335430223237,
+        "rmse_m": 0.0805104832694466,
+        "mae_m": 0.0420948288679448,
+        "delta1": 0.9897389650418098,
+        "n_pixels": 15360000,
+        "n_gt_valid": 11738990,
+        "n_pred_valid": 7680022,
+        "n_evaluated": 6415175,
+        "valid_coverage": 0.5464844079431024
+      }
+    }
+  ],
+  "limitation": "thresholds fixed at 100/75/50%; no GT used to select pixels or tune thresholds"
+}

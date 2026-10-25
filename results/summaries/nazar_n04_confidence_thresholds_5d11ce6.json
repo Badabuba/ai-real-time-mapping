@@ -1,0 +1,40 @@
+{
+  "schema": "rt_mapping.confidence_thresholds/v1",
+  "source_run": "nazar_n04_dev50_unidepth_5d11ce6_01",
+  "source_commit": "5d11ce60f6461e2a717e5e19af167a8b816d78e9",
+  "dataset": {
+    "checksum": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+    "manifest": "data/manifests/tum_fr1_desk_spike50.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_desk",
+    "split": "development"
+  },
+  "model": {
+    "checkpoint": "model.safetensors@sha256:ba73d3de735302ccc64a50f1e557122050c4b1893e6060b28dba05d6af3e67c6",
+    "dtype": "float16",
+    "repo": "lpiccinelli/unidepth-v2-vitl14",
+    "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9"
+  },
+  "source_run_sha256": "70c4cf1d8859ef0ef4b828bc0dcbebf243ee51ee2d8529f5a343708016120abf",
+  "confidence_semantics": "negative official scale-invariant log-error estimate; relative ranking, not probability",
+  "pooling": "all valid prediction pixels of all frames; numpy.quantile linear",
+  "frames": 50,
+  "valid_pixels": 15360000,
+  "thresholds": [
+    {
+      "keep_fraction_requested": 0.75,
+      "quantile": 0.25,
+      "threshold": -0.6916478276252747,
+      "retained_pixels": 11520004,
+      "retained_fraction": 0.7500002604166667
+    },
+    {
+      "keep_fraction_requested": 0.5,
+      "quantile": 0.5,
+      "threshold": -0.6456854343414307,
+      "retained_pixels": 7680004,
+      "retained_fraction": 0.5000002604166667
+    }
+  ],
+  "ground_truth_used": false
+}
