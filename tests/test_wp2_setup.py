@@ -148,3 +148,204 @@ def test_runtime_probe_preserves_virtual_environment_interpreter(tmp_path):
     )
     result = probe_runtime(python, source)
     assert result["status"] == "ok", result
+
+# Y-04: the same baseline over frozen development/selection/held-out inputs.
+from rt_mapping.data.manifest import build_tum_split_manifest
+from rt_mapping.slam.setup import load_setup_config, resolve_frame_count
+
+
+def freeze_split(dataset, split="development", count=None, camera="freiburg1"):
+    root, seq, archive, config = dataset
+    if camera != "freiburg1":
+        new_seq = seq.with_name(seq.name.replace("freiburg1", camera))
+        seq.rename(new_seq)
+        seq = new_seq
+        archive = seq.with_suffix(".tgz")
+        with tarfile.open(archive, "w:gz") as tar:
+            tar.add(seq, arcname=seq.name)
+        config.update(sequence_dir=str(seq.relative_to(root)), archive=str(archive.relative_to(root)))
+    manifest = build_tum_split_manifest(seq, archive, root, "https://example.invalid/tum.tgz", split, count)
+    config["split"] = split
+    (root / config["dataset_manifest"]).write_text(json.dumps(manifest))
+    return root, seq, archive, config
+
+
+def fake_source(root, monkeypatch):
+    source = root / "external/pyslam"
+    (source / "settings").mkdir(parents=True)
+    (source / "settings/TUM1.yaml").write_text(
+        "Camera.fx: 999\nCamera.k1: 0.262383\nCamera.k2: -0.953104\nCamera.k3: 1.163314\n"
+        "Camera.p1: -0.005358\nCamera.p2: 0.002628\nCamera.width: 640\nCamera.height: 480\n"
+        "FrozenAlgorithmParameter: 123\n")
+    (source / "settings/TUM2.yaml").write_text(
+        "Camera.k1: 0.231222\nCamera.k2: -0.784899\nCamera.p1: -0.003257\nCamera.p2: -0.000105\n"
+        "Camera.k3: 0.917205\nFrozenAlgorithmParameter: 999\n")
+    (source / "settings/TUM3.yaml").write_text(
+        "Camera.k1: 0.0\nCamera.k2: 0.0\nCamera.p1: 0.0\nCamera.p2: 0.0\nFrozenAlgorithmParameter: 999\n")
+    monkeypatch.setattr("rt_mapping.slam.setup.inspect_source", lambda *a: {"revision_matches": True, "dirty": False})
+    return source
+
+
+@pytest.mark.parametrize("split", ["development", "selection", "held-out"])
+def test_split_verification_rebuilds_frozen_input_hashes_and_preserves_data(dataset, split):
+    root, seq, _, config = freeze_split(dataset, split, count=2)
+    before = {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
+    manifest_before = (root / config["dataset_manifest"]).read_bytes()
+    report = verify_dataset(root, config, full=True)
+    assert report["status"] == "ok" and report["split"] == split
+    assert report["split_frames"] == 2 and report["associations"] == 3
+    assert report["selected_input_hashes_verified"] == 4
+    assert report["extracted_files_verified"] == 9
+    assert before == {p: p.read_bytes() for p in seq.rglob("*") if p.is_file()}
+    assert manifest_before == (root / config["dataset_manifest"]).read_bytes()
+
+
+@pytest.mark.parametrize("kind", ["rgb", "depth"])
+def test_split_verification_detects_selected_image_byte_changes(dataset, kind):
+    root, seq, _, config = freeze_split(dataset, "selection", count=2)
+    image = seq / f"{kind}/0.png"
+    data = image.read_bytes()
+    image.write_bytes(data[:-1]+bytes([data[-1]^1]))  # header remains valid
+    with pytest.raises(ValueError, match="frozen dataset manifest"):
+        verify_dataset(root, config)
+
+
+@pytest.mark.parametrize("case", ["split", "count", "frame_id", "sequence", "hash"])
+def test_malformed_or_mismatched_frozen_split_is_rejected(dataset, case):
+    root, _, _, config = freeze_split(dataset, "development", count=2)
+    path = root/config["dataset_manifest"]
+    value = json.loads(path.read_text())
+    if case == "split":
+        config["split"] = "held-out"
+    elif case == "count":
+        value["splits"]["development"]["num_frames"] = 3
+    elif case == "frame_id":
+        value["splits"]["development"]["frames"][0]["frame_id"] = 9
+    elif case == "sequence":
+        value["sequence_id"] = "rgbd_dataset_freiburg2_wrong"
+    else:
+        value["splits"]["development"]["frames"][0]["rgb_sha256"] = "0"*64
+    path.write_text(json.dumps(value))
+    with pytest.raises(ValueError):
+        verify_dataset(root, config)
+
+
+def test_all_frames_means_configured_split_not_whole_sequence(dataset, monkeypatch):
+    root, seq, _, config = freeze_split(dataset, "selection", count=2)
+    source = fake_source(root, monkeypatch)
+    assert resolve_frame_count(root, config, None) == 2
+    assert resolve_frame_count(root, config, 2) == 2
+    for invalid in (0, 1, True, -1, 3):
+        with pytest.raises(ValueError):
+            resolve_frame_count(root, config, invalid)
+    output = root / "outputs/wp2/all"
+    plan = prepare_baseline(root, source, output, config, frames=None)
+    assert len(plan["frames"]) == 2
+    assert len(list((output/"input").glob("*.png"))) == 2
+    assert not (output/"input/000002.png").exists()
+    assert not (output/"trajectory").exists()  # prepare never runs SLAM
+
+
+@pytest.mark.parametrize("camera,k1,k3,fx", [
+    ("freiburg1", 0.262383, 1.163314, 517.3),
+    ("freiburg2", 0.231222, 0.917205, 520.9),
+    ("freiburg3", 0., 0., 535.4),
+])
+def test_camera_calibration_changes_without_algorithm_changes(dataset, monkeypatch, camera, k1, k3, fx):
+    import yaml
+    root, _, _, config = freeze_split(dataset, "held-out", camera=camera)
+    source = fake_source(root, monkeypatch)
+    output = root / "outputs/wp2/camera"
+    plan = prepare_baseline(root, source, output, config, frames=None)
+    settings = yaml.safe_load((output/"camera.yaml").read_text())
+    assert settings["Camera.fx"] == fx
+    assert settings["Camera.k1"] == k1 and settings["Camera.k3"] == k3
+    assert settings["FrozenAlgorithmParameter"] == 123
+    assert settings["Camera.RGB"] == 0
+    assert len(plan["frames"]) == 3 and plan["status"] == "prepared_not_run"
+    assert all(p.suffix == ".png" or p.name == "times.txt" for p in (output/"input").iterdir())
+
+
+def test_committed_configs_change_dataset_fields_only():
+    root = Path(__file__).resolve().parents[1]
+    baseline = load_setup_config(root/"configs/wp2_pyslam_baseline.json")
+    allowed = {"dataset_manifest", "sequence_dir", "archive", "split"}
+    expected = {"development": ("development",573), "selection": ("selection",50), "heldout": ("held-out",2488)}
+    for suffix, (split, count) in expected.items():
+        config = load_setup_config(root/f"configs/wp2_pyslam_{suffix}.json")
+        assert {k:v for k,v in config.items() if k not in allowed} == {
+            k:v for k,v in baseline.items() if k not in allowed}
+        assert config["split"] == split
+        assert resolve_frame_count(root, config, None) == count
+        manifest=json.loads((root/config["dataset_manifest"]).read_text())
+        assert config["sequence_dir"] == manifest["extracted_dir"]
+        assert Path(config["archive"]).name == manifest["source"]["archive_filename"]
+
+
+def load_cli(name):
+    import importlib.util
+    path = Path(__file__).resolve().parents[1]/"scripts"/(name+".py")
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def cli_config(root, config):
+    path = root/"wp2_config.json"
+    path.write_text(json.dumps({**config, "schema":"rt_mapping.wp2_setup/v1", "sensor_type":"mono"}))
+    return path
+
+
+def test_run_cli_resolves_all_frames_before_calling_runner(dataset, monkeypatch):
+    import sys
+    root, _, _, config = freeze_split(dataset, "selection", count=2)
+    path = cli_config(root, config)
+    module = load_cli("run_wp2_pyslam")
+    monkeypatch.setattr(module, "ROOT", root)
+    calls=[]
+    def fake_run(*args, **kwargs):
+        calls.append((args,kwargs))
+        directory=root/"result"
+        directory.mkdir()
+        (directory/"run.json").write_text(json.dumps({"status":"ok", "reason":None}))
+        return directory
+    monkeypatch.setattr(module, "run_smoke", fake_run)
+    monkeypatch.setattr(sys, "argv", ["run_wp2_pyslam.py", "--config", str(path), "--all-frames"])
+    assert module.main() == 0
+    assert calls[0][1]["frames"] == 2
+    assert calls[0][1]["run_id"].startswith("yaropolk_b0_")
+    assert "fr1_xyz" not in calls[0][1]["run_id"]
+
+
+def test_run_cli_preserves_default_200_and_forbids_conflicting_flags(monkeypatch, tmp_path):
+    import sys
+    module=load_cli("run_wp2_pyslam")
+    calls=[]
+    monkeypatch.setattr(module,"resolve_frame_count",lambda root,config,frames: calls.append(frames) or frames)
+    def fake_run(*a,**kw):
+        directory=tmp_path/"default"
+        directory.mkdir()
+        (directory/"run.json").write_text(json.dumps({"status":"ok","reason":None}))
+        return directory
+    monkeypatch.setattr(module,"run_smoke",fake_run)
+    monkeypatch.setattr(sys,"argv",["run_wp2_pyslam.py"])
+    assert module.main()==0 and calls==[200]
+    monkeypatch.setattr(sys,"argv",["run_wp2_pyslam.py","--frames","2","--all-frames"])
+    with pytest.raises(SystemExit) as exc:module.main()
+    assert exc.value.code==2
+
+
+def test_prepare_cli_all_frames_writes_rgb_view_only(dataset, monkeypatch):
+    import sys
+    root, _, _, config = freeze_split(dataset, "held-out", count=2)
+    path=cli_config(root,config)
+    source=fake_source(root,monkeypatch)
+    module=load_cli("prepare_wp2_baseline")
+    monkeypatch.setattr(module,"ROOT",root)
+    output=root/"outputs/wp2/heldout_preflight"
+    monkeypatch.setattr(sys,"argv",["prepare_wp2_baseline.py","--config",str(path),"--all-frames",
+                                    "--pyslam-root",str(source),"--output",str(output)])
+    assert module.main()==0
+    assert len(list((output/"input").glob("*.png")))==2
+    assert not (output/"trajectory").exists()

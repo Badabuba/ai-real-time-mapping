@@ -19,7 +19,7 @@ import tarfile
 from pathlib import Path
 from typing import Any
 
-from rt_mapping.data.manifest import build_tum_manifest, sha256_file
+from rt_mapping.data.manifest import build_tum_manifest, build_tum_split_manifest, sha256_file
 from rt_mapping.data.tum import load_sequence, read_index
 
 
@@ -34,6 +34,32 @@ def load_setup_config(path: Path) -> dict[str, Any]:
         raise ValueError("python_optimization must be 0 or 1")
     return config
 
+
+
+def _load_split(repo_root: Path, config: dict[str, Any]):
+    manifest = json.loads((repo_root / config["dataset_manifest"]).read_text(encoding="utf-8"))
+    split = config["split"]
+    if manifest.get("schema_version") != 1 or split not in manifest.get("splits", {}):
+        raise ValueError("configured split is missing from the frozen TUM manifest")
+    frozen = manifest["splits"][split]
+    count = frozen["num_frames"]
+    if (type(count) is not int or count < 1 or len(frozen["frames"]) != count
+            or [row["frame_id"] for row in frozen["frames"]] != list(range(count))):
+        raise ValueError("frozen split count/frame IDs are inconsistent")
+    if manifest["sequence_id"] != Path(config["sequence_dir"]).name:
+        raise ValueError("configured sequence differs from the frozen manifest")
+    return manifest, frozen
+
+
+def resolve_frame_count(repo_root: Path, config: dict[str, Any], frames: int | None) -> int:
+    """None means the entire configured split; integers request a frozen prefix."""
+    _, frozen = _load_split(repo_root, config)
+    count = frozen["num_frames"] if frames is None else frames
+    if type(count) is not int or count < 2:
+        raise ValueError("baseline preparation requires at least two frames")
+    if count > frozen["num_frames"]:
+        raise ValueError("requested frames exceed the frozen split")
+    return count
 
 def verify_extracted_archive(archive: Path, sequence_dir: Path) -> int:
     """Compare every regular archive member with its extracted file; never extract.
@@ -84,12 +110,21 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
     """
     seq = repo_root / config["sequence_dir"]
     archive = repo_root / config["archive"]
-    manifest = json.loads((repo_root / config["dataset_manifest"]).read_text(encoding="utf-8"))
-    rebuilt = build_tum_manifest(
-        seq, archive, repo_root, manifest["source"]["archive_url"],
-        smoke_frames=manifest["splits"]["smoke"]["num_frames"],
-        max_delta_s=manifest["association"]["max_delta_s"],
-    )
+    manifest, frozen = _load_split(repo_root, config)
+    # Frozen wider manifests carry content hashes per selected RGB/depth file.
+    # Use the existing data API unchanged; keep legacy C2 smoke reconstruction.
+    hashed_split = config["split"] != "smoke" or any(
+        key in row for row in frozen["frames"] for key in ("rgb_sha256", "depth_sha256"))
+    if hashed_split:
+        rebuilt = build_tum_split_manifest(
+            seq, archive, repo_root, manifest["source"]["archive_url"],
+            config["split"], num_frames=frozen["num_frames"],
+        )
+    else:
+        rebuilt = build_tum_manifest(
+            seq, archive, repo_root, manifest["source"]["archive_url"],
+            smoke_frames=frozen["num_frames"], max_delta_s=manifest["association"]["max_delta_s"],
+        )
     if rebuilt != manifest:
         raise ValueError("local archive/indexes do not reproduce the frozen dataset manifest")
     counts = {}
@@ -115,7 +150,7 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
             gt.append(row)
     if not gt or any(a[0] >= b[0] for a, b in zip(gt, gt[1:])):
         raise ValueError("groundtruth timestamps must be nonempty and increasing")
-    frames = load_sequence(seq)
+    frames = load_sequence(seq, max_delta_s=manifest["association"]["max_delta_s"])
     if gt[0][0] > frames[0].frame.timestamp_s or gt[-1][0] < frames[-1].frame.timestamp_s:
         raise ValueError("groundtruth time range does not cover associated RGB frames")
     return {
@@ -123,10 +158,14 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
         "archive_sha256": rebuilt["source"]["archive_sha256"],
         "archive_size_bytes": rebuilt["source"]["archive_size_bytes"],
         "rgb_frames": counts["rgb.txt"], "depth_frames": counts["depth.txt"],
-        "associations": len(frames), "smoke_frames": len(manifest["splits"]["smoke"]["frames"]),
+        "associations": len(frames),
+        **({"smoke_frames": len(frozen["frames"])} if config["split"] == "smoke" else
+           {"split": config["split"], "split_frames": len(frozen["frames"]),
+            "selected_input_hashes_verified": 2 * len(frozen["frames"])}),
         "groundtruth_poses": len(gt), "quaternion_norm_squared_tolerance": 5e-4,
         "extracted_files_verified": verify_extracted_archive(archive, seq) if full else None,
-        "checks": ["frozen_manifest", "archive_sha256", "index_sha256", "PNG_headers", "timestamps", "evaluation_GT"],
+        "checks": ["frozen_manifest", "archive_sha256", "index_sha256", "PNG_headers", "timestamps", "evaluation_GT"]
+                  + (["selected_rgb_depth_sha256"] if hashed_split else []),
         "limitations": [] if full else ["PNG headers checked; extracted bytes not compared with archive (use --full)."],
     }
 
@@ -188,9 +227,9 @@ def host_report(repo_root: Path) -> dict[str, Any]:
 
 
 def prepare_baseline(
-    repo_root: Path, source: Path, output: Path, config: dict[str, Any], *, frames: int,
+    repo_root: Path, source: Path, output: Path, config: dict[str, Any], *, frames: int | None,
 ) -> dict[str, Any]:
-    """Prepare an RGB-only frozen smoke input and upstream YAML; does not run SLAM.
+    """Prepare an RGB-only frozen split input and upstream YAML; does not run SLAM.
 
     Files go into a new ignored output directory. Neither the original dataset
     nor the external upstream checkout is edited. Original shared frame IDs and
@@ -198,8 +237,7 @@ def prepare_baseline(
     """
     import yaml
 
-    if isinstance(frames, bool) or not isinstance(frames, int) or frames < 2:
-        raise ValueError("baseline preparation requires at least two frames")
+    frames = resolve_frame_count(repo_root, config, frames)
     if output.exists():
         raise ValueError("output already exists; choose a new preparation directory")
     seq = repo_root / config["sequence_dir"]
@@ -208,8 +246,8 @@ def prepare_baseline(
     state = inspect_source(source, config["upstream"]["revision"])
     if not state.get("revision_matches") or state.get("dirty"):
         raise ValueError("source must be a clean checkout of the pinned pySLAM revision")
-    manifest = json.loads((repo_root / config["dataset_manifest"]).read_text(encoding="utf-8"))
-    selected = manifest["splits"][config["split"]]["frames"][:frames]
+    manifest, frozen = _load_split(repo_root, config)
+    selected = frozen["frames"][:frames]
     if len(selected) != frames:
         raise ValueError("requested frames exceed the frozen split")
     for item in selected:
@@ -217,7 +255,17 @@ def prepare_baseline(
         if not path.resolve().is_relative_to(seq.resolve()) or not path.is_file():
             raise ValueError("missing RGB input or input outside sequence")
     settings = yaml.safe_load((source / "settings/TUM1.yaml").read_text(encoding="utf-8"))
-    # The shared WP1 calibration is authoritative; keep upstream TUM1 distortion.
+    # Keep the same TUM1 baseline settings; change only camera calibration.
+    # Freiburg3 omits k3 in its upstream YAML: explicitly zero it rather than
+    # leaking the TUM1 coefficient into an already-undistorted dataset.
+    camera = manifest["camera"]
+    if camera not in ("freiburg1", "freiburg2", "freiburg3"):
+        raise ValueError("unsupported TUM camera calibration")
+    if camera != "freiburg1":
+        calibration = yaml.safe_load((source / f"settings/TUM{camera[-1]}.yaml").read_text(encoding="utf-8"))
+        for key in ("k1", "k2", "p1", "p2", "k3"):
+            settings[f"Camera.{key}"] = calibration.get(f"Camera.{key}", 0.0)
+    # Shared WP1 manifest intrinsics are authoritative for every camera.
     intr = manifest["intrinsics"]
     for key in ("fx", "fy", "cx", "cy"):
         settings[f"Camera.{key}"] = intr[key]

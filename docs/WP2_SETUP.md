@@ -157,3 +157,50 @@ Configuration: ORB2/1000, DBOW3, Python sparse core, g2o optimization, depth/sem
 Додатковий [Linux container runtime](WP2_LINUX_CONTAINER.md) зібрано без змін pinned pySLAM source/baseline config. Native API check і entry-point preflight пройшли. Clean `4952e37` run відтворив 200 frames / 198 final poses / 0 LOST, 1,277 landmarks / 22 keyframes / 8,893 observations. [Summary](../results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.json).
 
 Automated timestamp association, SE(3)/Sim(3) ATE/RPE тепер реалізовані для **retained keyframes** у comparison runner; real metrics незалежно збігаються з evo. Normalized all-frame states/timing та all-frame evaluator integration у верхньому historical checklist усе ще лишаються WP2 work. Це Linux-on-Windows Docker evidence, не native Windows SLAM або GUI support.
+
+
+## Y-04 — ширші frozen splits (25 жовтня 2026)
+
+Owner: Ярополк (WP2). Branch `feature/yaropolk-split-support`, base `origin/develop` = `523cfa75a571fc14f7a35c475ad0e2fcdca707cf`. N-01 manifests та Y-01/Y-02/Y-03 уже merged; відсутність N-03 не блокує split support за technical dependency rule IC1. Цей chunk робить **preflight / preparation only**, не benchmark.
+
+### Dataset configs
+
+| Config | Sequence | Frozen split | Frames |
+|---|---|---|---:|
+| `configs/wp2_pyslam_baseline.json` | fr1/xyz | smoke | 200 |
+| `configs/wp2_pyslam_development.json` | fr1/desk | development | 573 |
+| `configs/wp2_pyslam_selection.json` | fr2/desk | selection | 50 |
+| `configs/wp2_pyslam_heldout.json` | fr3/long_office_household | held-out | 2488 |
+
+Нові configs відрізняються від baseline **лише** `dataset_manifest`, `sequence_dir`, `archive`, `split`; це перевіряє unit test. ORB2/1000, DBOW3, Python core, optimization, seed та всі інші algorithm fields незмінні. Notes baseline збережено як historical text, не як поточну заяву про validation.
+
+`verify_dataset` відтворює legacy C2 smoke через незмінений `build_tum_manifest`, а wider frozen manifests — через незмінений `build_tum_split_manifest`. Порівнюються archive/index hashes, identities та SHA-256 кожного selected RGB/depth файла; PNG headers і timestamps перевіряються для всього source recording. Ground truth читається лише як metadata для структурної перевірки, не для fitting або metrics. `--full` додатково порівнює всі extracted files із archive bytes.
+
+### Frame selection і calibration
+
+Обидва CLI (`prepare_wp2_baseline.py`, `run_wp2_pyslam.py`) підтримують mutually exclusive `--frames N` або **`--all-frames`**. Без flags лишається historical default 200. `--all-frames` означає саме configured frozen split: selection = 50, а не всі 2893 associations fr2/desk. Preparation API приймає `frames=None` із тією ж семантикою. New default run ID — `yaropolk_b0_<UTC>`, без hard-coded fr1/xyz.
+
+Camera intrinsics беруться з shared manifest. Common upstream TUM1 baseline settings збережено; **тільки distortion calibration** береться з pinned `settings/TUM2.yaml` або `TUM3.yaml` для відповідної камери. Відсутній TUM3 k3 явно стає 0, а не успадковує TUM1 k3. Algorithm/viewer/depth defaults не копіюються з іншого camera template. FolderDataset читає BGR, тому `Camera.RGB=0` як і раніше. Для RGB-only B0 GT depth scale не використовується.
+
+### Preflight і preparation (без SLAM)
+
+Кожного разу новий output directory; нічого не перезаписується. Приклад development; для selection/heldout замінити config та output name:
+
+```bash
+.venv-wp2/bin/python scripts/check_wp2_environment.py \
+  --config configs/wp2_pyslam_development.json --dataset-only --full
+
+.venv-wp2/bin/python scripts/prepare_wp2_baseline.py \
+  --config configs/wp2_pyslam_development.json --all-frames \
+  --output outputs/wp2/y04_development_<unique_id>
+```
+
+Preparation створює RGB-only view, timestamps, camera config та setup.json. У input view немає GT/depth; upstream SLAM не запускається. Source metadata/hashes лишаються в preparation для provenance. **На held-out у Y-04 не запускати `run_wp2_pyslam.py`**; лише перевірка bytes та підготовка input. Held-out benchmark лишається після IC3 freeze. Actual development/selection SLAM runs — Y-05.
+
+### Локальні inputs і перевірка
+
+Початково був лише fr1/xyz. Y-04 authorization дозволяє завантажити рівно три official archives із URLs у frozen manifests (~3.72 GB сумарно), перевірити recorded SHA-256 і безпечно extract. Raw data / archives залишаються ignored у `data/raw/tum_rgbd/`, не потрапляють у PR. Existing fr1/xyz та recorded runs не змінюються.
+
+Serial download fr1/desk був навмисно зупинений через низьку швидкість; partial bytes збережено й повторно використано в ranged download із 8 bounded workers на тих самих URLs. Повний SHA-256 має збігатися перед final archive rename/extraction. Links / unsafe archive paths відхиляються, disk headroom перевіряється перед extraction. Packages не встановлювались і не оновлювались.
+
+Tests: legacy smoke regression, wider manifests і per-file corruption, invalid split/count/IDs/sequence/hash, whole-split vs whole-recording selection, per-camera distortion без algorithm changes, immutable output, CLI flag exclusivity / historical default / neutral run ID. Full local CPU suite: **620 passed, 1 native skip**; setup tests: **26 passed**. Final real preflight evidence із paths/hashes/config provenance — `results/summaries/yaropolk_y04_preflight.json` після завершення input verification. Shared status docs лишаються для integration checkpoint за file boundaries плану.
