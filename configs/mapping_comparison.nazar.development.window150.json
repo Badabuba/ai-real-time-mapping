@@ -1,0 +1,9 @@
+{
+  "mapping": {"plot": true},
+  "thresholds_m": [0.02, 0.05, 0.1],
+  "crop_bounds_m": null,
+  "keyframe_intervals": [2, 5],
+  "confidence_thresholds": [-0.6916478276252747, -0.6456854343414307],
+  "max_timestamp_delta_s": 0.02,
+  "causal_window_frames": 150
+}
