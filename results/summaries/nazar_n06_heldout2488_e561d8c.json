@@ -1,0 +1,67 @@
+{
+  "chunk": "N-06",
+  "dataset": {
+    "checksum": "c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c",
+    "manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg3_long_office_household",
+    "split": "held-out"
+  },
+  "dirty_worktree": false,
+  "disclosures": [
+    "Superseded-runner attempt wp2_heldout2488_4484fd7 (clean 4484fd7) failed in upstream local_mapping.py (TypeError: 'int' object is not iterable); no trajectory, no metrics, nothing tuned."
+  ],
+  "failure": {
+    "check": "src/rt_mapping/slam/setup.py:155 (Track Y area; line from 24b16e2, kept by Y-04)",
+    "classification": "preflight rejects the official TUM recording because its GT starts 67 ms after the first RGB frame; B0 SLAM does not need GT, and the merged PR #21 policy already excludes keyframes without a GT pose. Fix belongs to Track Y (slam/); not edited here.",
+    "facts": {
+      "frames": 2488,
+      "frames_without_gt_pose_within_20ms": 2,
+      "gt_first_s": 1341847980.79,
+      "gt_last_s": 1341848067.8795,
+      "rgb_first_s": 1341847980.722988,
+      "rgb_frames_after_gt_end": 0,
+      "rgb_frames_before_gt_start": 3,
+      "rgb_last_s": 1341848067.862808
+    },
+    "message": "groundtruth time range does not cover associated RGB frames",
+    "stage": "slam (WP2 preflight, before any SLAM frame)",
+    "y04_note": "Y-04 held-out real-data preflight was explicitly skipped (input unavailable on Yaropolk's machine), so this was not detected before IC3."
+  },
+  "freeze": {
+    "config": "configs/benchmark_frozen.json",
+    "freeze_commit": "4021a02",
+    "freeze_merge": "847c662 (PR #25)",
+    "pipeline_config_equals_frozen": true,
+    "run_commit_contains_freeze": true,
+    "sha256": "bf990a4ab459ca1db4457530e18c378a1e4219e89e943aaa7bc17ffb29213407"
+  },
+  "git_commit": "e561d8c5add636a8a3cdeb66423ae5cfcb2027fb",
+  "gt_access": "preflight read GT timestamps only; diagnosis compared GT/RGB timestamps; no GT pose or depth used for any metric",
+  "not_executed": {
+    "alignment_fusion": false,
+    "b0_evaluation": false,
+    "comparison": false,
+    "geometry_inference_frames": 0,
+    "heldout_metrics": null,
+    "reason": "pipeline stopped at the SLAM preflight",
+    "slam_frames": 0
+  },
+  "performance": {
+    "memory_samples_5s": 51,
+    "real_time_verdict": "offline (D-7); no held-out timing exists; N-05 dev components alone exceed 33.3 ms (Slam.track p95 2312 ms, DA3 p95 97.9 ms)",
+    "reason": "no stage executed; performance table cannot be measured",
+    "status": "unavailable"
+  },
+  "real_time_claim": false,
+  "reason": "pipeline_failed: slam adapter exited 2; see logs/slam.log",
+  "rerun_rule": "plan D-5: rerun only after a documented code-bug fix merged via the owner's (Yaropolk's) PR, new run_id nazar_n06_heldout2488_da3_<sha7>_01 from a commit containing that fix; frozen parameters unchanged; both runs reported",
+  "run_id": "nazar_n06_heldout2488_da3_e561d8c_01",
+  "run_json_sha256": "721fae60e320bf6d9ecf3eaf0019ac00119176fd28b0336880d0136a6a9f14d8",
+  "schema": "rt_mapping.nazar_n06_heldout/v1",
+  "slam_log_tail": "Rejected: groundtruth time range does not cover associated RGB frames",
+  "started_at": "2026-10-25T19:32:36.128414Z",
+  "status": "failed",
+  "tuning_from_heldout": false,
+  "wall_clock_to_failure_s": 387
+}
