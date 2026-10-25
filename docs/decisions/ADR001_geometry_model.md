@@ -23,6 +23,10 @@
 - **Fallback trigger (D-3, pre-registered):** якщо UniDepth не проходить N-04 pipeline gate (будь-який child run не `ok`, OOM, rejection model-ID/grid незміненим mapping code), primary для N-05/N-06 автоматично стає DA3METRIC-LARGE `process_res=504`, без окремого рішення.
 - **Licence state (D-6, лише limitation):** UniDepth code CC-BY-NC-4.0, checkpoint card не декларує окремої licence; DA3 Apache-2.0; pySLAM GPLv3 (не vendored); weights і upstream sources не комітяться; project LICENSE немає.
 
+## N-04 pipeline gate (25 жовтня 2026): fail → DA3 primary
+
+`nazar_n04_e2e_smoke200_unidepth_8378365_01`: незмінний mapping code (`alignment/correspondences.py:prediction_grid`) відхилив UniDepth predictions, бо в них немає `pixel_grid` (18/18 keyframes). Model-ID check пройшов, OOM не було. За pre-registered trigger D-3 **DA3METRIC-LARGE `process_res=504` стає primary для N-05/N-06**, UniDepth — друга модель для primary-vs-fallback ablation. Рубрика N-03 і її результат не змінюються. Деталі: `docs/DEPTH_ABLATIONS.md` §N-04, `results/summaries/nazar_n04_e2e_smoke200_unidepth_8378365.json`.
+
 ## Докази
 
 Frozen protocol commit `7f37d66`, виконаний у clean local integration commits a9ccd5d / f9c181a. 50 exact development кадрів fr1/desk + окремі 50 exact selection кадрів fr2/desk; 10 warm-up calls перед кожним run. Немає median scaling або GT-assisted correction. Per-frame mask hashes та frame identities збігаються для обох кандидатів.

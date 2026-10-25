@@ -21,5 +21,7 @@
     "dtype": "bfloat16"
   },
   "source_summary": "results/summaries/nazar_n03_selection50_c130626_scorecard.json",
+  "n04_pipeline_gate": {"result": "fail", "run_id": "nazar_n04_e2e_smoke200_unidepth_8378365_01", "reason": "unsupported_preprocess: prediction must declare its pixel grid", "evidence": "results/summaries/nazar_n04_e2e_smoke200_unidepth_8378365.json"},
+  "effective_primary_for_n05_n06": "fallback",
   "fallback_trigger": "primary fails the N-04 pipeline gate: any child run not ok, OOM, or model-ID/grid rejection by the unchanged mapping code (plan D-3)"
 }

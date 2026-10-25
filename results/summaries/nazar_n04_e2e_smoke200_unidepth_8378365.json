@@ -1,0 +1,219 @@
+{
+  "schema": "rt_mapping.evidence_summary/v1",
+  "chunk": "N-04 (docs/TWO_PERSON_COMPLETION_PLAN.md)",
+  "scope": "UniDepth V2 smoke-200 P1 through the unchanged alignment/fusion/comparison, reusing the N-02 SLAM stage",
+  "status": "failed",
+  "pipeline_run_id": "nazar_n04_e2e_smoke200_unidepth_8378365_01",
+  "git_commit": "8378365e4d055821b540e92b09673e30b4d9397f",
+  "dirty_worktree": false,
+  "pipeline_status": "failed",
+  "pipeline_reason": "pipeline_failed: unsupported_preprocess: prediction must declare its pixel grid",
+  "config_file": "configs/pipeline.nazar.smoke200.unidepth.json",
+  "config_sha256_canonical": "569f0304fd90137a86b530a16da9f05efaceaf1d984ad40cb63c461a80658da0",
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "model": {
+    "checkpoint": "model.safetensors@sha256:ba73d3de735302ccc64a50f1e557122050c4b1893e6060b28dba05d6af3e67c6",
+    "dtype": "float16",
+    "repo": "lpiccinelli/unidepth-v2-vitl14",
+    "revision": "52b349b514bd8b47642f67ac78cb7b5dc5c51dd9"
+  },
+  "slam": {
+    "config": "configs/wp2_pyslam_baseline.json",
+    "pose_convention": "T_wc",
+    "repo": "https://github.com/luigifreda/pyslam.git",
+    "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+  },
+  "stage_status": {
+    "slam": {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.slam",
+      "mode": "reused",
+      "status": "ok",
+      "git_commit": "0fc564f2160824361d305fd0110d169bda1b26aa",
+      "dirty_worktree": false
+    },
+    "geometry": {
+      "run_id": "nazar_n04_e2e_smoke200_unidepth_8378365_01.geometry",
+      "mode": "launched",
+      "status": "ok",
+      "git_commit": "8378365e4d055821b540e92b09673e30b4d9397f",
+      "dirty_worktree": false,
+      "run_json_sha256": "c3e0aafc7a6184051a17d99ff4bfe689c9e15aa9f14f920e2ead99b56d0c7100"
+    },
+    "comparison": {
+      "status": "not_started",
+      "reason": "pipeline stopped in load_mapping_inputs, before run_comparison created a run directory"
+    },
+    "pipeline": {
+      "run_id": "nazar_n04_e2e_smoke200_unidepth_8378365_01",
+      "status": "failed",
+      "reason": "pipeline_failed: unsupported_preprocess: prediction must declare its pixel grid",
+      "run_json_sha256": "32127fe0e73ccd504914db4eae0201051f62039b46b582bbc05a678f7a391c07"
+    }
+  },
+  "d3_pipeline_gate": {
+    "result": "fail",
+    "rule": "plan D-3: the primary fails if any child run is not ok, OOM, or model-ID/grid rejection by the unchanged mapping code",
+    "criteria": {
+      "all_children_ok": false,
+      "no_oom": true,
+      "model_id_check": "18/18 keyframes passed",
+      "grid_check": "0/18 keyframes passed"
+    },
+    "rejection": [
+      "AlignmentError: unsupported_preprocess: prediction must declare its pixel grid"
+    ],
+    "rejecting_code": "src/rt_mapping/alignment/correspondences.py prediction_grid via runs/artifacts.py load_mapping_inputs (Yulian WP3/WP4, unchanged)",
+    "cause": "UniDepth adapter preprocess metadata declares neither pixel_grid nor intrinsics_convention; prediction_grid infers raw_distorted only for library=depth_anything_3",
+    "consequence": "fallback trigger fires: DA3METRIC-LARGE process_res 504 becomes primary for N-05/N-06 with no further decision (plan D-3)",
+    "rerun": "none; an adapter metadata fix would not make the gate pass on the reused SLAM stage, because the comparison stage would still fail on the GT association gap below"
+  },
+  "independent_blocker_on_reused_slam_stage": {
+    "description": "load_oracle_inputs requires a GT pose within max_timestamp_delta_s for every retained keyframe; checked read-only, not reached by this run",
+    "association_tolerance_s": 0.02,
+    "retained_keyframes": 18,
+    "matched_keyframes": 17,
+    "unmatched": [
+      {
+        "keyframe_index": 16,
+        "frame_id": 195,
+        "timestamp_s": 1305031108.876515,
+        "nearest_gt_delta_ms": 40.814876556396484
+      }
+    ],
+    "model_independent": true,
+    "tolerance_changed": false,
+    "keyframes_discarded": false
+  },
+  "geometry_stage": {
+    "frames": 200,
+    "depth_metrics_raw_metric_no_scaling": {
+      "abs_rel": 0.04087099072394574,
+      "rmse_m": 0.12109704295413265,
+      "mae_m": 0.05519145941013669,
+      "delta1": 0.9852698608667584,
+      "n_evaluated": 46234230,
+      "valid_coverage": 1.0
+    },
+    "timing_ms": {
+      "warm_median_ms": 78.52520000142249,
+      "warm_p95_ms": 87.66101499950308,
+      "warm_max_ms": 92.45929999997315
+    },
+    "prewarm_calls": 10,
+    "first_prewarm_inference_ms": 1290.347300000576,
+    "model_load_s": 7.082984500000748,
+    "peak_allocated_vram_gib": 1.7968764305114746,
+    "hardware": {
+      "cpu": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+      "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "ram_gb": 31.2
+    },
+    "environment": {
+      "cuda_runtime": "12.8",
+      "numpy": "2.2.6",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "python": "3.11.16",
+      "torch": "2.11.0+cu128",
+      "unidepth": "0.1",
+      "unidepth_source_revision": "8d8cfe4c7ee15297099983607febf0d4f32eb3d6",
+      "unidepth_source_sha256": "cc4b12d0f5cfd2d6f0cc2b84db46c834fb7dac95a624553ed85ec4998ba6fbf5"
+    }
+  },
+  "confidence_ablation": {
+    "thresholds_source": "results/summaries/nazar_n04_confidence_thresholds_5d11ce6.json (dev50 UniDepth predictions only, run nazar_n04_dev50_unidepth_5d11ce6_01)",
+    "thresholds": [
+      -0.6916478276252747,
+      -0.6456854343414307
+    ],
+    "map_children": "not run; the pipeline failed before the comparison stage",
+    "gt_free_coverage_on_smoke_keyframes": [
+      {
+        "threshold": -0.6916478276252747,
+        "frames": 18,
+        "valid_pixels": 5529600,
+        "retained_pixels": 4077375,
+        "retained_fraction": 0.7373725043402778
+      },
+      {
+        "threshold": -0.6456854343414307,
+        "frames": 18,
+        "valid_pixels": 5529600,
+        "retained_pixels": 2426164,
+        "retained_fraction": 0.4387594039351852
+      }
+    ],
+    "gt_free_coverage_on_all_smoke_frames": [
+      {
+        "threshold": -0.6916478276252747,
+        "frames": 200,
+        "valid_pixels": 61440000,
+        "retained_pixels": 43748094,
+        "retained_fraction": 0.71204580078125
+      },
+      {
+        "threshold": -0.6456854343414307,
+        "frames": 200,
+        "valid_pixels": 61440000,
+        "retained_pixels": 24927845,
+        "retained_fraction": 0.40572664388020835
+      }
+    ],
+    "note": "coverage = fraction of valid UniDepth pixels with confidence >= threshold, from predictions only"
+  },
+  "reused_n02_artifacts": {
+    "source_run": "nazar_n02_e2e_smoke200_0fc564f_02 (merged PR #18 evidence)",
+    "path_in_runtime_clone": "results/runs/nazar_n02_e2e_smoke200_0fc564f_02/stages/nazar_n02_e2e_smoke200_0fc564f_02.slam",
+    "copied": false,
+    "stage_run_json_sha256": "2e4afa27929392509e4ebe2403e7978ea6237d54f3921cccfff3a8d3cfa2943f",
+    "matches_n02_summary_manifest_sha256": true,
+    "files": 21,
+    "unchanged_after_run": true,
+    "file_sha256": {
+      "input_setup/camera.yaml": "7532dd8d43074d551442d3264a801829f7e51d0755d46a676180ee66118d944d",
+      "input_setup/input/times.txt": "2c065de192c1922fa9c0966c1e0fea525af0baa207edadd8b1da8a3eed960354",
+      "input_setup/logs/gba.log": "732484240a81eadeb1949421065e0b03ea7fe6771feb38caf4234f7346bc6085",
+      "input_setup/logs/kf_info.log": "1716ed4d8747b44927fe9d7c7ebfbe4472fce5294395ec54e34e1a998938f4f6",
+      "input_setup/logs/local_mapping.log": "4a44ad38ed2e056f9d08159b73f9752c3a662360263eea380d02d3333c545e08",
+      "input_setup/logs/loop_closing.log": "868bf6aab0545cf59f6a2a8058ad0a1c36f7d10d8322a3e16816abc2da0f97ad",
+      "input_setup/logs/loop_detecting.log": "275c0f43012de78953bbe08ade4a3df1407c423867ac48b230cce56a5a8ee11d",
+      "input_setup/logs/relocalization.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_setup/pyslam.yaml": "60e9f2b3acb6663b84452695768cedf9eba3e6fd0e00ff7dbafd56077d641cf4",
+      "input_setup/setup.json": "920cf677b1369ce06c03580750122500fb222c7c7d519547e412ce3f20f98bd8",
+      "input_setup/trajectory/other_metrics_info.txt": "2dfdc3c30a5e19a35a59b9684178a8ad050123b5e87ca250e0afe814007b14eb",
+      "input_setup/trajectory/trajectory_final.txt": "fff94a8876567b6d14acfeca500d2fb43d844b4ab4ee33a747af04a260e8bc9e",
+      "input_setup/trajectory/trajectory_online.txt": "09d14c285057b324eb2b20589c0cb0aa56d03c42b16f0a28f61a919e9367595b",
+      "metrics.json": "be8386ee3359a9066a1057f7d86f77c40359560316bbdf4e14e9ebbd852e6b2d",
+      "run.json": "2e4afa27929392509e4ebe2403e7978ea6237d54f3921cccfff3a8d3cfa2943f",
+      "sparse/export.json": "fcfef9d27ea51ce3d985ae5e31d51844b75c53ccd8af411416fdc62ee9d829c7",
+      "sparse/keyframes.npz": "0a7d64c94f414eb97ad8f2ec06f334ce8f951fc3b058412f886aefb617a7f13c",
+      "sparse/landmarks.npz": "6ac884b3685a122790f808fad3aa0f31dcada6abbe488aca376b1af9619e481c",
+      "sparse/observations.csv": "76654dfef65bb18159be7ff625eb1682e754afe196b5a1cf7ac6dbdc4b75fa1c",
+      "sparse/sparse_map.ply": "93c5bbd686bdd0651d56a314449ceac29ac081b9933e96e7d3624de340d62395",
+      "upstream.log": "99a7e02dd24c41e895fc7d2a1abc62a5b10042b98c10ef2a932a639b874d4c2b"
+    }
+  },
+  "runs": [
+    {
+      "run_id": "nazar_n04_dev50_unidepth_5d11ce6_01",
+      "status": "ok",
+      "dirty_worktree": false,
+      "purpose": "confidence thresholds and rank-equivalence re-verification"
+    },
+    {
+      "run_id": "nazar_n04_e2e_smoke200_unidepth_8378365_01",
+      "status": "failed",
+      "dirty_worktree": false,
+      "purpose": "UniDepth smoke P1 and D-3 gate"
+    }
+  ],
+  "ground_truth_use": "GT only in the geometry runner's depth evaluation and in the read-only association check; none for thresholds or decisions",
+  "held_out_accessed": false,
+  "real_time_claim": false,
+  "real_time_note": "component latency only; UniDepth warm p95 exceeds the 33.3 ms D-7 frame budget; no end-to-end measurement"
+}
