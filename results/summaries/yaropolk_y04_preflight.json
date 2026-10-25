@@ -1,0 +1,117 @@
+{
+  "baseline_algorithm_fields_unchanged": true,
+  "chunk": "Y-04",
+  "dirty_worktree": false,
+  "failed_preflights": [
+    {
+      "reason": "Official GT contains one repeated timestamp beyond selection50 interval; original strict metadata validation rejected it before preflight fix",
+      "split": "selection"
+    }
+  ],
+  "heldout": {
+    "gt_metrics_computed": false,
+    "reason": "User requested proceeding without another download with 3.5 hours remaining; no input available",
+    "slam_frames_executed": 0,
+    "status": "skipped"
+  },
+  "implementation_commit": "7492ffa8cc73ee0191a6ce44c8b48b788708fc3b",
+  "inputs": [
+    {
+      "config": "configs/wp2_pyslam_development.json",
+      "config_sha256": "dfd1d9b04524f0805092231e79ffb70dcb4284aa78b97997d8a6d4510083254b",
+      "preflight": {
+        "archive_sha256": "e983d6830916e66dc4a46a71368046b149b283de87769690e7aa4e0b9483530c",
+        "archive_size_bytes": 344011403,
+        "associations": 573,
+        "checks": [
+          "frozen_manifest",
+          "archive_sha256",
+          "index_sha256",
+          "PNG_headers",
+          "timestamps",
+          "evaluation_GT",
+          "selected_rgb_depth_sha256"
+        ],
+        "depth_frames": 595,
+        "extracted_files_verified": 1212,
+        "groundtruth_poses": 2335,
+        "limitations": [],
+        "quaternion_norm_squared_tolerance": 0.0005,
+        "rgb_frames": 613,
+        "selected_input_hashes_verified": 1146,
+        "sequence": "rgbd_dataset_freiburg1_desk",
+        "split": "development",
+        "split_frames": 573,
+        "status": "ok"
+      },
+      "preparation": "outputs/wp2/y04_development_7492ffa_01",
+      "prepared_frames": 573,
+      "rgb_only": true,
+      "setup_sha256": "37d7f6ed0123c7f4bb07e1af98b58848bc4f2e7fc9564b0c1b3fcf55062fa645",
+      "slam_frames_executed": 0,
+      "status": "prepared_not_run"
+    },
+    {
+      "config": "configs/wp2_pyslam_selection.json",
+      "config_sha256": "7c7b050d813fe609fed99544a5183f4487a8c1f3d4d316ba059081e6a247b6c1",
+      "preflight": {
+        "archive_sha256": "1a0756d72510a26e26e2a02bf0b6c69c2796619fca531e176fc2e5110173807c",
+        "archive_size_bytes": 1893351095,
+        "associations": 2893,
+        "checks": [
+          "frozen_manifest",
+          "archive_sha256",
+          "index_sha256",
+          "PNG_headers",
+          "timestamps",
+          "evaluation_GT",
+          "selected_rgb_depth_sha256"
+        ],
+        "depth_frames": 2964,
+        "extracted_files_verified": 5933,
+        "groundtruth_duplicate_timestamp_pairs": 1,
+        "groundtruth_poses": 20957,
+        "limitations": [
+          "Ground-truth timestamps contain duplicates; evaluation must explicitly handle/reference only its time window. RGB/depth inputs are unaffected."
+        ],
+        "quaternion_norm_squared_tolerance": 0.0005,
+        "rgb_frames": 2965,
+        "selected_input_hashes_verified": 100,
+        "sequence": "rgbd_dataset_freiburg2_desk",
+        "split": "selection",
+        "split_frames": 50,
+        "status": "ok"
+      },
+      "preparation": "outputs/wp2/y04_selection_7492ffa_01",
+      "prepared_frames": 50,
+      "rgb_only": true,
+      "setup_sha256": "67918d2331089d6667edfaae57afdbc2fa9aaa8161fc9e1e13d7d172feb7d91f",
+      "slam_frames_executed": 0,
+      "status": "prepared_not_run"
+    }
+  ],
+  "raw_files_changed": false,
+  "real_time_claim": false,
+  "runtime": {
+    "exit_code": 0,
+    "scope": "upstream entry-point imports only",
+    "status": "ok"
+  },
+  "schema": "rt_mapping.wp2_split_preflight/v1",
+  "scope_adjustment": "Development/selection verified; held-out explicitly unverified under latest user deadline instruction",
+  "source": {
+    "dirty": false,
+    "missing_paths": [],
+    "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+    "revision_matches": true,
+    "sparse_checkout": false,
+    "status": "ok",
+    "untracked_file_count": 210
+  },
+  "status": "ok_for_deadline_scope",
+  "verification": {
+    "full_local_cpu_suite": "688 passed, 1 native skip",
+    "git_diff_check": "passed",
+    "setup_tests": "28 passed"
+  }
+}
