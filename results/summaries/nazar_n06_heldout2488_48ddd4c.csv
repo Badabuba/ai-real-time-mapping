@@ -1,0 +1,9 @@
+run_id,split,method,status,scope,poses,ate_rmse_m,ate_median_m,rpe_translation_rmse_m,rpe_rotation_rmse_deg,alignment,gt_coverage,map_metrics
+nazar_n06_heldout2488_b0eval_48ddd4c_01,held-out,B0,ok,final trajectory,2458,0.03713072332781239,0.022701777160221506,0.006151219079561093,0.2830752534168144,Sim(3) eval-only,2458/2458 poses; 2486/2488 frames,unavailable: comparison failed
+nazar_n06_heldout2488_b0eval_48ddd4c_01,held-out,B0,ok,online causal trajectory,2458,0.03993986935402562,0.028141827179738503,,,Sim(3) eval-only,2486/2488 frames,unavailable: comparison failed
+nazar_n06_heldout2488_da3_48ddd4c_01,held-out,B0,ok,retained keyframes,282,0.028815301794887057,0.016360648551599598,0.006406555630703269,0.3539554819630797,Sim(3) eval-only,282/282 keyframes,unavailable: comparison failed
+nazar_n06_heldout2488_da3_48ddd4c_01,held-out,P1-global,ok,retained keyframes,282,0.0728926917780756,0.057902149664164154,0.008309563986951521,0.3539554819630797,SE(3) recovered scale,282/282 keyframes,unavailable: comparison failed
+nazar_n06_heldout2488_da3_48ddd4c_01,held-out,B0-shared-scale,not_evaluated,map,,,,,,,,unavailable: comparison aborted
+nazar_n06_heldout2488_da3_48ddd4c_01,held-out,B1-oracle,not_evaluated,map,,,,,,,,unavailable: comparison aborted
+nazar_n06_heldout2488_da3_48ddd4c_01,held-out,P1-raw,failed,map,,,,,,,,unavailable: map_capacity_exceeded
+nazar_n06_heldout2488_da3_48ddd4c_01,held-out,P1-keyframes-2,not_evaluated,map,,,,,,,,unavailable: comparison aborted
