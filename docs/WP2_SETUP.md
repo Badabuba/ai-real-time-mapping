@@ -16,6 +16,8 @@
 
 ## Dataset verification
 
+Y-06 preflight уточнення (25 жовтня): official fr3 archive SHA-256 `c7cd8e1afb87c80e5744a356214819b110fa09b4744fa4ba0cc2382f9ba59e9c`, 5,098 extracted files побайтово збігаються. RGB interval починається `1341847980.722988`, а GT — `1341847980.790000`: три associated RGB frames лежать перед GT interval. Попередня вимога повного GT time coverage помилково блокувала valid dataset ще до SLAM. Preflight тепер записує `associated_rgb_frames_outside_gt_time_range` та limitation; повна відсутність time overlap досі є помилкою. Frozen inputs, baseline/config hashes, 20 ms evaluation association та source GT bytes не змінено; жодного SLAM run до виправлення не запускали. Внутрішні GT gaps та кількість unmatched poses перевіряє evaluator.
+
 TUM `rgbd_dataset_freiburg1_xyz` лежить у `data/raw/tum_rgbd/` разом із `.tgz` archive. Raw data не змінювалися.
 
 - Archive: 448204271 bytes, SHA-256 збігається з manifest Назара.

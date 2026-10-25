@@ -152,8 +152,11 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
         raise ValueError("groundtruth timestamps must be nonempty and nondecreasing")
     duplicate_gt_pairs = sum(a[0] == b[0] for a, b in zip(gt, gt[1:]))
     frames = load_sequence(seq, max_delta_s=manifest["association"]["max_delta_s"])
-    if gt[0][0] > frames[0].frame.timestamp_s or gt[-1][0] < frames[-1].frame.timestamp_s:
-        raise ValueError("groundtruth time range does not cover associated RGB frames")
+    if gt[-1][0] < frames[0].frame.timestamp_s or gt[0][0] > frames[-1].frame.timestamp_s:
+        raise ValueError("groundtruth time range does not overlap associated RGB frames")
+    # Official TUM sequences may start/end outside the motion-capture interval.
+    # Keep every frozen RGB input; GT association/coverage belongs to evaluation.
+    outside_gt = sum(not gt[0][0] <= f.frame.timestamp_s <= gt[-1][0] for f in frames)
     return {
         "status": "ok", "sequence": manifest["sequence_id"],
         "archive_sha256": rebuilt["source"]["archive_sha256"],
@@ -164,12 +167,14 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
            {"split": config["split"], "split_frames": len(frozen["frames"]),
             "selected_input_hashes_verified": 2 * len(frozen["frames"])}),
         "groundtruth_poses": len(gt), "quaternion_norm_squared_tolerance": 5e-4,
+        "associated_rgb_frames_outside_gt_time_range": outside_gt,
         "extracted_files_verified": verify_extracted_archive(archive, seq) if full else None,
         "checks": ["frozen_manifest", "archive_sha256", "index_sha256", "PNG_headers", "timestamps", "evaluation_GT"]
                   + (["selected_rgb_depth_sha256"] if hashed_split else []),
         **({"groundtruth_duplicate_timestamp_pairs": duplicate_gt_pairs} if duplicate_gt_pairs else {}),
         "limitations": ([] if full else ["PNG headers checked; extracted bytes not compared with archive (use --full)."] )
-                       + (["Ground-truth timestamps contain duplicates; evaluation must explicitly handle/reference only its time window. RGB/depth inputs are unaffected."] if duplicate_gt_pairs else []),
+                       + (["Ground-truth timestamps contain duplicates; evaluation must explicitly handle/reference only its time window. RGB/depth inputs are unaffected."] if duplicate_gt_pairs else [])
+                       + (["Associated RGB frames extend beyond the GT time range; all frozen inputs are retained. Evaluation must report unmatched poses using its unchanged timestamp tolerance."] if outside_gt else []),
     }
 
 
