@@ -148,8 +148,9 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
             if abs(sum(v * v for v in row[4:]) - 1.0) > 5e-4:
                 raise ValueError("groundtruth quaternion exceeds rounding tolerance")
             gt.append(row)
-    if not gt or any(a[0] >= b[0] for a, b in zip(gt, gt[1:])):
-        raise ValueError("groundtruth timestamps must be nonempty and increasing")
+    if not gt or any(a[0] > b[0] for a, b in zip(gt, gt[1:])):
+        raise ValueError("groundtruth timestamps must be nonempty and nondecreasing")
+    duplicate_gt_pairs = sum(a[0] == b[0] for a, b in zip(gt, gt[1:]))
     frames = load_sequence(seq, max_delta_s=manifest["association"]["max_delta_s"])
     if gt[0][0] > frames[0].frame.timestamp_s or gt[-1][0] < frames[-1].frame.timestamp_s:
         raise ValueError("groundtruth time range does not cover associated RGB frames")
@@ -166,7 +167,9 @@ def verify_dataset(repo_root: Path, config: dict[str, Any], *, full: bool = Fals
         "extracted_files_verified": verify_extracted_archive(archive, seq) if full else None,
         "checks": ["frozen_manifest", "archive_sha256", "index_sha256", "PNG_headers", "timestamps", "evaluation_GT"]
                   + (["selected_rgb_depth_sha256"] if hashed_split else []),
-        "limitations": [] if full else ["PNG headers checked; extracted bytes not compared with archive (use --full)."],
+        **({"groundtruth_duplicate_timestamp_pairs": duplicate_gt_pairs} if duplicate_gt_pairs else {}),
+        "limitations": ([] if full else ["PNG headers checked; extracted bytes not compared with archive (use --full)."] )
+                       + (["Ground-truth timestamps contain duplicates; evaluation must explicitly handle/reference only its time window. RGB/depth inputs are unaffected."] if duplicate_gt_pairs else []),
     }
 
 

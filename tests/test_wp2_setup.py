@@ -349,3 +349,24 @@ def test_prepare_cli_all_frames_writes_rgb_view_only(dataset, monkeypatch):
     assert module.main()==0
     assert len(list((output/"input").glob("*.png")))==2
     assert not (output/"trajectory").exists()
+
+
+
+def test_preflight_reports_official_style_duplicate_gt_without_fitting(dataset):
+    root, seq, _, config = dataset
+    (seq / "groundtruth.txt").write_text(
+        "0.9 0 0 0 0 0 0 1\n0.9 0.001 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
+    before = (seq / "groundtruth.txt").read_bytes()
+    report = verify_dataset(root, config)
+    assert report["status"] == "ok"
+    assert report["groundtruth_duplicate_timestamp_pairs"] == 1
+    assert any("duplicates" in reason for reason in report["limitations"])
+    assert (seq / "groundtruth.txt").read_bytes() == before
+
+
+def test_preflight_still_rejects_decreasing_gt_timestamps(dataset):
+    root, seq, _, config = dataset
+    (seq / "groundtruth.txt").write_text(
+        "0.9 0 0 0 0 0 0 1\n0.8 0 0 0 0 0 0 1\n1.3 0 0 0 0 0 0 1\n")
+    with pytest.raises(ValueError, match="nondecreasing"):
+        verify_dataset(root, config)
