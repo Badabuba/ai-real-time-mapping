@@ -1,0 +1,12 @@
+.git
+.local
+.venv*
+external
+data/raw
+data/processed
+checkpoints
+results/runs
+results/visualizations
+logs
+__pycache__
+*.pyc

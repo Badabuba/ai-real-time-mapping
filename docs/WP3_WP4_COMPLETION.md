@@ -15,9 +15,13 @@
 
 За явним дозволом Юліана завантажено frozen TUM fr1/xyz: SHA-256 `a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98`; `build_tum_manifest.py --check` пройшов. DA3METRIC-LARGE revision `4010e39f3634a45bc60553321fb49fb760bd594e`, weights SHA-256 `bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776` збігається з Nazar evidence.
 
-DA3 isolated environment: `.local/da3-venv`, використовує наявний host torch 2.7.1+cu118, RTX 3070 Ti Laptop 8 GB; NumPy 1.26.4 та OpenCV 4.11 встановлені локально у venv. Host packages не замінювалися. Перший real one-frame dev run `yulian_da3_real_dev_f1_20261025` має status ok. Це smoke, не alignment evidence.
+DA3 isolated environment: `.local/da3-venv`, використовує наявний host torch 2.7.1+cu118, RTX 3070 Ti Laptop 8 GB; NumPy 1.26.4 та OpenCV 4.11 встановлені локально у venv. Host packages не замінювалися. Clean 200-frame run `yulian_da3_f200_b43c384` (`b43c384`, `dirty_worktree=false`) завершився: mean AbsRel **0.092655**, RMSE **0.177196 m**, δ1 **0.964949**; warm median **125.462 ms**, p95 **157.248 ms** (warmup=1). Усі 200 C3 predictions існують. [Summary із source hashes](../results/summaries/wp1_da3metric_yulian_tum_fr1_xyz_200.json). Це smoke inference evidence, не alignment або held-out benchmark.
+
+Незалежна перевірка trajectory evaluator через `evo` на 60 TUM poses із заданим scale/noise дала ATE/RPE RMSE різницю ≤1.3e-16 для SE(3) та Sim(3). Це parity перевірка математичного evaluator, не accuracy самого SLAM.
 
 Native pySLAM runtime готується в окремому Docker container `rt-mapping-wp2-yulian`, без system packages на Windows/Ubuntu host. Source pinned `96019cf`; контейнерна копія потрібна для коректних Unix symlinks. До завершення real pipeline run WP3/WP4 real validation не вважати done.
+
+Linux recipe та compatibility flags: [WP2_LINUX_CONTAINER.md](WP2_LINUX_CONTAINER.md). Відповідний full-stage config: `configs/pipeline.tum.windows-docker.json`.
 
 ## Обмеження evaluation
 
