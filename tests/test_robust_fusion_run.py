@@ -187,6 +187,29 @@ def test_cli_runs_and_never_overwrites(clean, tmp_path):
     assert again.returncode == 2 and "never overwritten" in again.stderr
 
 
+def test_u04_figures_render_from_the_fixture_runs_under_the_size_limit(clean, tmp_path):
+    """U-04 render script smoke test; the synthetic fixture has no RGB, so that panel shows a placeholder."""
+    from rt_mapping.evaluation.frame_diagnostics import run_frame_diagnostics
+
+    u01 = run_frame_diagnostics(ROOT, clean["comparison"], clean["slam"], clean["geometry"], clean["sequence"],
+                                clean["manifest"], run_id="u01", output_root=tmp_path / "out")
+    ok(u01)
+    u03 = robust(clean, tmp_path)
+    ok(u03)
+    argv = [sys.executable, str(ROOT / "scripts/render_robust_fusion_figures.py"), "--u01-run", str(u01),
+            "--u03-run", str(u03), "--comparison-run", str(clean["comparison"]), "--slam-run", str(clean["slam"]),
+            "--geometry-run", str(clean["geometry"]), "--sequence-dir", str(clean["sequence"]),
+            "--manifest", str(clean["manifest"]), "--output-dir", str(tmp_path / "plots")]
+    done = subprocess.run(argv, capture_output=True, text=True, timeout=180)
+    assert done.returncode == 0, done.stdout + done.stderr
+    figures = [tmp_path / "plots" / name for name in ("yulian_u04_pointcloud_before_after.png",
+                                                      "yulian_u04_failure_cases.png")]
+    assert all(path.stat().st_size > 0 for path in figures)
+    assert sum(path.stat().st_size for path in figures) < 1_000_000
+    again = subprocess.run(argv, capture_output=True, text=True, timeout=180)
+    assert again.returncode != 0 and "never overwritten" in again.stderr
+
+
 def _imports(path):
     names = set()
     for node in ast.walk(ast.parse((ROOT / path).read_text(encoding="utf-8"))):
@@ -198,7 +221,8 @@ def _imports(path):
 
 
 def test_robust_fusion_modules_load_no_native_or_model_runtime():
-    for path in ("src/rt_mapping/runs/robust_fusion_run.py", "scripts/run_robust_fusion.py"):
+    for path in ("src/rt_mapping/runs/robust_fusion_run.py", "scripts/run_robust_fusion.py",
+                 "scripts/render_robust_fusion_figures.py"):
         bad = {n for n in _imports(path) for p in NATIVE_OR_MODEL if n == p or n.startswith(p + ".")}
         assert not bad, f"{path} imports {sorted(bad)}"
     code = (f"import sys; sys.path.insert(0,{str(ROOT / 'src')!r}); import rt_mapping.runs.robust_fusion_run; "
