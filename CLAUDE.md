@@ -10,10 +10,11 @@ UCU course project "Real-time Mapping with Foundation Models": monocular RGB →
 - `docs/MODEL_SELECTION.md`, `docs/ENVIRONMENT.md`, `CONTRIBUTING.md`, per-directory READMEs.
 
 ## Current state (verify in PROJECT_STATUS before relying on this)
-- WP1 C1–C5 and WP2 baseline/sparse handoff were merged into develop (PRs #1–#5), then main (PR #6, 36ed781). GPU evidence is Nazar's; native macOS evidence is Yaropolk's.
-- WP3/WP4 now have robust scalar/Sim(3), validated correspondences, Brown-distortion geometry, voxel fusion, and an offline artifact runner. Synthetic smoke: `python scripts/run_alignment_smoke.py`; real handoff: `docs/YULIAN_HANDOFF.md`.
-- Local CPU suite after initial WP3/WP4 implementation: 441 passed, 1 native skip. Windows process/symlink helper failures fixed; this does not establish native Windows SLAM support. CI workflow covers Ubuntu/Windows Python 3.11/3.12.
-- Still incomplete: real alignment/fusion validation (full SLAM export and matching DA3 predictions are absent); WP2 all-frame states/timing/automated ATE/RPE; WP1 broader selection/evaluation; input-to-output orchestration, benchmark and demo.
+- WP1 C1–C5 and WP2 sparse baseline integrated via PR #6; WP3/WP4 core via PR #7; completion/evidence PR #8.
+- WP3/WP4 real smoke done: one-config native SLAM + CUDA DA3 + alignment/fusion/comparison, 200 frames, clean 4952e37, all stages ok; 72,887 metric voxels. See docs/YULIAN_HANDOFF.md and docs/WP3_WP4_COMPLETION.md.
+- CPU suite: 472 passed, 1 native skip; Ubuntu/Windows Python 3.11/3.12 CI. Installed-backend sparse test separately passed; data/source/runtime preflight ok. SLAM runs in Linux Docker, not native Windows.
+- Real data/checkpoints/full runs are present locally and ignored. Never overwrite finished run.json. Runtime recipe: docs/WP2_LINUX_CONTAINER.md.
+- Still incomplete: WP2 normalized all-frame states/timing and full-frame evaluator integration; WP1 broader model selection/fallback; shared held-out benchmark, independent review, demo/presentation. Recorded map metrics show tradeoffs, not universal improvement or real-time performance.
 - `.gitignore` ignores any `models/` directory: never name a source package `models`.
 
 ## Environment (Windows, PowerShell, from repo root)

@@ -1,0 +1,23 @@
+{
+  "evo_version": "1.38.1",
+  "poses": 22,
+  "alignment": "SE3",
+  "scope": "Independent TUM file reader, timestamp matching, ATE and retained-keyframe RPE",
+  "checks": {
+    "ate_rmse_m": {
+      "evo": 0.022376986962664262,
+      "project": 0.022376986962664273,
+      "absolute_delta": 1.0408340855860843e-17
+    },
+    "rpe_translation_rmse_m": {
+      "evo": 0.01628812817561384,
+      "project": 0.016288128175613772,
+      "absolute_delta": 6.591949208711867e-17
+    },
+    "rpe_rotation_rmse_deg": {
+      "evo": 0.8374007706760126,
+      "project": 0.8374007706761029,
+      "absolute_delta": 9.026113190202523e-14
+    }
+  }
+}

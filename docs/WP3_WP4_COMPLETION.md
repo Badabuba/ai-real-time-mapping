@@ -1,6 +1,6 @@
 # WP3/WP4 completion — 25 жовтня 2026
 
-Юліан попросив завершити не лише code core, а й runnable integration та перевірку. Попередня реалізація PR #7 мала лише synthetic alignment/fusion evidence.
+WP3/WP4 Юліана завершені: code core, runnable integration, реальна пара sparse/dense, residual plot, fused cloud та smoke comparison. Попередній PR #7 мав лише synthetic evidence; [PR #8](https://github.com/Badabuba/ai-real-time-mapping/pull/8) додає завершення. Повний held-out benchmark і demo лишаються спільними задачами команди.
 
 ## Реалізований залишок
 
@@ -9,7 +9,7 @@
 - `evaluation/trajectory.py`: one-to-one timestamp association, SE(3)/Sim(3) ATE та RPE. RPE delta — matched retained-keyframe rows, не всі RGB frames. Sim(3) diagnostic окремо від metric SE(3) result.
 - `evaluation/map_geometry.py`: однаковий voxel/crop, accuracy/completeness, symmetric Chamfer-L1 = 0.5·(mean forward + mean backward), F-score@2/5/10 cm. Один trajectory-only SE(3) evaluation transform для всіх maps; per-map ICP/Sim(3) не використовується.
 - `alignment/causal.py`: optional P1-window, лише поточне/минуле вікно, стабільний landmark-ID hash split. Не вистачає startup support — явна помилка, без майбутнього/global fallback. Вмикається `causal_window_frames>0` лише як development ablation.
-- `run_comparison_smoke.py --plot`: повний synthetic reference/oracle/comparison fixture, явно позначений synthetic. Code suite: **470 passed, 1 native skip** на Windows Python 3.12.
+- `run_comparison_smoke.py --plot`: повний synthetic reference/oracle/comparison fixture, явно позначений synthetic. CPU suite: **472 passed, 1 native skip**; Ubuntu/Windows Python 3.11/3.12 CI. Окремо installed-backend sparse API test: **1 passed**.
 
 ## Дані та runtime
 
@@ -19,9 +19,30 @@ DA3 isolated environment: `.local/da3-venv`, використовує наявн
 
 Незалежна перевірка trajectory evaluator через `evo` на 60 TUM poses із заданим scale/noise дала ATE/RPE RMSE різницю ≤1.3e-16 для SE(3) та Sim(3). Це parity перевірка математичного evaluator, не accuracy самого SLAM.
 
-Native pySLAM runtime зібрано в окремому Docker container `rt-mapping-wp2-yulian`, без system packages на Windows/Ubuntu host. Source pinned `96019cf`; контейнерна копія потрібна для коректних Unix symlinks. Opt-in test реальних Map/KeyFrame/MapPoint APIs та sparse export пройшов: **1 test, OK**. До завершення real pipeline run WP3/WP4 real validation не вважати done.
+Native pySLAM runtime зібрано в окремому Docker container `rt-mapping-wp2-yulian`, без system packages на Windows/Ubuntu host. Source pinned `96019cf`; контейнерна копія потрібна для коректних Unix symlinks. Opt-in test реальних Map/KeyFrame/MapPoint APIs та sparse export пройшов: **1 test, OK**. Dataset/source/entry-point preflight: **ok**. Це Linux runtime на Windows/Docker host, не native Windows SLAM support.
 
 Linux recipe та compatibility flags: [WP2_LINUX_CONTAINER.md](WP2_LINUX_CONTAINER.md). Відповідний full-stage config: `configs/pipeline.tum.windows-docker.json`.
+
+## Реальний end-to-end результат
+
+Run `yulian_tum_e2e_f200_20261025_01`: **ok**, усі stages та methods із clean commit `4952e37dd773925c4c7aa069c4d6aaf10f489120`, `dirty_worktree=false`. Один config справді запускав обидва adapters; це не reuse mode. Full artifacts локально у `results/runs/<run_id>/`; [малий summary із hashes](../results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.json), [CSV](../results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.csv), [звіт](../results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200_report.md).
+
+- SLAM: 200/200 frames, 198 final poses, 0 LOST за upstream counters; **1,277 landmarks / 22 retained keyframes / 8,893 observations**. Pose fraction не називаємо tracking success.
+- Alignment: scale **1.1920834**; 5,044/6,571 calibration inliers (**76.76%**), 16/16 coverage bins. Незмінний residual threshold **0.1 m**. Withheld: 256 landmarks / 1,737 pairs, inlier ratio **77.43%**, median **0.03877 m**, p95 **0.31322 m**. Великий outlier tail не приховується.
+- Fusion: 611,226 pixel samples → **72,887 metric voxels** до evaluation transform; common evaluation voxelization має **58,569** P1 points. [Map preview](../results/plots/yulian_tum_map.png), [residuals](../results/plots/yulian_tum_residuals.png), [comparison](../results/plots/yulian_tum_comparison.png) оглянуто візуально.
+- P1 retained-keyframe SE(3) ATE **0.022377 m**, RPE translation **0.016288 m**, rotation **0.837401°**. B0 Sim(3) ATE **0.012187 m** — окремий scale-fitted diagnostic. Незалежні TUM reader, association та `evo` ATE/RPE відтворили P1 result до 9.1e-14: [parity](../results/summaries/wp3_wp4_yulian_real_evo_parity.json).
+- Pipeline DA3: mean AbsRel **0.092655**, RMSE **0.177196 m**, δ1 **0.964949**; warm median **119.691 ms**, p95 **134.057 ms**. CPU fusion median **71.947 ms**, p95 **121.059 ms**. Wall clock усього launcher **400.02 s**; inference включено. Це offline smoke, не real-time.
+
+| Method | Accuracy mean [m] ↓ | Completeness mean [m] ↓ | Chamfer-L1 [m] ↓ | SE(3) ATE [m] ↓ |
+|---|---:|---:|---:|---:|
+| B0-shared-scale | 0.04937 | 0.22610 | 0.13774 | 0.02238 |
+| P1-global | 0.09239 | 0.08493 | 0.08866 | 0.02238 |
+| P1-raw | 0.09132 | 0.08387 | 0.08760 | 0.04890 |
+| B1-oracle | 0.03231 | 0.03349 | 0.03290 | 0.02238 |
+| P1-keyframes-2 | 0.08180 | 0.09403 | 0.08792 | 0.02238 |
+| P1-keyframes-5 | 0.07464 | 0.10493 | 0.08979 | 0.02238 |
+
+P1 покращує completeness та combined Chamfer проти sparse B0, але sparse points точніші в середньому. Scale recovery покращує metric trajectory проти unit-scale control, проте **global map Chamfer не кращий за P1-raw** на цьому smoke. Це tradeoff, не універсальне покращення. B1 показує помітний залишковий depth-error gap. Global threshold не підбирали за GT; input runs і finished manifests не змінювали.
 
 ## Обмеження evaluation
 
@@ -37,6 +58,8 @@ python -m pip install -e ".[dev,benchmark]"
 python -m pytest tests -q
 python scripts/run_comparison_smoke.py --plot
 python scripts/run_pipeline.py --config configs/pipeline.tum.example.json --run-id unique_tum_pipeline
+# Перевірений Windows/Docker + CUDA шлях:
+python scripts/run_pipeline.py --config configs/pipeline.tum.windows-docker.json --run-id unique_real_pipeline
 ```
 
 Приклад full pipeline потребує вже встановлених native SLAM/CUDA runtimes. Для іншого OS замінити stage `command` на відповідний Python/WSL/Docker argv. Для existing artifacts задати stage `{"reuse_run": "results/runs/<actual_run_id>"}`. Launcher додає власні `--run-id` і `--output-root`; не задавати їх у command.

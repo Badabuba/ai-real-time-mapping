@@ -1,0 +1,480 @@
+{
+  "schema": "rt_mapping.evidence_summary/v1",
+  "scope": "Real frozen TUM 200-frame smoke; retained-keyframe alignment/fusion comparison",
+  "pipeline_run_id": "yulian_tum_e2e_f200_20261025_01",
+  "git_commit": "4952e37dd773925c4c7aa069c4d6aaf10f489120",
+  "dirty_worktree": false,
+  "status": "ok",
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "config_file": "configs/pipeline.tum.windows-docker.json",
+  "source_runs": {
+    "pipeline": "yulian_tum_e2e_f200_20261025_01",
+    "slam": "yulian_tum_e2e_f200_20261025_01.slam",
+    "geometry": "yulian_tum_e2e_f200_20261025_01.geometry",
+    "comparison": "yulian_tum_e2e_f200_20261025_01.comparison",
+    "global": "yulian_tum_e2e_f200_20261025_01.comparison.global"
+  },
+  "model": {
+    "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+    "dtype": "bfloat16",
+    "repo": "depth-anything/DA3METRIC-LARGE",
+    "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+  },
+  "slam": {
+    "config": "configs/wp2_pyslam_baseline.json",
+    "pose_convention": "T_wc",
+    "repo": "https://github.com/luigifreda/pyslam.git",
+    "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+  },
+  "native_environment": {
+    "python": "3.11.17",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "gcc": "12.2.0",
+    "clang": "Debian clang version 14.0.6",
+    "LD_PRELOAD": "/usr/lib/x86_64-linux-gnu/libQt5Core.so.5:/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5:/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5",
+    "packages": {
+      "numpy": "1.26.4",
+      "torch": "2.6.0+cpu",
+      "torchvision": "0.21.0+cpu",
+      "opencv-python": "4.11.0.86",
+      "open3d": "0.20.0",
+      "pybind11": "2.13.1",
+      "gtsam": "4.2a9",
+      "PyQt5": "5.15.11",
+      "PyQt5-Qt5": "5.15.19"
+    },
+    "vocabulary_bytes": 105381669,
+    "vocabulary_sha256": "49b1deee2331aa0897aec95b0fdf0fb07eda4a608ed5b92c54186e9cf6d500ea"
+  },
+  "native_checks": {
+    "preflight": "ok",
+    "installed_backend_sparse_test": "1 passed"
+  },
+  "nvidia_driver": "617.14",
+  "gpu_vram_mib": 8192,
+  "hardware": {
+    "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "gpu": "NVIDIA GeForce RTX 3070 Ti Laptop GPU",
+    "ram_gb": 39.7
+  },
+  "slam_metrics": {
+    "input_frames": 200,
+    "processed_frames": 200,
+    "lost_frames": 0,
+    "lost_fraction": 0.0,
+    "final_pose_count": 198,
+    "final_pose_fraction": 0.99,
+    "first_pose_timestamp_s": 1305031102.275326,
+    "last_pose_timestamp_s": 1305031109.011269,
+    "trajectory_units": "monocular SLAM units; metric scale not recovered",
+    "trajectory_alignment": "none",
+    "ate_rpe": "not evaluated",
+    "note": "Final pose fraction is not tracking success; initialization/lost-state handling differs.",
+    "sparse_export": {
+      "landmarks": 1277,
+      "keyframes": 22,
+      "observations": 8893
+    },
+    "wall_clock_seconds_including_startup": 234.26388777600005
+  },
+  "depth_metrics": {
+    "abs_rel": 0.09265534980550988,
+    "aggregation": "frame_mean",
+    "delta1": 0.9649486500371753,
+    "mae_m": 0.12100086238975281,
+    "n_evaluated": 16730870,
+    "n_frames": 200,
+    "n_gt_valid": 16730870,
+    "n_pixels": 22226400,
+    "n_pred_valid": 22226400,
+    "rmse_m": 0.17719629667187944,
+    "valid_coverage": 1.0
+  },
+  "depth_timing": {
+    "model_inference": {
+      "cold_start_ms": 1710.4782999958843,
+      "n_total": 200,
+      "n_warm": 199,
+      "n_warmup": 1,
+      "percentile_method": "linear",
+      "stage": "model_inference",
+      "unit": "ms",
+      "warm_max_ms": 486.22189997695386,
+      "warm_mean_ms": 121.9203879380477,
+      "warm_median_ms": 119.69069996848702,
+      "warm_min_ms": 104.8008999787271,
+      "warm_p95_ms": 134.05738995643333
+    }
+  },
+  "alignment": {
+    "R": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "all_pairs_median_residual_m": 0.04332913473295319,
+    "calibration_coverage_bins_4x4": 16,
+    "failure_reason": null,
+    "inlier_count": 5044,
+    "inlier_ratio": 0.7676152792573429,
+    "median_residual_m": 0.030850106879053596,
+    "method": "robust_median",
+    "number_of_pairs": 6571,
+    "p95_residual_m": 0.08727175553793665,
+    "rejected_pairs": {
+      "reprojection_error": 585
+    },
+    "scale": 1.1920834129618625,
+    "scale_application": "SLAM translations/landmarks multiplied by scale; predicted metric depth unchanged",
+    "source_frame": "slam_world",
+    "status": "ok",
+    "t": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "target_frame": "metric_world",
+    "thresholds": {
+      "min_coverage_bins": 4,
+      "min_inlier_ratio": 0.5,
+      "min_inliers": 30,
+      "residual_m": 0.1
+    },
+    "transform_direction": "target = scale * R @ source + t",
+    "withheld_inlier_ratio": 0.7743235463442717,
+    "withheld_landmarks": 256,
+    "withheld_median_residual_m": 0.038771344874799385,
+    "withheld_p95_residual_m": 0.3132195238736541,
+    "withheld_pairs": 1737
+  },
+  "fusion_metrics": {
+    "alignment_inliers": 5044,
+    "fused_keyframes": 22,
+    "ground_truth_evaluation": "not performed",
+    "input_keyframes": 22,
+    "input_points": 611226,
+    "map_points": 72887,
+    "real_time_claim": false,
+    "scale": 1.1920834129618625,
+    "status": "ok",
+    "trajectory_scope": "retained keyframes only; snapshot matches sparse landmarks",
+    "units": "meters"
+  },
+  "fusion_timing": {
+    "alignment_and_input_ms": 4071.80190004874,
+    "fusion_median_ms": 71.94734999211505,
+    "fusion_p95_ms": 121.05860001174733,
+    "fusion_per_keyframe_ms": [
+      87.28069998323917,
+      66.23590004164726,
+      65.19570003729314,
+      64.85910003539175,
+      67.24090001080185,
+      68.67619999684393,
+      70.23130008019507,
+      73.66339990403503,
+      66.39609998092055,
+      68.07399995159358,
+      66.16279995068908,
+      64.82570001389831,
+      69.73779993131757,
+      109.71799993421882,
+      111.79750005248934,
+      90.61190008651465,
+      94.98280007392168,
+      103.83880010340363,
+      120.21880003158003,
+      126.79479992948472,
+      121.1028000107035,
+      116.25109997112304
+    ],
+    "scope": "CPU artifact integration, excluding SLAM/model inference",
+    "wall_clock_s": 8.400981800048612
+  },
+  "trajectory": {
+    "B0_sim3": {
+      "alignment_mode": "sim3",
+      "association_max_actual_delta_s": 0.0046770572662353516,
+      "ate_median_m": 0.007830058395904164,
+      "ate_rmse_m": 0.01218688363256339,
+      "evaluation_transform": {
+        "R": [
+          [
+            0.10864674731409349,
+            0.6466843865012614,
+            -0.7549802570620997
+          ],
+          [
+            0.9939969928792323,
+            -0.08051196459029723,
+            0.07407969833127795
+          ],
+          [
+            -0.012878759455396334,
+            -0.7584966234686202,
+            -0.6515496985968079
+          ]
+        ],
+        "direction": "reference_world = scale * R @ estimate_world + t",
+        "scale": 1.3181733680273464,
+        "t": [
+          1.340093402749157,
+          0.6215686440599435,
+          1.65851541861496
+        ]
+      },
+      "input_poses": 22,
+      "matched_poses": 22,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 21,
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.015527907197271198,
+      "scale_fitted_for_evaluation": true
+    },
+    "P1_global_se3": {
+      "alignment_mode": "se3",
+      "association_max_actual_delta_s": 0.0046770572662353516,
+      "ate_median_m": 0.01677589261669814,
+      "ate_rmse_m": 0.022376986962664273,
+      "evaluation_transform": {
+        "R": [
+          [
+            0.10864674731409397,
+            0.6466843865012616,
+            -0.7549802570620997
+          ],
+          [
+            0.9939969928792324,
+            -0.08051196459029746,
+            0.07407969833127787
+          ],
+          [
+            -0.012878759455396386,
+            -0.7584966234686197,
+            -0.6515496985968084
+          ]
+        ],
+        "direction": "reference_world = scale * R @ estimate_world + t",
+        "scale": 1.0,
+        "t": [
+          1.330739403555079,
+          0.6285001134633975,
+          1.647880579233056
+        ]
+      },
+      "input_poses": 22,
+      "matched_poses": 22,
+      "max_timestamp_delta_s": 0.02,
+      "rpe_delta": 1,
+      "rpe_delta_unit": "matched_pose_rows",
+      "rpe_pairs": 21,
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.016288128175613772,
+      "scale_fitted_for_evaluation": false
+    },
+    "scope": "retained keyframes, not all-frame trajectory/tracking evaluation"
+  },
+  "comparison_rows": [
+    {
+      "accuracy_mean_m": 0.04937226802477008,
+      "ate_se3_rmse_m": 0.022376986962664273,
+      "chamfer_l1_m": 0.13773825780079255,
+      "completeness_mean_m": 0.22610424757681502,
+      "fscore_0.02m": 0.04334712981071893,
+      "fscore_0.05m": 0.2654468823987267,
+      "fscore_0.1m": 0.49889542745595034,
+      "fusion_median_ms": null,
+      "fusion_p95_ms": null,
+      "map_points": 1038,
+      "method": "B0-shared-scale",
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.016288128175613772
+    },
+    {
+      "accuracy_mean_m": 0.09238787071369903,
+      "ate_se3_rmse_m": 0.022376986962664273,
+      "chamfer_l1_m": 0.08865884996152734,
+      "completeness_mean_m": 0.08492982920935566,
+      "fscore_0.02m": 0.24028984398198608,
+      "fscore_0.05m": 0.4799695448472063,
+      "fscore_0.1m": 0.6939626985669916,
+      "fusion_median_ms": 71.94734999211505,
+      "fusion_p95_ms": 121.05860001174733,
+      "map_points": 58569,
+      "method": "P1-global",
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.016288128175613772
+    },
+    {
+      "accuracy_mean_m": 0.09132440086424713,
+      "ate_se3_rmse_m": 0.04889991594029586,
+      "chamfer_l1_m": 0.08759518361647578,
+      "completeness_mean_m": 0.08386596636870443,
+      "fscore_0.02m": 0.24231312373571362,
+      "fscore_0.05m": 0.4748702794000392,
+      "fscore_0.1m": 0.6997639002495538,
+      "fusion_median_ms": 98.17624994320795,
+      "fusion_p95_ms": 149.65322505449876,
+      "map_points": 62944,
+      "method": "P1-raw",
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.026930625474327285
+    },
+    {
+      "accuracy_mean_m": 0.03230779203765035,
+      "ate_se3_rmse_m": 0.022376986962664273,
+      "chamfer_l1_m": 0.032900159164756734,
+      "completeness_mean_m": 0.033492526291863126,
+      "fscore_0.02m": 0.4654713395357495,
+      "fscore_0.05m": 0.7895752272297417,
+      "fscore_0.1m": 0.9530166390668026,
+      "fusion_median_ms": 61.9003499741666,
+      "fusion_p95_ms": 90.04897006670944,
+      "map_points": 39122,
+      "method": "B1-oracle",
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.016288128175613772
+    },
+    {
+      "accuracy_mean_m": 0.08180499635537325,
+      "ate_se3_rmse_m": 0.022376986962664273,
+      "chamfer_l1_m": 0.08791647536817322,
+      "completeness_mean_m": 0.0940279543809732,
+      "fscore_0.02m": 0.23652150880535175,
+      "fscore_0.05m": 0.48559433730762297,
+      "fscore_0.1m": 0.7093829842217201,
+      "fusion_median_ms": 72.99749995581806,
+      "fusion_p95_ms": 100.35725001944229,
+      "map_points": 39079,
+      "method": "P1-keyframes-2",
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.016288128175613772
+    },
+    {
+      "accuracy_mean_m": 0.07464017416591755,
+      "ate_se3_rmse_m": 0.022376986962664273,
+      "chamfer_l1_m": 0.08978503757275048,
+      "completeness_mean_m": 0.10492990097958342,
+      "fscore_0.02m": 0.23366411932348705,
+      "fscore_0.05m": 0.48644144305151193,
+      "fscore_0.1m": 0.6968166366546942,
+      "fusion_median_ms": 90.98789992276579,
+      "fusion_p95_ms": 115.96469997894019,
+      "map_points": 24007,
+      "method": "P1-keyframes-5",
+      "rpe_rotation_rmse_deg": 0.8374007706761029,
+      "rpe_translation_rmse_m": 0.016288128175613772
+    }
+  ],
+  "skipped_ablations": [
+    {
+      "ablation": "P1-window",
+      "reason": "conditional_on_development_comparison; disabled in config"
+    },
+    {
+      "ablation": "confidence",
+      "reason": "model_supplies_no_confidence; no fake confidence created"
+    }
+  ],
+  "pipeline_timing": {
+    "inference_included": true,
+    "note": "Reuse mode times artifact verification/integration only; native/model timings stay in source runs.",
+    "real_time_claim": false,
+    "stages": {
+      "geometry": {
+        "command_sha256": "c036f1d1c007cc3568954f9153c4e4230c04c08669b36145c36d34c4fc85953b",
+        "elapsed_s": 71.12012310000136,
+        "manifest_sha256": "c15ad670eab06cc46020d123ebccd2940b3d83bb55aebef455ff985aac0dbf79",
+        "mode": "launched",
+        "run_id": "yulian_tum_e2e_f200_20261025_01.geometry"
+      },
+      "slam": {
+        "command_sha256": "5556c8f11d83e7fb6089bab88b32ca2a26265c82f04cae1fbf33f5f0660550fb",
+        "elapsed_s": 303.4511757999426,
+        "manifest_sha256": "dac27aad70e06d7d501ea17e5dc2017b26f1b0ccaed20a6aaf1489c5d45ff08d",
+        "mode": "launched",
+        "run_id": "yulian_tum_e2e_f200_20261025_01.slam"
+      }
+    },
+    "wall_clock_s": 400.0199674000032
+  },
+  "evaluation_provenance": {
+    "depth_sha256": {
+      "depth/1305031102.160407.png": "3d2b60049ced75b1c4f468ee1ff734650e4b31ca1a535698a02a1434f41eafae",
+      "depth/1305031102.262886.png": "5ebfa544868e8b6aec3f3edb0f9a833a08c0d65600bcc1ac32d03b83285bab00",
+      "depth/1305031102.295279.png": "dc59fc59500000a718cc8d083251c8a6993bc478f4602de6301b2dd4aa664c8c",
+      "depth/1305031102.626818.png": "c957680804165df000bb70df4ef6a524ec7033fd0796a7e6801bb013ffd35d3b",
+      "depth/1305031102.763549.png": "d99c228bcc883501dde171782456d88a24e138585aa4d5e8d6f2b19fc40c1f1e",
+      "depth/1305031102.828537.png": "cc53c137bd6d292df3e93de9ce9a3f947595b7e7ce5fb7c2aab776b010333564",
+      "depth/1305031102.962137.png": "378ee15b70099806bef82341ce47c3ffc90a963dca6f91a71e79d78b36bec440",
+      "depth/1305031103.027881.png": "5d3d4846e7a83d5e59687f406cb6a5d9bf2de714216867a1babebccd1ea0f784",
+      "depth/1305031103.129109.png": "4d37ebb05993890e6d7512fbf182f594655f4dcb5b36955786f3eeea858a2fe4",
+      "depth/1305031103.262576.png": "40ddc5e30e45feafa3ff532d3cd76b23eab784908f736be35d34371aeef786c0",
+      "depth/1305031103.362405.png": "745e22707f606e3deaf7966a6a4274f536daca9a6024fc7edf538a1d4e3711bb",
+      "depth/1305031103.494472.png": "2d210bf2617d2b40f9b2053a80fd961db9626ea6be273da0e4a0dd55de95715e",
+      "depth/1305031103.595310.png": "8ca436fdbbe936a43f2e5b2e229afec2bb8e91dc45207c31c3eac65e527573e4",
+      "depth/1305031104.730936.png": "0d1a6cfa1277983d1166a50032e0afdea8f4c67e59186fa58c8c3aa492264522",
+      "depth/1305031104.998342.png": "300dc291ad49fe121c0520510c06596a7c9077881bce805c6183a2da6a0a0927",
+      "depth/1305031105.130269.png": "19a41e8ff0c86756d6bcf508bc1f1dc6327127ef0c543d8da1b6fda7620fdb82",
+      "depth/1305031108.267660.png": "c729f90be85c4d5d7bc3c16aa440346547e8196a20609b45ad5eae51e5db6679",
+      "depth/1305031108.399284.png": "1b440a89613bd2fe75ce7f13613b563ae82de17068fb4b7872d79e36941cf086",
+      "depth/1305031108.534811.png": "244487c7309171ba55d0df709dcb15d1e16e9e2c468acc4b57e571e189805607",
+      "depth/1305031108.667189.png": "12f60c4a45a6b5f8d45de87d1ee6bdc75e864ff01d72af3f480bd0fcc412e373",
+      "depth/1305031108.803370.png": "dfc42de462d42d03d7f940799c8789a587d81579a1665ce43c967955246254f2",
+      "depth/1305031108.935116.png": "6488c68a0ee071451e79d4f95c3d254f5ac6ace6be257a23b44f2bad59fc6088"
+    },
+    "depth_units": "PNG/5000; dataset depth correction is already applied by TUM",
+    "format_reference": "https://cvg.cit.tum.de/data/datasets/rgbd-dataset/file_formats",
+    "groundtruth_sha256": "aac0319a6ef4e1cdf61e779d2152b95aa7e9f7b1749d6d18717b43ddabffede2",
+    "manifest_sha256": "f82096c0edc40478d605a93045c6793f53b01ce933e0f2dbd701410b4b338217",
+    "reference_geometry": "shared calibrated RGB K and Brown coefficients, matching the frozen pipeline",
+    "reference_limitation": "registered depth rectification is approximate; TUM recommends ROS-default K for direct depth clouds"
+  },
+  "limitations": [
+    "GT depth/poses are evaluation-only except the explicitly labeled B1 control.",
+    "All maps use the same voxel size, crop and P1 trajectory SE(3) world transform; no per-map alignment.",
+    "B0-shared-scale reuses P1 scale only for a fair sparse/dense map comparison; B0 Sim(3) ATE is separate.",
+    "RPE delta=1 matched retained-keyframe pair; full-frame tracking/timing are not evaluated.",
+    "Fusion timing excludes model and SLAM inference. No real-time claim.",
+    "Smoke/development evidence only; no held-out model/threshold selection claim.",
+    "TUM registered-depth reference uses frozen RGB K/Brown as a documented approximation.",
+    "No all-frame tracking normalization or full-system peak-memory measurement.",
+    "Container stages were built/tested individually; the Dockerfile received --check, not a second fresh full image rebuild."
+  ],
+  "source_hashes": {
+    "pipeline/run.json": "56010d9ea38391866f126b78b9f9d11903ec83b567c0143c864d366aeb250ab9",
+    "pipeline/timing.json": "cfefc2bb18266db38fdb45894ce572bd1e92726e920dc703ef71aaa96f9f0fb0",
+    "slam/run.json": "dac27aad70e06d7d501ea17e5dc2017b26f1b0ccaed20a6aaf1489c5d45ff08d",
+    "slam/metrics.json": "a6eb2e4d342b2e973a2e3c5ae5e0c004d4a217de4996c235fc9ad64ffa6f9899",
+    "geometry/run.json": "c15ad670eab06cc46020d123ebccd2940b3d83bb55aebef455ff985aac0dbf79",
+    "geometry/metrics.json": "19577519631cde9920e1b9d7307b670dc4a52e9311a15ed620a219c03e4173c0",
+    "geometry/timing.json": "0c0c315021d8d6b179e34b0d0632ef24337f76bf6426bb791374f261e77b45ee",
+    "comparison/run.json": "83bd22b803adb4645b9c01c0b0ac088ee2661950cfbab88b65cebb500c6936ea",
+    "comparison/metrics.json": "9762118baca8f55cb6debc24053372dc55fab15b2e3c4f072b5e1383e587adf3",
+    "global/run.json": "2a3a2624c06ddb8f3fa4aec1eec56f1d6942673a626ff3544c0339bb3e287ea0",
+    "global/metrics.json": "d03632435cc8e7c11dc066576650d5ac043c272d3d4e8a3aeaba402818c9673c",
+    "global/alignment.json": "518e3ff94cdb369cca0f6906a5de4c814f93943d4061ac1a6bffbe279241dcd9",
+    "global/timing.json": "d569f00df303b8f4fed8c82ff0d2b1fb0e0f9d52f0e4c65394c563f42fed91f6"
+  },
+  "real_time_claim": false
+}

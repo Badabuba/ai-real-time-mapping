@@ -140,7 +140,7 @@ Configuration: ORB2/1000, DBOW3, Python sparse core, g2o optimization, depth/sem
 - Upstream експортує final trajectory **до** `slam.quit()`, коли останній local-mapping job ще може завершуватись. Це його snapshot; для наступного строгого benchmark/exporter треба синхронізувати mapping перед final export.
 - Запуск був із uncommitted code. Native install, verification і smoke — реальні локальні результати; це не clean-commit benchmark.
 
-## Залишок WP2
+## Залишок WP2 після historical macOS smoke (23 жовтня)
 
 - [x] dataset + archive/member verification;
 - [x] separate Python tools/runtime environments;
@@ -151,3 +151,9 @@ Configuration: ORB2/1000, DBOW3, Python sparse core, g2o optimization, depth/sem
 - [x] sparse landmarks + retained-keyframe observation/pixel links для Юліана (див. WP2_SPARSE_EXPORT.md; не all-frame history);
 - [ ] автоматизовані GT timestamp association, ATE/RPE та збереження numeric evaluation artifacts (manual diagnostic старого run уже виконано);
 - [ ] clean reviewed commit та ширший baseline/evaluation run.
+
+## Integration update — 25 жовтня
+
+Додатковий [Linux container runtime](WP2_LINUX_CONTAINER.md) зібрано без змін pinned pySLAM source/baseline config. Native API check і entry-point preflight пройшли. Clean `4952e37` run відтворив 200 frames / 198 final poses / 0 LOST, 1,277 landmarks / 22 keyframes / 8,893 observations. [Summary](../results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.json).
+
+Automated timestamp association, SE(3)/Sim(3) ATE/RPE тепер реалізовані для **retained keyframes** у comparison runner; real metrics незалежно збігаються з evo. Normalized all-frame states/timing та all-frame evaluator integration у верхньому historical checklist усе ще лишаються WP2 work. Це Linux-on-Windows Docker evidence, не native Windows SLAM або GUI support.
