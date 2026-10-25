@@ -1,0 +1,669 @@
+{
+  "schema": "rt_mapping.evidence_summary/v1",
+  "chunk": "N-02 (docs/TWO_PERSON_COMPLETION_PLAN.md)",
+  "scope": "Independent second-machine reproduction of the merged one-config TUM fr1/xyz smoke-200 pipeline",
+  "status": "failed",
+  "outcome": "SLAM, DA3 geometry and global alignment/fusion children completed ok; the GT-based B0/B1/P1 comparison stage failed, so the pipeline run is failed. Disclosed failure, no rerun, no evaluation-rule change.",
+  "pipeline_run_id": "nazar_n02_e2e_smoke200_0fc564f_02",
+  "git_commit": "0fc564f2160824361d305fd0110d169bda1b26aa",
+  "dirty_worktree": false,
+  "pipeline_status": "failed",
+  "pipeline_reason": "pipeline_failed: comparison_failed: all retained keyframes need distinct associated GT poses for a shared comparison",
+  "config_file": "configs/pipeline.nazar.smoke200.docker.json",
+  "config_sha256_canonical": "86d460ca3bcb806036f8ce5a53e00fbbc45d68322e5f4a9659dacacd22b038ba",
+  "config_change_vs_reference": [
+    "SLAM docker container name rt-mapping-wp2-yulian -> rt-mapping-wp2-nazar",
+    "DA3 interpreter .local/da3-venv/Scripts/python.exe -> .venv\\Scripts\\python.exe"
+  ],
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "model": {
+    "checkpoint": "model.safetensors@sha256:bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+    "dtype": "bfloat16",
+    "repo": "depth-anything/DA3METRIC-LARGE",
+    "revision": "4010e39f3634a45bc60553321fb49fb760bd594e"
+  },
+  "slam": {
+    "config": "configs/wp2_pyslam_baseline.json",
+    "pose_convention": "T_wc",
+    "repo": "https://github.com/luigifreda/pyslam.git",
+    "revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d"
+  },
+  "stage_status": {
+    "slam": {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.slam",
+      "status": "ok",
+      "dirty_worktree": false
+    },
+    "geometry": {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.geometry",
+      "status": "ok",
+      "dirty_worktree": false
+    },
+    "comparison.global (alignment+fusion)": {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.comparison.global",
+      "status": "ok",
+      "dirty_worktree": false
+    },
+    "comparison": {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.comparison",
+      "status": "failed",
+      "reason": "comparison_failed: all retained keyframes need distinct associated GT poses for a shared comparison"
+    },
+    "pipeline": {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02",
+      "status": "failed",
+      "reason": "pipeline_failed: comparison_failed: all retained keyframes need distinct associated GT poses for a shared comparison"
+    }
+  },
+  "failure_diagnosis": {
+    "error": "comparison_failed: all retained keyframes need distinct associated GT poses for a shared comparison",
+    "code_path": "src/rt_mapping/evaluation/oracle.py load_oracle_inputs (Yulian WP4, unchanged)",
+    "association_tolerance_s": 0.02,
+    "retained_keyframes": 18,
+    "matched_keyframes": 17,
+    "unmatched": [
+      {
+        "keyframe_index": 16,
+        "frame_id": 195,
+        "timestamp_s": 1305031108.876515,
+        "nearest_gt_delta_ms": 40.814876556396484,
+        "gt_before_s": 1305031108.8357,
+        "gt_after_s": 1305031108.9458,
+        "gt_gap_ms": 110.10003089904785
+      }
+    ],
+    "interpretation": "One retained keyframe lies inside a ~110 ms gap of the TUM fr1/xyz groundtruth.txt. The merged comparison requires a GT pose for every retained keyframe and aborts. Keyframe selection differs from the reference run (18 vs 22), so the reference run did not hit the gap. Classified as a WP4 evaluation-robustness limitation; a fix would change evaluation rules and belongs to a separate fix/nazar-* PR (plan D-2)."
+  },
+  "docker": {
+    "image": "rt-mapping-wp2:96019cf",
+    "image_id": "sha256:f975805a9c6cc4be3d4741053d5b2150dd4578a3f7b254bc28807acfd5e7b5f6",
+    "image_size_bytes": 13092557957,
+    "build": "fresh build from containers/wp2.Dockerfile at fc0f538 on this machine; exit 0; native compile step 3129 s",
+    "base_image_digest": "sha256:18d373e126e39c29c6d38e71e2f19ca66636568318fc95c7849c462b7f9d3d64",
+    "orb_vocabulary_sha256_check": "passed in build",
+    "container": "rt-mapping-wp2-nazar",
+    "limits": {
+      "memory_bytes": 10737418240,
+      "cpus": 4,
+      "shm_bytes": 1073741824
+    },
+    "engine": "Docker Desktop 29.8.2, WSL2 kernel 6.18.54.1-microsoft-standard-WSL2, VM 32 vCPU / 15.2 GiB"
+  },
+  "native_checks": {
+    "preflight": "ok",
+    "preflight_dataset": "ok",
+    "preflight_source_revision_matches": true,
+    "preflight_runtime": "ok",
+    "installed_backend_sparse_test": "1 passed"
+  },
+  "hardware": {
+    "cpu": "AMD Ryzen 9 8940HX",
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "gpu_vram_mib": 8151,
+    "nvidia_driver": "610.74",
+    "ram_gb": 31.2,
+    "os": "Windows 11 Pro (build 26300)"
+  },
+  "environments": {
+    "slam_container": {
+      "numpy": "1.26.4",
+      "opencv_python": "4.11.0.86",
+      "python": "3.11.17",
+      "torch": "2.6.0+cpu"
+    },
+    "geometry_host": {
+      "cuda_runtime": "12.8",
+      "depth_anything_3": "0.0.0+git3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+      "huggingface_hub": "2.2.0",
+      "numpy": "1.26.4",
+      "opencv": "4.11.0.86",
+      "pillow": "12.3.0",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "python": "3.11.16",
+      "torch": "2.11.0+cu128"
+    },
+    "pipeline_host": {
+      "numpy": "1.26.4",
+      "python": "3.11.16"
+    }
+  },
+  "slam_metrics": {
+    "input_frames": 200,
+    "processed_frames": 200,
+    "lost_frames": 0,
+    "lost_fraction": 0.0,
+    "final_pose_count": 198,
+    "final_pose_fraction": 0.99,
+    "first_pose_timestamp_s": 1305031102.275326,
+    "last_pose_timestamp_s": 1305031109.011269,
+    "trajectory_units": "monocular SLAM units; metric scale not recovered",
+    "trajectory_alignment": "none",
+    "ate_rpe": "not evaluated",
+    "note": "Final pose fraction is not tracking success; initialization/lost-state handling differs.",
+    "sparse_export": {
+      "landmarks": 1130,
+      "keyframes": 18,
+      "observations": 7035
+    },
+    "wall_clock_seconds_including_startup": 281.1081502520001
+  },
+  "depth_metrics": {
+    "abs_rel": 0.09264927354243806,
+    "aggregation": "frame_mean",
+    "delta1": 0.9650181271906999,
+    "mae_m": 0.12097875667880377,
+    "n_evaluated": 16730870,
+    "n_frames": 200,
+    "n_gt_valid": 16730870,
+    "n_pixels": 22226400,
+    "n_pred_valid": 22226400,
+    "rmse_m": 0.1771574802915829,
+    "valid_coverage": 1.0
+  },
+  "depth_timing": {
+    "model_inference": {
+      "cold_start_ms": 1064.7742000001017,
+      "n_total": 200,
+      "n_warm": 199,
+      "n_warmup": 1,
+      "percentile_method": "linear",
+      "stage": "model_inference",
+      "unit": "ms",
+      "warm_max_ms": 499.23329999910493,
+      "warm_mean_ms": 75.38013969852686,
+      "warm_median_ms": 72.97959999959858,
+      "warm_min_ms": 42.72040000068955,
+      "warm_p95_ms": 83.05165999972813
+    },
+    "model_load_s": 3.92815789999986,
+    "peak_vram_gb": 1.4244098663330078,
+    "wall_clock_s": 51.24634750000041
+  },
+  "alignment": {
+    "status": "ok",
+    "scale": 1.224085382515751,
+    "inlier_count": 3746,
+    "inlier_ratio": 0.7022872140982377,
+    "number_of_pairs": 5334,
+    "median_residual_m": 0.03131834916254739,
+    "p95_residual_m": 0.0868662623357637,
+    "all_pairs_median_residual_m": 0.05038490056762601,
+    "calibration_coverage_bins_4x4": 16,
+    "rejected_pairs": {
+      "reprojection_error": 388
+    },
+    "withheld_landmarks": 226,
+    "withheld_pairs": 1313,
+    "withheld_inlier_ratio": 0.7136329017517137,
+    "withheld_median_residual_m": 0.050085514086465,
+    "withheld_p95_residual_m": 0.5028447161701658,
+    "thresholds": {
+      "min_coverage_bins": 4,
+      "min_inlier_ratio": 0.5,
+      "min_inliers": 30,
+      "residual_m": 0.1
+    },
+    "method": "robust_median",
+    "transform_direction": "target = scale * R @ source + t",
+    "scale_application": "SLAM translations/landmarks multiplied by scale; predicted metric depth unchanged"
+  },
+  "fusion_metrics": {
+    "alignment_inliers": 3746,
+    "fused_keyframes": 18,
+    "ground_truth_evaluation": "not performed",
+    "input_keyframes": 18,
+    "input_points": 500094,
+    "map_points": 72115,
+    "real_time_claim": false,
+    "scale": 1.224085382515751,
+    "status": "ok",
+    "trajectory_scope": "retained keyframes only; snapshot matches sparse landmarks",
+    "units": "meters"
+  },
+  "fusion_timing": {
+    "alignment_and_input_ms": 3181.6373000001477,
+    "fusion_median_ms": 85.91100000012375,
+    "fusion_p95_ms": 114.24520000018671,
+    "scope": "CPU artifact integration, excluding SLAM/model inference",
+    "wall_clock_s": 6.763971100001072,
+    "fusion_per_keyframe_ms": [
+      87.8143000009004,
+      85.12999999948079,
+      101.35739999896032,
+      82.9042000004847,
+      82.407100000637,
+      77.96130000133417,
+      74.25179999881948,
+      73.16629999877478,
+      84.63630000005651,
+      127.58849999954691,
+      111.89050000029965,
+      87.92299999913666,
+      86.71180000055756,
+      82.25470000070345,
+      88.3531999988918,
+      90.95850000085193,
+      86.69200000076671,
+      85.10829999977432
+    ]
+  },
+  "pipeline_stage_timing": {
+    "geometry": {
+      "command_sha256": "4d792dd255cc661ed68b0d7c76bf3de0c4fd42c7d6a3831617734ece0bc3495a",
+      "elapsed_s": 53.4098625000006,
+      "manifest_sha256": "c2e0a7a7ad452da2a65ac4d4cd379af84f37da27a56cc41c59b8c68d581a2967",
+      "mode": "launched",
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.geometry"
+    },
+    "slam": {
+      "command_sha256": "cd0b568b504fd88b88f19f313b454bf7ccc833e693c43cf355ef648951b221eb",
+      "elapsed_s": 376.901160899999,
+      "manifest_sha256": "2e4afa27929392509e4ebe2403e7978ea6237d54f3921cccfff3a8d3cfa2943f",
+      "mode": "launched",
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02.slam"
+    }
+  },
+  "not_reproduced": {
+    "trajectory": "B0 Sim(3) / P1 SE(3) ATE/RPE not computed: comparison stage aborted before trajectory evaluation",
+    "comparison_rows": "B0-shared-scale, B1-oracle, P1-global, P1-raw, P1-keyframes-2/5 map metrics not computed"
+  },
+  "comparison_with_reference": {
+    "reference_summary": "results/summaries/wp3_wp4_yulian_tum_fr1_xyz_200.json",
+    "reference_run": "yulian_tum_e2e_f200_20261025_01",
+    "reference_commit": "4952e37dd773925c4c7aa069c4d6aaf10f489120",
+    "interpretation": "cross-machine variation; no parity claim",
+    "rows": [
+      {
+        "metric": "slam.processed_frames",
+        "reference_yulian": 200,
+        "nazar": 200,
+        "abs_diff": 0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "slam.lost_frames",
+        "reference_yulian": 0,
+        "nazar": 0,
+        "abs_diff": 0,
+        "rel_diff": null
+      },
+      {
+        "metric": "slam.final_pose_count",
+        "reference_yulian": 198,
+        "nazar": 198,
+        "abs_diff": 0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "slam.first_pose_timestamp_s",
+        "reference_yulian": 1305031102.275326,
+        "nazar": 1305031102.275326,
+        "abs_diff": 0.0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "slam.last_pose_timestamp_s",
+        "reference_yulian": 1305031109.011269,
+        "nazar": 1305031109.011269,
+        "abs_diff": 0.0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "slam.sparse.landmarks",
+        "reference_yulian": 1277,
+        "nazar": 1130,
+        "abs_diff": -147,
+        "rel_diff": -0.11511354737666406
+      },
+      {
+        "metric": "slam.sparse.keyframes",
+        "reference_yulian": 22,
+        "nazar": 18,
+        "abs_diff": -4,
+        "rel_diff": -0.18181818181818182
+      },
+      {
+        "metric": "slam.sparse.observations",
+        "reference_yulian": 8893,
+        "nazar": 7035,
+        "abs_diff": -1858,
+        "rel_diff": -0.20892837062858427
+      },
+      {
+        "metric": "slam.wall_clock_seconds_including_startup",
+        "reference_yulian": 234.26388777600005,
+        "nazar": 281.1081502520001,
+        "abs_diff": 46.84426247600004,
+        "rel_diff": 0.1999636517634843
+      },
+      {
+        "metric": "depth.abs_rel",
+        "reference_yulian": 0.09265534980550988,
+        "nazar": 0.09264927354243806,
+        "abs_diff": -6.0762630718219635e-06,
+        "rel_diff": -6.557919304796182e-05
+      },
+      {
+        "metric": "depth.rmse_m",
+        "reference_yulian": 0.17719629667187944,
+        "nazar": 0.1771574802915829,
+        "abs_diff": -3.881638029654133e-05,
+        "rel_diff": -0.00021905864301678367
+      },
+      {
+        "metric": "depth.mae_m",
+        "reference_yulian": 0.12100086238975281,
+        "nazar": 0.12097875667880377,
+        "abs_diff": -2.2105710949044122e-05,
+        "rel_diff": -0.00018269052395544072
+      },
+      {
+        "metric": "depth.delta1",
+        "reference_yulian": 0.9649486500371753,
+        "nazar": 0.9650181271906999,
+        "abs_diff": 6.94771535245664e-05,
+        "rel_diff": 7.200088162400118e-05
+      },
+      {
+        "metric": "depth.n_evaluated",
+        "reference_yulian": 16730870,
+        "nazar": 16730870,
+        "abs_diff": 0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "depth.n_pred_valid",
+        "reference_yulian": 22226400,
+        "nazar": 22226400,
+        "abs_diff": 0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "depth.valid_coverage",
+        "reference_yulian": 1.0,
+        "nazar": 1.0,
+        "abs_diff": 0.0,
+        "rel_diff": 0.0
+      },
+      {
+        "metric": "depth_timing.cold_start_ms",
+        "reference_yulian": 1710.4782999958843,
+        "nazar": 1064.7742000001017,
+        "abs_diff": -645.7040999957826,
+        "rel_diff": -0.37749914745912666
+      },
+      {
+        "metric": "depth_timing.warm_median_ms",
+        "reference_yulian": 119.69069996848702,
+        "nazar": 72.97959999959858,
+        "abs_diff": -46.71109996888845,
+        "rel_diff": -0.39026507474003297
+      },
+      {
+        "metric": "depth_timing.warm_mean_ms",
+        "reference_yulian": 121.9203879380477,
+        "nazar": 75.38013969852686,
+        "abs_diff": -46.540248239520835,
+        "rel_diff": -0.3817265432518938
+      },
+      {
+        "metric": "depth_timing.warm_p95_ms",
+        "reference_yulian": 134.05738995643333,
+        "nazar": 83.05165999972813,
+        "abs_diff": -51.005729956705196,
+        "rel_diff": -0.3804768239429494
+      },
+      {
+        "metric": "depth_timing.warm_max_ms",
+        "reference_yulian": 486.22189997695386,
+        "nazar": 499.23329999910493,
+        "abs_diff": 13.011400022151065,
+        "rel_diff": 0.026760209737092845
+      },
+      {
+        "metric": "alignment.scale",
+        "reference_yulian": 1.1920834129618625,
+        "nazar": 1.224085382515751,
+        "abs_diff": 0.032001969553888454,
+        "rel_diff": 0.026845411324343517
+      },
+      {
+        "metric": "alignment.inlier_count",
+        "reference_yulian": 5044,
+        "nazar": 3746,
+        "abs_diff": -1298,
+        "rel_diff": -0.2573354480570975
+      },
+      {
+        "metric": "alignment.inlier_ratio",
+        "reference_yulian": 0.7676152792573429,
+        "nazar": 0.7022872140982377,
+        "abs_diff": -0.06532806515910516,
+        "rel_diff": -0.0851052173196828
+      },
+      {
+        "metric": "alignment.number_of_pairs",
+        "reference_yulian": 6571,
+        "nazar": 5334,
+        "abs_diff": -1237,
+        "rel_diff": -0.1882514077005022
+      },
+      {
+        "metric": "alignment.median_residual_m",
+        "reference_yulian": 0.030850106879053596,
+        "nazar": 0.03131834916254739,
+        "abs_diff": 0.0004682422834937916,
+        "rel_diff": 0.015177979296133839
+      },
+      {
+        "metric": "alignment.p95_residual_m",
+        "reference_yulian": 0.08727175553793665,
+        "nazar": 0.0868662623357637,
+        "abs_diff": -0.0004054932021729518,
+        "rel_diff": -0.004646328009257081
+      },
+      {
+        "metric": "alignment.all_pairs_median_residual_m",
+        "reference_yulian": 0.04332913473295319,
+        "nazar": 0.05038490056762601,
+        "abs_diff": 0.0070557658346728225,
+        "rel_diff": 0.16284114322058427
+      },
+      {
+        "metric": "alignment.withheld_landmarks",
+        "reference_yulian": 256,
+        "nazar": 226,
+        "abs_diff": -30,
+        "rel_diff": -0.1171875
+      },
+      {
+        "metric": "alignment.withheld_pairs",
+        "reference_yulian": 1737,
+        "nazar": 1313,
+        "abs_diff": -424,
+        "rel_diff": -0.24409902130109384
+      },
+      {
+        "metric": "alignment.withheld_inlier_ratio",
+        "reference_yulian": 0.7743235463442717,
+        "nazar": 0.7136329017517137,
+        "abs_diff": -0.06069064459255802,
+        "rel_diff": -0.0783789216782701
+      },
+      {
+        "metric": "alignment.withheld_median_residual_m",
+        "reference_yulian": 0.038771344874799385,
+        "nazar": 0.050085514086465,
+        "abs_diff": 0.011314169211665615,
+        "rel_diff": 0.2918178166942979
+      },
+      {
+        "metric": "alignment.withheld_p95_residual_m",
+        "reference_yulian": 0.3132195238736541,
+        "nazar": 0.5028447161701658,
+        "abs_diff": 0.1896251922965117,
+        "rel_diff": 0.6054066807566004
+      },
+      {
+        "metric": "alignment.rejected_pairs.reprojection_error",
+        "reference_yulian": 585,
+        "nazar": 388,
+        "abs_diff": -197,
+        "rel_diff": -0.3367521367521368
+      },
+      {
+        "metric": "fusion.input_keyframes",
+        "reference_yulian": 22,
+        "nazar": 18,
+        "abs_diff": -4,
+        "rel_diff": -0.18181818181818182
+      },
+      {
+        "metric": "fusion.fused_keyframes",
+        "reference_yulian": 22,
+        "nazar": 18,
+        "abs_diff": -4,
+        "rel_diff": -0.18181818181818182
+      },
+      {
+        "metric": "fusion.input_points",
+        "reference_yulian": 611226,
+        "nazar": 500094,
+        "abs_diff": -111132,
+        "rel_diff": -0.18181818181818182
+      },
+      {
+        "metric": "fusion.map_points",
+        "reference_yulian": 72887,
+        "nazar": 72115,
+        "abs_diff": -772,
+        "rel_diff": -0.010591737895646686
+      },
+      {
+        "metric": "fusion.alignment_inliers",
+        "reference_yulian": 5044,
+        "nazar": 3746,
+        "abs_diff": -1298,
+        "rel_diff": -0.2573354480570975
+      },
+      {
+        "metric": "fusion_timing.alignment_and_input_ms",
+        "reference_yulian": 4071.80190004874,
+        "nazar": 3181.6373000001477,
+        "abs_diff": -890.1646000485925,
+        "rel_diff": -0.21861687329089785
+      },
+      {
+        "metric": "fusion_timing.fusion_median_ms",
+        "reference_yulian": 71.94734999211505,
+        "nazar": 85.91100000012375,
+        "abs_diff": 13.963650008008699,
+        "rel_diff": 0.19408150556676546
+      },
+      {
+        "metric": "fusion_timing.fusion_p95_ms",
+        "reference_yulian": 121.05860001174733,
+        "nazar": 114.24520000018671,
+        "abs_diff": -6.813400011560617,
+        "rel_diff": -0.056281833846578894
+      },
+      {
+        "metric": "fusion_timing.wall_clock_s",
+        "reference_yulian": 8.400981800048612,
+        "nazar": 6.763971100001072,
+        "abs_diff": -1.63701070004754,
+        "rel_diff": -0.1948594508368138
+      },
+      {
+        "metric": "pipeline_stage.slam.elapsed_s",
+        "reference_yulian": 303.4511757999426,
+        "nazar": 376.901160899999,
+        "abs_diff": 73.44998510005644,
+        "rel_diff": 0.24204877409498024
+      },
+      {
+        "metric": "pipeline_stage.geometry.elapsed_s",
+        "reference_yulian": 71.12012310000136,
+        "nazar": 53.4098625000006,
+        "abs_diff": -17.710260600000765,
+        "rel_diff": -0.24901898123964897
+      }
+    ]
+  },
+  "system_memory_during_run": {
+    "sampling": "Windows free physical memory and nvidia-smi used MiB every 5 s",
+    "samples": 84,
+    "free_gb_min": 12.82,
+    "free_gb_max": 15.91,
+    "gpu_used_mib_max_sampled": 998,
+    "note": "sampled, not a peak measurement; geometry stage records peak_vram_gb"
+  },
+  "attempts": [
+    {
+      "run_id": "nazar_n02_e2e_smoke200_65571cc_01",
+      "commit": "65571cc",
+      "status": "failed",
+      "where": "N-02 git worktree",
+      "reason": "SLAM adapter exited 2: git rev-parse failed inside container (worktree .git file points to a Windows path)",
+      "run_json_sha256": "6c60cc92bed6a75869aaa70e6f77d37119d1aef95b81ba6bfe0d2668b38d57de"
+    },
+    {
+      "run_id": "nazar_n02_e2e_smoke200_65571cc_02",
+      "commit": "65571cc",
+      "status": "failed",
+      "where": "standalone clone",
+      "reason": "SLAM stage ok; geometry stage launch [WinError 2]: relative forward-slash executable path not resolved by CreateProcess on this host",
+      "run_json_sha256": "5dfefcb26bdb3b75efd4fe9b89dd9a52ace5de4e877fe14b4920c05d79814796"
+    },
+    {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_01",
+      "commit": "0fc564f",
+      "status": "interrupted",
+      "where": "standalone clone",
+      "reason": "SLAM stage ok; launcher killed during DA3 inference by the Claude Code background-shell memory-pressure reaper; run.json left with status 'running' and not edited",
+      "run_json_sha256": "62f97f8daf5abdfc537988e3ff4c8ffc48970e23b133bde907a7b18a040a35e3"
+    },
+    {
+      "run_id": "nazar_n02_e2e_smoke200_0fc564f_02",
+      "commit": "0fc564f",
+      "status": "failed",
+      "where": "standalone clone",
+      "reason": "pipeline_failed: comparison_failed: all retained keyframes need distinct associated GT poses for a shared comparison",
+      "run_json_sha256": "3ec7a60790f4765b6cdb87a8ca0c36103647fdc7aa19131df58c68bdae9e8b48"
+    }
+  ],
+  "source_hashes": {
+    "run.json": "3ec7a60790f4765b6cdb87a8ca0c36103647fdc7aa19131df58c68bdae9e8b48",
+    "input_stages.json": "934b07a5ca19dd66bc44654c84a7a00d64f7f0255ec3796bd2264dc30d82269d",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/run.json": "2e4afa27929392509e4ebe2403e7978ea6237d54f3921cccfff3a8d3cfa2943f",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/metrics.json": "be8386ee3359a9066a1057f7d86f77c40359560316bbdf4e14e9ebbd852e6b2d",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/sparse/export.json": "fcfef9d27ea51ce3d985ae5e31d51844b75c53ccd8af411416fdc62ee9d829c7",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.slam/sparse/keyframes.npz": "0a7d64c94f414eb97ad8f2ec06f334ce8f951fc3b058412f886aefb617a7f13c",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/run.json": "c2e0a7a7ad452da2a65ac4d4cd379af84f37da27a56cc41c59b8c68d581a2967",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/metrics.json": "b238569ccb861bf6e1b2b6fd34186fb80c12efce0b4c5dfa9284676476d7eb69",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.geometry/timing.json": "95baa9d8a9abf58140c3892ee858a240c71db24391c53de2b7e6217ccc92530b",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/run.json": "df0d719bc4f94507f5d3d8cc3c6a669cf353b16761fb16cbfd2d5d42d550e9ed",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/run.json": "afeb2bee9bb104f4b318ea6af4dcb4fb087893fed07e78a7d54ce8c5daadb012",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/alignment.json": "d0c457c0af68afa5aaa373852fcc7b8527bb3840e70322c39c163608b7ea4f92",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/metrics.json": "000393c1b8b0ee2a23886053a3783c9cb6a6ccf860775b8fac4909e6e6962dfb",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/timing.json": "08d561308f74cd8f5eade4a05017a9308ca38a38edc304493a06fef32c808bd8",
+    "stages/nazar_n02_e2e_smoke200_0fc564f_02.comparison/methods/nazar_n02_e2e_smoke200_0fc564f_02.comparison.global/inputs.json": "8948353ff0962e3670145b1bf9b6b62fbe88b64367968de315e9e2be1e481a13",
+    "logs/slam.log": "b71ea7530c6aa03de99fdd75966441ec1b316d924187294db02007c7772035d4",
+    "logs/geometry.log": "b5a75df61e55a63fc818f728bbbee0e4be888d4d6943505cd131ff024b428c37"
+  },
+  "limitations": [
+    "Pipeline run failed in GT-based comparison; trajectory ATE/RPE and map metrics were not reproduced.",
+    "Alignment/fusion numbers come from the comparison's global child run, which completed ok.",
+    "Single run; SLAM keyframe selection is nondeterministic across machines (seed policy in slam run.json).",
+    "DA3 host environment differs from the reference (torch 2.11.0+cu128 / Python 3.11 vs 2.7.1+cu118 / 3.12).",
+    "Timing is component-level on one laptop; no real-time claim (plan D-7).",
+    "No metric-scale claim from Sim(3)-style alignment; GT used only in evaluation code."
+  ],
+  "real_time_claim": false
+}
