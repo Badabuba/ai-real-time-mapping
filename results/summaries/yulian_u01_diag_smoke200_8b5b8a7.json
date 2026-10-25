@@ -1,0 +1,362 @@
+{
+  "chunk": "U-01",
+  "correlations": {
+    "abs_log_anchor_ratio__vs__eval_abs_rel": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "abs_log_anchor_ratio",
+      "spearman_rho": -0.09994353472614342,
+      "target": "eval_abs_rel"
+    },
+    "abs_log_anchor_ratio__vs__eval_map_accuracy_mean_m": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "abs_log_anchor_ratio",
+      "spearman_rho": -0.20271033314511575,
+      "target": "eval_map_accuracy_mean_m"
+    },
+    "median_abs_residual_m__vs__eval_abs_rel": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "median_abs_residual_m",
+      "spearman_rho": -0.4500282326369283,
+      "target": "eval_abs_rel"
+    },
+    "median_abs_residual_m__vs__eval_map_accuracy_mean_m": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "median_abs_residual_m",
+      "spearman_rho": 0.16205533596837945,
+      "target": "eval_map_accuracy_mean_m"
+    },
+    "one_minus_frame_inlier_ratio__vs__eval_abs_rel": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "one_minus_frame_inlier_ratio",
+      "spearman_rho": -0.35290796160361376,
+      "target": "eval_abs_rel"
+    },
+    "one_minus_frame_inlier_ratio__vs__eval_map_accuracy_mean_m": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "one_minus_frame_inlier_ratio",
+      "spearman_rho": 0.32241671372106157,
+      "target": "eval_map_accuracy_mean_m"
+    },
+    "predicted_depth_median_m__vs__eval_abs_rel": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "predicted_depth_median_m",
+      "spearman_rho": -0.32806324110671936,
+      "target": "eval_abs_rel"
+    },
+    "predicted_depth_median_m__vs__eval_map_accuracy_mean_m": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "predicted_depth_median_m",
+      "spearman_rho": 0.33145115753811405,
+      "target": "eval_map_accuracy_mean_m"
+    },
+    "withheld_median_abs_residual_m__vs__eval_abs_rel": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "withheld_median_abs_residual_m",
+      "spearman_rho": -0.5324675324675324,
+      "target": "eval_abs_rel"
+    },
+    "withheld_median_abs_residual_m__vs__eval_map_accuracy_mean_m": {
+      "excluded_nulls": 0,
+      "n": 22,
+      "reason": null,
+      "signal": "withheld_median_abs_residual_m",
+      "spearman_rho": 0.07171089779785432,
+      "target": "eval_map_accuracy_mean_m"
+    }
+  },
+  "dataset": {
+    "checksum": "a0236d97b8c30cd93b653656d2b6c293ff7c982a4130ef2a1a8beecdb124ef98",
+    "manifest": "data/manifests/tum_fr1_xyz.json",
+    "name": "TUM RGB-D",
+    "sequence": "rgbd_dataset_freiburg1_xyz",
+    "split": "smoke"
+  },
+  "depth_crosscheck_max_abs_rel_difference": 0.0006235190907266375,
+  "dirty_worktree": false,
+  "environment": {
+    "numpy": "2.2.4",
+    "python": "3.12.8"
+  },
+  "failure_table": [
+    {
+      "anchor_ratio": 0.9990540679201354,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.09035248820385515,
+      "eval_map_accuracy_mean_m": 0.0831323349254069,
+      "flags": "",
+      "frame_id": 80,
+      "rank": 1
+    },
+    {
+      "anchor_ratio": 0.9983153758470591,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.0952144830054396,
+      "eval_map_accuracy_mean_m": 0.08116356257966721,
+      "flags": "",
+      "frame_id": 72,
+      "rank": 2
+    },
+    {
+      "anchor_ratio": 0.9672921769983085,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.08952810732111494,
+      "eval_map_accuracy_mean_m": 0.06364632372998709,
+      "flags": "",
+      "frame_id": 84,
+      "rank": 3
+    },
+    {
+      "anchor_ratio": 1.058995514458713,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.15040312472517567,
+      "eval_map_accuracy_mean_m": 0.06093376611522359,
+      "flags": "",
+      "frame_id": 20,
+      "rank": 4
+    },
+    {
+      "anchor_ratio": 0.9799190909564472,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.09953244390760563,
+      "eval_map_accuracy_mean_m": 0.053662119063587484,
+      "flags": "",
+      "frame_id": 3,
+      "rank": 5
+    },
+    {
+      "anchor_ratio": 1.013800658511587,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.09801685189904548,
+      "eval_map_accuracy_mean_m": 0.052125751674851055,
+      "flags": "",
+      "frame_id": 11,
+      "rank": 6
+    },
+    {
+      "anchor_ratio": 1.0386329358427293,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.1265164874234233,
+      "eval_map_accuracy_mean_m": 0.04632987943939312,
+      "flags": "",
+      "frame_id": 28,
+      "rank": 7
+    },
+    {
+      "anchor_ratio": 1.0280839770921744,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.11946312662256685,
+      "eval_map_accuracy_mean_m": 0.045892933218405235,
+      "flags": "",
+      "frame_id": 15,
+      "rank": 8
+    },
+    {
+      "anchor_ratio": 0.9827033808469962,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.09710472382357073,
+      "eval_map_accuracy_mean_m": 0.044934577919422354,
+      "flags": "",
+      "frame_id": 2,
+      "rank": 9
+    },
+    {
+      "anchor_ratio": 0.9615699265991519,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.08069006408476458,
+      "eval_map_accuracy_mean_m": 0.04465324828481508,
+      "flags": "",
+      "frame_id": 0,
+      "rank": 10
+    },
+    {
+      "anchor_ratio": 1.017540710304227,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.11355376180011308,
+      "eval_map_accuracy_mean_m": 0.0432067299191295,
+      "flags": "",
+      "frame_id": 22,
+      "rank": 11
+    },
+    {
+      "anchor_ratio": 1.0203069345659936,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.1137327244416047,
+      "eval_map_accuracy_mean_m": 0.04301953787110707,
+      "flags": "",
+      "frame_id": 17,
+      "rank": 12
+    },
+    {
+      "anchor_ratio": 0.9857613024997316,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.07398718705586849,
+      "eval_map_accuracy_mean_m": 0.042441684358413875,
+      "flags": "",
+      "frame_id": 189,
+      "rank": 13
+    },
+    {
+      "anchor_ratio": 1.0078412172720401,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.08484068713338289,
+      "eval_map_accuracy_mean_m": 0.04039129315835354,
+      "flags": "",
+      "frame_id": 38,
+      "rank": 14
+    },
+    {
+      "anchor_ratio": 0.9755930847169103,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.06774998154693379,
+      "eval_map_accuracy_mean_m": 0.03786525247865802,
+      "flags": "",
+      "frame_id": 177,
+      "rank": 15
+    },
+    {
+      "anchor_ratio": 1.0199634198036271,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.09419742836724126,
+      "eval_map_accuracy_mean_m": 0.03740554443064385,
+      "flags": "",
+      "frame_id": 31,
+      "rank": 16
+    },
+    {
+      "anchor_ratio": 0.9812224177004447,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.06930295002021337,
+      "eval_map_accuracy_mean_m": 0.03716140825812413,
+      "flags": "",
+      "frame_id": 185,
+      "rank": 17
+    },
+    {
+      "anchor_ratio": 1.0160435357753053,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.08026290716813102,
+      "eval_map_accuracy_mean_m": 0.03696574617081864,
+      "flags": "",
+      "frame_id": 35,
+      "rank": 18
+    },
+    {
+      "anchor_ratio": 0.9495114138647692,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.03659750777653676,
+      "eval_map_accuracy_mean_m": 0.031823561407916645,
+      "flags": "",
+      "frame_id": 197,
+      "rank": 19
+    },
+    {
+      "anchor_ratio": 0.9620054859948429,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.06037588604274486,
+      "eval_map_accuracy_mean_m": 0.03127764782904363,
+      "flags": "",
+      "frame_id": 181,
+      "rank": 20
+    },
+    {
+      "anchor_ratio": 0.9843265560968973,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.08999324194106724,
+      "eval_map_accuracy_mean_m": 0.031201171988075697,
+      "flags": "",
+      "frame_id": 25,
+      "rank": 21
+    },
+    {
+      "anchor_ratio": 0.946982164545543,
+      "category": "unflagged; гіпотеза: D2 local depth error",
+      "eval_abs_rel": 0.03137844195202282,
+      "eval_map_accuracy_mean_m": 0.02939043328302864,
+      "flags": "",
+      "frame_id": 193,
+      "rank": 22
+    }
+  ],
+  "flag_counts": {
+    "A1": 0,
+    "A2": 0,
+    "A3": 0,
+    "A4": 0,
+    "S1": 0
+  },
+  "flag_rules": {
+    "A1": "anchor_ratio null: fewer than min_inliers=30 anchors or inlier ratio < min_inlier_ratio=0.5 (merged mapping defaults)",
+    "A2": "|log anchor_ratio| > log(1.25) (delta1 accuracy band, docs/EXPERIMENTS.md §4.2)",
+    "A3": "withheld median |residual| > residual_threshold_m=0.1 (only with >= 1 withheld pair, as in alignment/causal.py)",
+    "A4": "calibration-inlier coverage_bins_4x4 < min_coverage_bins=4 (merged default)",
+    "S1": "tracking_state known and != OK (Y-01 contract); unavailable when the run has no tracking export"
+  },
+  "git_commit": "8b5b8a7082bd0787cf510ced7dc2fac013899b30",
+  "global_scale": 1.1920834129618625,
+  "keyframes": 22,
+  "limitations": [
+    "one easy sequence (TUM fr1/xyz smoke-200), 22 retained keyframes; correlations are descriptive only (n=22)",
+    "anchors come from the final BA sparse snapshot: offline and non-causal",
+    "GT map reference is built from the same keyframes with the shared RGB calibration (documented approximation)",
+    "historical SLAM run predates the Y-01 tracking export: tracking state and S1 unavailable",
+    "per-frame AbsRel is read from the geometry run; recomputation via the oracle grid differs by <= 6.24e-4 AbsRel (cause: гіпотеза)",
+    "no new map is produced; no gating is applied in U-01; no real-time claim"
+  ],
+  "owner": "Yulian (WP3/WP4)",
+  "real_time_claim": false,
+  "residuals_crosscheck": {
+    "frame_point_withheld_identical": true,
+    "max_abs_source_z_difference": 0.0,
+    "max_abs_target_z_difference_m": 0.0,
+    "rows": 8308
+  },
+  "run_artifact_sha256": {
+    "correlations.json": "53ac3f790624f871aced063d36aee5c8ced3643274d4d03511cda2a2d1ea3948",
+    "diagnostics_summary.json": "d35ad947ef939f6ffeeb11c85537ae6576d81235a561d91a42a77bda58e05027",
+    "failure_table.csv": "14333b2450c979ad43e57a057b13688d4b3529b1cc2c3a0be008a0918bb5752e",
+    "frame_diagnostics.csv": "700e22c59a356a14b0934bafa5527b7984d880d765fb9c68354f85294badffc5",
+    "frame_evaluation.csv": "3d0103e3193254ccc7e8aaab3828f386da6fd862e2a13f243cbb6aa2084eda10",
+    "frame_signals.csv": "492b9c1d228d8f82b665c675dfe07c1f7a99c85cf3902a607862211655dbe5f3",
+    "run.json": "eea66aae4949764c1bb5b33c081fdb7a999a67474a21360e3a88e83379a15f1d",
+    "signal_vs_error.png": "bcf2cf1809b5c719cc4c2f0af4ffb7b3667ef87911b6f9f22c40bce66fdc8401",
+    "signals.json": "cefe20648944a1852c99eb9e4be149becebb315d11f177487051a30f8876c83e",
+    "timeline.png": "7286f52d03c8c34e1bcc3a1295d0eb4e1ba86468f0982c387eb19cffa9d3ea87"
+  },
+  "run_id": "yulian_u01_diag_smoke200_8b5b8a7_01",
+  "schema": "rt_mapping.p1_robust_u01_summary/v1",
+  "sources": {
+    "alignment_sha256": "518e3ff94cdb369cca0f6906a5de4c814f93943d4061ac1a6bffbe279241dcd9",
+    "comparison_run_id": "yulian_tum_e2e_f200_20261025_01.comparison",
+    "comparison_run_sha256": "83bd22b803adb4645b9c01c0b0ac088ee2661950cfbab88b65cebb500c6936ea",
+    "geometry_run_id": "yulian_tum_e2e_f200_20261025_01.geometry",
+    "geometry_run_sha256": "c15ad670eab06cc46020d123ebccd2940b3d83bb55aebef455ff985aac0dbf79",
+    "global_run_id": "yulian_tum_e2e_f200_20261025_01.comparison.global",
+    "global_run_sha256": "2a3a2624c06ddb8f3fa4aec1eec56f1d6942673a626ff3544c0339bb3e287ea0",
+    "residuals_sha256": "3536260f53f394b147d83463e34511d171e16d72a3506a5d5f215167c6605421",
+    "slam_run_id": "yulian_tum_e2e_f200_20261025_01.slam",
+    "slam_run_sha256": "dac27aad70e06d7d501ea17e5dc2017b26f1b0ccaed20a6aaf1489c5d45ff08d"
+  },
+  "status": "ok",
+  "tracking": {
+    "available": false,
+    "reason": "source SLAM run predates Y-01 tracking export (be9bff2)"
+  }
+}
