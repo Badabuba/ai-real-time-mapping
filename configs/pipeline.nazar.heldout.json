@@ -1,0 +1,66 @@
+{
+  "schema": "rt_mapping.pipeline_config/v1",
+  "dataset_manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+  "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household",
+  "split": "held-out",
+  "slam": {
+    "command": [
+      "docker",
+      "exec",
+      "--env",
+      "LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libQt5Core.so.5:/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5:/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5",
+      "--workdir",
+      "/workspace",
+      "rt-mapping-wp2-nazar",
+      "python",
+      "-O",
+      "scripts/run_wp2_pyslam.py",
+      "--pyslam-root",
+      "/opt/pyslam",
+      "--pyslam-python",
+      "/usr/local/bin/python",
+      "--config",
+      "configs/wp2_pyslam_heldout.json",
+      "--all-frames",
+      "--export-sparse",
+      "--timeout",
+      "14400"
+    ]
+  },
+  "geometry": {
+    "command": [
+      ".venv\\Scripts\\python.exe",
+      "scripts/run_geometry_benchmark.py",
+      "--model",
+      "da3",
+      "--manifest",
+      "data/manifests/tum_fr3_long_office_heldout.json",
+      "--split",
+      "held-out",
+      "--frames",
+      "2488",
+      "--prewarm",
+      "10",
+      "--process-res",
+      "504"
+    ]
+  },
+  "mapping": {
+    "plot": true
+  },
+  "comparison": {
+    "thresholds_m": [
+      0.02,
+      0.05,
+      0.1
+    ],
+    "crop_bounds_m": null,
+    "keyframe_intervals": [
+      2
+    ],
+    "confidence_thresholds": [],
+    "max_timestamp_delta_s": 0.02,
+    "causal_window_frames": 0
+  },
+  "timeout_s": 14400
+}
