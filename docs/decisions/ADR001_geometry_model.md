@@ -81,3 +81,7 @@ UniDepth виграє за precommitted weighted rubric, але **не за ко
 - Held-out fr3/long_office_household заморожений, inference/tuning на ньому не проводився.
 - End-to-end mapping/SLAM latency та map quality залежать від WP2/WP3. Current model p95 >33.3 ms при уявному 30 Hz budget; real-time pipeline не заявляємо.
 - Second-machine smoke reproduction (N-02) завершився disclosed failure на GT-based comparison stage; DA3 depth там відтворився (див. `docs/NAZAR_REPRODUCTION.md`). Owner review non-blocking (D-8).
+
+## Final (IC3, 25 жовтня 2026)
+
+**Frozen для held-out: DA3METRIC-LARGE `process_res` 504** (D-3 fallback trigger після N-04 gate fail). N-05 dev показав, що UniDepth після pixel-grid fix (PR #22) дає кращий P1 map (Chamfer-L1 0.0447 проти 0.1057 m), але D-3 механічний і після результатів не змінюється; це записано як limitation (`docs/DEVELOPMENT_BENCHMARK.md` §5, `configs/benchmark_frozen.json`).

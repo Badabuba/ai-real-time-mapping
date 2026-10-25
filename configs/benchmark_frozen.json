@@ -1,0 +1,141 @@
+{
+  "schema": "rt_mapping.benchmark_frozen/v1",
+  "status": "frozen at IC3 before any held-out access; values copied from docs/DEVELOPMENT_BENCHMARK.md section 7 (Derived freeze)",
+  "derived_from": {
+    "doc": "docs/DEVELOPMENT_BENCHMARK.md",
+    "section": "7. Derived freeze",
+    "n05_pr": 24,
+    "n05_merge_commit": "ef5e682",
+    "summary": "results/summaries/nazar_n05_benchmark.json",
+    "summary_sha256": "e275f3e715a0c21b66a6b3750c3b05dc80fe6d6be4d1e62aec77f0367a1c838a",
+    "rule": "plan D-4 applied to dev rows of the primary model only; selection rows not used",
+    "y05_status": "merged (PR #23); B0 configuration unchanged as merged (D-9)"
+  },
+  "model": {
+    "repo": "depth-anything/DA3METRIC-LARGE",
+    "revision": "4010e39f3634a45bc60553321fb49fb760bd594e",
+    "checkpoint_file": "model.safetensors",
+    "checkpoint_sha256": "bbea5b0b3ee389849cffa7ddae89de064a90abd2b055fc5aa99aac68db324776",
+    "process_res": 504,
+    "dtype": "bfloat16",
+    "prewarm_calls": 10,
+    "seed": 0,
+    "selection_basis": "plan D-3 fallback trigger (UniDepth failed the N-04 pipeline gate); not reopened"
+  },
+  "p1": {
+    "best_config_keyframe_interval": 2,
+    "causal_window_frames": 0,
+    "p1_window_on_heldout": false,
+    "confidence_threshold": null,
+    "confidence_reason": "DA3 supplies no confidence"
+  },
+  "alignment_fusion": {
+    "config": "configs/offline_mapping.json",
+    "sha256": "93c0c363b3c01b955fd424e92824a97ade8c0bf8abf2852a1e985e1cedd9f9fb",
+    "note": "merged defaults, unchanged"
+  },
+  "evaluation": {
+    "map_thresholds_m": [
+      0.02,
+      0.05,
+      0.1
+    ],
+    "crop_bounds_m": null,
+    "max_timestamp_delta_s": 0.02,
+    "gt_pose_policy": "exclude_keyframes_without_gt_pose_within_tolerance (PR #21)",
+    "b0_evaluator": "scripts/evaluate_wp2_run.py with defaults (--max-timestamp-delta 0.02 --rpe-delta 1 --tracking-warmup 1) --plot"
+  },
+  "b0": {
+    "config": "configs/wp2_pyslam_heldout.json",
+    "sha256": "3545878e88134b33caf89b3a5a879372381d98a08bd637260ca4e5dce23971eb",
+    "pyslam_revision": "96019cfafcfc099ac9866884d7143a9ed1451a0d",
+    "runtime": "Docker image rt-mapping-wp2:96019cf, container rt-mapping-wp2-nazar"
+  },
+  "heldout": {
+    "manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+    "manifest_sha256": "42b1149db6b48874b0b24f0b5a260f624139afc63fa4573cdee607dd5ca80ee3",
+    "split": "held-out",
+    "frames": 2488,
+    "methods": [
+      "B0",
+      "B0-shared-scale",
+      "B1-oracle",
+      "P1-raw",
+      "P1-global",
+      "P1-keyframes-2"
+    ],
+    "pipeline_config_path": "configs/pipeline.nazar.heldout.json",
+    "pipeline_config": {
+      "schema": "rt_mapping.pipeline_config/v1",
+      "dataset_manifest": "data/manifests/tum_fr3_long_office_heldout.json",
+      "sequence_dir": "data/raw/tum_rgbd/rgbd_dataset_freiburg3_long_office_household",
+      "split": "held-out",
+      "slam": {
+        "command": [
+          "docker",
+          "exec",
+          "--env",
+          "LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libQt5Core.so.5:/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5:/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5",
+          "--workdir",
+          "/workspace",
+          "rt-mapping-wp2-nazar",
+          "python",
+          "-O",
+          "scripts/run_wp2_pyslam.py",
+          "--pyslam-root",
+          "/opt/pyslam",
+          "--pyslam-python",
+          "/usr/local/bin/python",
+          "--config",
+          "configs/wp2_pyslam_heldout.json",
+          "--all-frames",
+          "--export-sparse",
+          "--timeout",
+          "14400"
+        ]
+      },
+      "geometry": {
+        "command": [
+          ".venv\\Scripts\\python.exe",
+          "scripts/run_geometry_benchmark.py",
+          "--model",
+          "da3",
+          "--manifest",
+          "data/manifests/tum_fr3_long_office_heldout.json",
+          "--split",
+          "held-out",
+          "--frames",
+          "2488",
+          "--prewarm",
+          "10",
+          "--process-res",
+          "504"
+        ]
+      },
+      "mapping": {
+        "plot": true
+      },
+      "comparison": {
+        "thresholds_m": [
+          0.02,
+          0.05,
+          0.1
+        ],
+        "crop_bounds_m": null,
+        "keyframe_intervals": [
+          2
+        ],
+        "confidence_thresholds": [],
+        "max_timestamp_delta_s": 0.02,
+        "causal_window_frames": 0
+      },
+      "timeout_s": 14400
+    },
+    "run_id": "nazar_n06_heldout2488_da3_<sha7>_01",
+    "b0_eval_run_id": "nazar_n06_heldout2488_b0eval_<sha7>_01",
+    "runs_once": true,
+    "rerun_rule": "plan D-5: only after a documented code-bug fix merged via its owner's PR, new run_id, both reported; no parameter changes",
+    "runtime_limits_note": "SLAM --timeout 14400 s and pipeline timeout_s 14400 are runtime guards only (dev Slam.track mean 0.84 s/frame x 2488), not algorithm parameters"
+  },
+  "real_time_rule": "plan D-7: real-time only if measured p95 end-to-end per-frame latency <= 33.3 ms and effective FPS >= 30 with no unbounded backlog; otherwise offline"
+}
