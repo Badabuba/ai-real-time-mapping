@@ -71,7 +71,7 @@ Verification: full local CPU suite **523 passed, 1 native skip**; Y-02 tests **1
 
 ## Y-03: causal states, gap-aware RPE і latency
 
-Branch: `feature/yaropolk-tracking-evaluation`. Локальна implementation base — completed Y-02 `2dd1498`; observed `origin/develop` на початку Y-03 — `060eef75b3e16eff58617faf3b40efe58c897881`. Y-02 push повторно відхилено automatic approval review як неавторизовану публікацію; remote PR/merge pending explicit approval. Тому Y-03 підготовлено окремою локальною branch поверх Y-02. До remote Y-03 PR спочатку потрібно інтегрувати Y-02.
+Branch: `feature/yaropolk-tracking-evaluation`. Локальна implementation base — completed Y-02 `2dd1498`; observed `origin/develop` на початку Y-03 — `060eef75b3e16eff58617faf3b40efe58c897881`. Y-03 спочатку підготовлено окремою локальною branch поверх Y-02, поки automatic approval review блокував публікацію. Після explicit дозволу користувача Y-02 merged через [PR #15](https://github.com/Badabuba/ai-real-time-mapping/pull/15), merge `fd48549c540ea07612d3ede461f5589df831374d`; усі чотири CI jobs пройшли. Y-03 синхронізовано з цим develop merge без переписування implementation/evidence commits. Актуальний CI/merge status Y-03 доступний у GitHub PR.
 
 Input evidence — **власний clean macOS Y-02 run** `yaropolk_y02_smoke200_9bc4ee3_01`, який уже містить повний verified Y-01 export. Це свідома відмінність від запланованої назви `yaropolk_y01_*`: алгоритм / config / exporter той самий merged; повторний SLAM не потрібний. Інші учасники ignored runs не використовувались, source не редагувався.
 
@@ -120,3 +120,5 @@ Implementation `f7245ff58f90b4e9e9572724d2db520728a841b2`; runs `yaropolk_y03_ev
 - Tracking warm-up=1, 199 samples: p50 **168.414083 ms**, p95 **909.267971 ms**, mean **293.951464 ms**. First-call sample **284.602 ms**; це не process cold start. `real_time_claim=false`.
 - Full local CPU suite **535 passed, 1 native skip**; WP2 evaluation tests **28 passed**. `metrics.json`, `inputs.json`, `tracking_states.png` побітово однакові в обох evaluations. Всі раніше recorded Y-02 artifact hashes залишилися незмінними; timeline візуально перевірено.
 - Failed real Y-03 evaluations: **немає**. Matplotlib створив temporary cache, бо default user cache недоступний у sandbox; це не вплинуло на output, детермінізм або status. Existing environments не змінювались.
+
+Після merge актуального `develop` (включно з Yulian U-02) повторна combined local CPU suite: **602 passed, 1 native skip**; `git diff --check` пройшов. Зміни Y-03 відносно merged Y-02 залишаються у шести дозволених files.
