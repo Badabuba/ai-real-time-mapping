@@ -1,8 +1,8 @@
 # ADR001 — UniDepth V2 для non-commercial course MVP
 
-Дата: 23 жовтня 2026; integration update 24 жовтня; N-03 update 25 жовтня. Owner: Назар (бос).
+Дата: 23 жовтня 2026; integration update 24 жовтня; N-03 update 25 жовтня. Owner: Назар.
 
-**Status: accepted by pre-registered rubric (plan D-3).** Primary = переможець weighted rubric на clean N-03 re-run selection50 (`docs/TWO_PERSON_COMPLETION_PLAN.md` D-3). Рубрика не змінювалась після результатів. Owner review (Юліан, Ярополк) запитано для attribution; він non-blocking (plan D-8).
+**Status: accepted by pre-registered rubric (plan D-3).** Primary = переможець weighted rubric на clean N-03 re-run selection50 (`docs/EXPERIMENTS.md` D-3). Рубрика не змінювалась після результатів. Owner review (Юліан, Ярополк) запитано для attribution; він non-blocking (plan D-8).
 
 ## N-03 clean re-run на `develop` (25 жовтня 2026)
 
@@ -25,7 +25,7 @@
 
 ## N-04 pipeline gate (25 жовтня 2026): fail → DA3 primary
 
-`nazar_n04_e2e_smoke200_unidepth_8378365_01`: незмінний mapping code (`alignment/correspondences.py:prediction_grid`) відхилив UniDepth predictions, бо в них немає `pixel_grid` (18/18 keyframes). Model-ID check пройшов, OOM не було. За pre-registered trigger D-3 **DA3METRIC-LARGE `process_res=504` стає primary для N-05/N-06**, UniDepth — друга модель для primary-vs-fallback ablation. Рубрика N-03 і її результат не змінюються. Деталі: `docs/DEPTH_ABLATIONS.md` §N-04, `results/summaries/nazar_n04_e2e_smoke200_unidepth_8378365.json`.
+`nazar_n04_e2e_smoke200_unidepth_8378365_01`: незмінний mapping code (`alignment/correspondences.py:prediction_grid`) відхилив UniDepth predictions, бо в них немає `pixel_grid` (18/18 keyframes). Model-ID check пройшов, OOM не було. За pre-registered trigger D-3 **DA3METRIC-LARGE `process_res=504` стає primary для N-05/N-06**, UniDepth — друга модель для primary-vs-fallback ablation. Рубрика N-03 і її результат не змінюються. Деталі: `docs/RESULTS.md` §N-04, `results/summaries/nazar_n04_e2e_smoke200_unidepth_8378365.json`.
 
 ## Докази
 
@@ -80,7 +80,7 @@ UniDepth виграє за precommitted weighted rubric, але **не за ко
 - Internal native resolutions і bf16/fp16 різні та задокументовані; це ready-to-use model/config comparison.
 - Held-out fr3/long_office_household заморожений, inference/tuning на ньому не проводився.
 - End-to-end mapping/SLAM latency та map quality залежать від WP2/WP3. Current model p95 >33.3 ms при уявному 30 Hz budget; real-time pipeline не заявляємо.
-- Second-machine smoke reproduction (N-02) завершився disclosed failure на GT-based comparison stage; DA3 depth там відтворився (див. `docs/NAZAR_REPRODUCTION.md`). Owner review non-blocking (D-8).
+- Second-machine smoke reproduction (N-02) завершився disclosed failure на GT-based comparison stage; DA3 depth там відтворився (див. `docs/RESULTS.md`). Owner review non-blocking (D-8).
 
 ## Final (IC3, 25 жовтня 2026)
 

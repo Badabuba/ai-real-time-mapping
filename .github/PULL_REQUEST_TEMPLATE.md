@@ -17,4 +17,4 @@
 - [ ] tests or smoke run pass
 - [ ] units, coordinate frames and transform direction documented
 - [ ] no datasets, checkpoints, generated clouds or secrets committed
-- [ ] PROJECT_STATUS updated with actual evidence
+- [ ] RESULTS updated with actual evidence when applicable

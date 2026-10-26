@@ -1,6 +1,6 @@
 """Build pinned pySLAM's classical native dependencies on Apple Silicon.
 
-Run after installing Homebrew/Python dependencies (docs/WP2_SETUP.md). Does not
+Run after installing Homebrew/Python dependencies (docs/REPRODUCIBILITY.md). Does not
 install system packages or fetch learned models. Each command has a separate
 log; a failed configure/build stops immediately. Jobs default to 2.
 """

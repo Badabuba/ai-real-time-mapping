@@ -11,7 +11,7 @@
 | GitHub-репозиторій | URL, структура, останній release/tag | README, commit history | repo є; release ще немає |
 | Baseline | pySLAM config, sequence, trajectory/sparse map, одна команда | config + run manifest + artifact | ні |
 | Метрики | таблиця з units/alignment mode; ATE/RPE + speed, за можливості depth/map | metrics.json/CSV + plot script | протокол є; чисел немає |
-| Обґрунтованість моделей | candidates, hard gates, однаковий spike, license/hardware trade-off | MODEL_SELECTION.md + selection results | дизайн є; spike немає |
+| Обґрунтованість моделей | candidates, hard gates, однаковий spike, license/hardware trade-off | docs/EXPERIMENTS.md + selection results | дизайн є; spike немає |
 | Pipeline | схема входів/виходів і що реально працює виділено кольором/статусом | ARCHITECTURE.md + demo artifact | дизайн є; реалізації немає |
 
 ### Прогрес — 5 балів
@@ -19,7 +19,7 @@
 | Питання | Доказ |
 |---|---|
 | Що з proposal виконано? | status table: done/in progress/blocked/planned + посилання |
-| Хто що робив? | contribution table для Назара (бос), Ярополка (дубєнь) і Юліана (піндос) з PR/commit/run, а не лише майбутні ролі |
+| Хто що робив? | contribution table для Назара, Ярополка і Юліана з PR/commit/run, а не лише майбутні ролі |
 | Що не вийшло? | 1–3 конкретні failures із командою/log/симптомом |
 | Чому не вийшло? | root cause або чітко позначена гіпотеза + перевірка |
 | Чи зрозуміло з презентації? | один progress slide; однакова легенда статусів |
@@ -42,7 +42,7 @@
 3. **Baseline** — dataset/config, sparse map/trajectory, ATE/RPE/FPS. Потрібні реальні числа.
 4. **Dense model selection** — candidates, критерії, виміряний trade-off і остаточний вибір.
 5. **Поточний результат** — aligned/fused visualization + quantitative diagnostics; якщо інтеграції ще немає, чесно показати окремі модулі.
-6. **Прогрес і внесок** — proposal → status; Назар (бос)/Ярополк (дубєнь)/Юліан (піндос) → evidence.
+6. **Прогрес і внесок** — proposal → status; Назар/Ярополк/Юліан → evidence.
 7. **Що не вийшло / lessons** — симптом, причина/гіпотеза, вже спробоване, рішення.
 8. **План до фіналу** — календар, experiment matrix, Plan B, stretch goal.
 
@@ -80,7 +80,7 @@ Appendix: metric definitions, additional qualitative examples, environment/licen
 - [ ] commit/tag у slides відповідає repo;
 - [ ] baseline command відтворено з чистого environment або другим учасником;
 - [ ] усі числа мають units, dataset, config й alignment mode;
-- [ ] внесок Назара (бос), Ярополка (дубєнь) і Юліана (піндос) підтверджений evidence;
+- [ ] внесок Назара, Ярополка і Юліана підтверджений evidence;
 - [ ] known failures і Plan B сформульовані конкретно;
 - [ ] live demo має prerecorded fallback;
 - [ ] кожен учасник підтвердив присутність;

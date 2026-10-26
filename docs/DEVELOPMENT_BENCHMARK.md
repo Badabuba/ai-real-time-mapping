@@ -1,6 +1,6 @@
 # N-05: development + selection benchmark
 
-Назар (бос), 25 жовтня 2026. Chunk N-05 з `docs/TWO_PERSON_COMPLETION_PLAN.md`. B0 метрики — evaluator Ярополка (`scripts/evaluate_wp2_run.py`, Y-02/Y-03), split support — Y-04 (PR #19); alignment/fusion/comparison і missing-GT policy — Юліан (PR #7/#8/#21). Усе використано без змін.
+Назар, 25 жовтня 2026. Chunk N-05 з `docs/EXPERIMENTS.md`. B0 метрики — evaluator Ярополка (`scripts/evaluate_wp2_run.py`, Y-02/Y-03), split support — Y-04 (PR #19); alignment/fusion/comparison і missing-GT policy — Юліан (PR #7/#8/#21). Усе використано без змін.
 
 **Статус: виконано.** Development rows для всіх обов'язкових methods/ablations є; selection rows — **disclosed failure** GT evaluation (§6). Derived freeze обчислено механічно (§7). Held-out не відкривався.
 
@@ -16,7 +16,7 @@
 | UniDepth configs + PR #22 sync | `580bba1` (runs з цього clean commit; develop `6440a0d` містить PR #22 = `b8204b2`) |
 | Hardware | NVIDIA GeForce RTX 5070 Laptop GPU (8 GiB), driver 610.74, AMD64 CPU, 31.2 GB RAM, Windows 11; B0 у Linux Docker `rt-mapping-wp2:96019cf`, container `rt-mapping-wp2-nazar` |
 
-Runs запускались зі standalone clone того самого branch (container mount, `docs/NAZAR_REPRODUCTION.md`); fr1/desk і fr2/desk скопійовано в ignored `data/raw/` clone, SLAM preflight перевіряє archive/input SHA-256 проти frozen manifests. Model-only runs скопійовано в clone і перевірено побайтово (SHA-256 усіх 576/576/53/53 files збігаються); не перезапускались.
+Runs запускались зі standalone clone того самого branch (container mount, `docs/RESULTS.md`); fr1/desk і fr2/desk скопійовано в ignored `data/raw/` clone, SLAM preflight перевіряє archive/input SHA-256 проти frozen manifests. Model-only runs скопійовано в clone і перевірено побайтово (SHA-256 усіх 576/576/53/53 files збігаються); не перезапускались.
 
 PR #21: tolerance **20 ms не змінено** (`max_timestamp_delta_s` = 0.02 у всіх configs і в evaluator defaults).
 
