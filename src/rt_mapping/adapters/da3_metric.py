@@ -1,7 +1,7 @@
 """Depth Anything 3 Metric (DA3METRIC-LARGE) behind the GeometryAdapter interface.
 
 Facts this adapter relies on (checked in depth_anything_3 git 3d835ec1, see
-docs/MODEL_SELECTION.md):
+docs/EXPERIMENTS.md):
 
 - Preprocessing ("upper_bound_resize"): cv2.resize of the longest side to
   process_res, then a second cv2.resize of each side to the nearest multiple

@@ -1,55 +1,37 @@
 # Робочий процес команди
 
-## 1. Git workflow
+## Branches та дозволи
 
-- main має залишатися відтворюваним; робота йде в коротких branches.
-- Рекомендовані назви: feature/nazar-model-inference, feature/yaropolk-pyslam-baseline, feature/yulian-sim3-alignment, fix/<issue>.
-- Один PR — одна перевірювана зміна. Не змішувати setup SLAM, model swap і нову метрику.
-- PR має reviewer з іншого work package.
-- Перед merge owner додає evidence у PR і оновлює docs/PROJECT_STATUS.md.
-- Не force-push у shared main і не комітити dataset/checkpoints/secrets.
+Працюємо від актуального `develop` в окремій `feature/<owner>-<topic>` або `fix/<topic>` branch. Один PR — одна перевірювана зміна. Перед роботою перевірити dirty files, worktrees і ongoing PRs; чужі зміни, finished runs та дані не перезаписувати.
 
-## 2. PR template у тексті
+Commit, push, PR, merge, release/tag, зміна benchmark scope або datasets, installs/downloads та destructive cleanup потребують відповідного явного дозволу. Дозвіл на code edit не означає дозвіл на публікацію. Історичні chunk briefs або D-8 не замінюють поточну інструкцію користувача. `main` не змінювати без окремого дозволу; shared history не переписувати.
 
-```markdown
-## Goal
+Рекомендований reviewer — учасник іншого WP. Merge лише після required CI, перевірки scope/diff та відсутності review blockers; permission може встановити додаткові умови. Template — `.github/PULL_REQUEST_TEMPLATE.md`.
 
-## Changes
+## Ownership та evidence
 
-## How to reproduce
+Назар — WP1/depth і dense benchmark; Ярополк — WP2/SLAM; Юліан — WP3 alignment і WP4 fusion/evaluation. Assistance позначати окремо: авторство коду, owner work package та experiment execution не об'єднувати в один credit. Contribution table і поточний стан — [RESULTS](docs/RESULTS.md).
 
-## Evidence
-- config/run_id:
-- metrics/artifacts:
-- environment:
+Перед зміною contracts читати [ARCHITECTURE](docs/ARCHITECTURE.md), перед experiments — [EXPERIMENTS](docs/EXPERIMENTS.md). Нові підсумки повинні посилатися на PR/commit, run ID, config, data/model hashes, hardware і failure/limitations. Finished `run.json` та existing evidence не редагувати; для нового виконання — новий run ID. Неперевірену причину позначати як гіпотезу.
 
-## Limitations / failures
+## Перевірка
 
-## Checklist
-- [ ] tests/smoke run pass
-- [ ] units, coordinate frames and transform direction documented
-- [ ] no dataset/checkpoints/secrets committed
-- [ ] PROJECT_STATUS updated
+```bash
+python -m pip install -e ".[dev,benchmark,filtering]"
+python -m pytest tests -q
+python scripts/run_alignment_smoke.py --plot
+python scripts/run_comparison_smoke.py --plot
+git diff --check
 ```
 
-## 3. Definition of Done для коду
+Install потрібен лише для нового environment і не виконується автоматично агентом. CPU correctness tests використовують synthetic inputs; модель/GPU/TUM не потрібні. Installed pySLAM test opt-in: `WP2_NATIVE_SPARSE_TEST=1` у налаштованому native runtime (див. REPRODUCIBILITY). Для low-impact docs edits не додавати тести, що лише повторюють текст; перевіряти links, commands і configs. Не запускати дорогі inference/SLAM або held-out reruns без потреби та дозволу.
 
-- є command/config для відтворення;
-- input/output відповідає ARCHITECTURE.md;
-- units/shapes/coordinate frames перевіряються assertions/tests;
-- run manifest містить git revision, dataset, model/config і hardware;
-- happy path має smoke test;
-- failure повертає status/reason, а не тихо пропускає кадр;
-- для performance claim є warm-up, synchronization і p50/p95;
-- reviewer реально запустив smoke case або пояснив, чому це неможливо.
+Definition of Done: interfaces сумісні, units/frames/transform direction documented, happy/failure paths перевірені, run provenance відтворювана, missing metrics мають null+reason, required CI passed. Latency claims потребують hardware, resolution, warm-up, synchronization і scope; real-time criterion визначено протоколом.
 
-## 4. Дані та артефакти
+## Дані й документація
 
-- data/raw, checkpoints і великі PLY/NPZ/відео ігноруються Git.
-- У repo зберігаються download instructions, checksums/manifests, configs, невеликі CSV/JSON summaries та compressed preview images.
-- Кожен результат має run_id. Файли без run manifest не використовуються у headline table.
-- Якщо потрібен Git LFS/DVC/Drive, команда спочатку узгоджує один спосіб; не додаємо три паралельні системи.
+Не комітити `data/raw/`, checkpoints, environments, full runs/logs, великі PLY/NPZ/video чи secrets. Зберігати маленькі evidence summaries та потрібні figures. Не видаляти failed runs, лише тому що вони failed. Універсальне правило: GT тільки evaluation або labelled B1 oracle, без held-out tuning; GT tolerance frozen 20 ms.
 
-## 5. Комунікація
+README — основний user-facing guide. Технічні contracts, protocols, reproduction і results мають по одному canonical document. Не створювати новий progress/handoff Markdown для кожної задачі; актуальні результати додавати в RESULTS з provenance. Історичні facts перевіряти на original commit; не переписувати summaries заради перейменування документа.
 
-На короткому sync кожен відповідає трьома рядками: що завершено з evidence; що блокує; який наступний deliverable і дата. Рішення, які змінюють baseline, dataset split, metric або MVP, фіксуються в decision log.
+Presentation/demo і fresh-clone submission audit залишаються окремими deliverables. Active grading requirements — [INTERIM_REVIEW](docs/INTERIM_REVIEW.md). Cleanup PR не означає завершення всього проєкту.

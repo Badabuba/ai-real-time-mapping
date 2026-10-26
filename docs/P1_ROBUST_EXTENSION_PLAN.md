@@ -1,6 +1,6 @@
 # P1-robust extension plan: failure-aware, sparse-anchored dense fusion (one-day MVP)
 
-- **Track:** Yulian (third, mostly independent track next to Track N — Nazar and Track Y — Yaropolk from `docs/TWO_PERSON_COMPLETION_PLAN.md`).
+- **Track:** Yulian (third, mostly independent track next to Track N — Nazar and Track Y — Yaropolk from `docs/EXPERIMENTS.md`).
 - **Planning base:** `origin/develop` = `d3071f1` (Merge PR #11), 2026-10-25.
 - **Status:** plan only. Every file marked **(planned)** below does not exist yet on `origin/develop`.
 - **Scope rule:** this extension does not replace, redesign or duplicate any N-track or Y-track chunk, and it does not enter the D-4/IC3 held-out freeze.
@@ -197,14 +197,14 @@ All files in the "Yulian may create" rows are **planned**.
 
 | Category | Exact files |
 |---|---|
-| **Yulian may create: U-01** | `src/rt_mapping/alignment/frame_signals.py`, `src/rt_mapping/evaluation/frame_diagnostics.py`, `scripts/run_frame_diagnostics.py`, `tests/test_frame_diagnostics.py`, `tests/test_import_hygiene_robust.py`, `docs/ROBUST_FUSION.md`, `results/summaries/yulian_u01_diag_smoke200_<sha7>.{json,csv}`, `results/plots/yulian_u01_{timeline,signal_vs_error}.png` |
-| **Yulian may create: U-02** | `src/rt_mapping/alignment/anchoring.py`, `configs/robust_fusion.json`, `scripts/run_anchor_gate.py`, `tests/test_anchoring.py`; extend `tests/test_import_hygiene_robust.py` and `docs/ROBUST_FUSION.md`; `results/summaries/yulian_u02_anchor_gate_smoke200_<sha7>.{json,csv}` |
-| **Yulian may create: U-03** | `src/rt_mapping/runs/robust_fusion_run.py`, `scripts/run_robust_fusion.py`, `tests/test_robust_fusion_run.py`, `docs/ROBUST_FUSION.md`, `results/summaries/yulian_u03_robust_smoke200_<sha7>.{json,csv}`, `results/plots/yulian_u03_comparison.png` |
-| **Yulian may create: U-04** | `scripts/render_robust_fusion_figures.py`, `docs/ROBUST_FUSION.md`, `results/plots/yulian_u04_{pointcloud_before_after,failure_cases}.png` |
+| **Yulian may create: U-01** | `src/rt_mapping/alignment/frame_signals.py`, `src/rt_mapping/evaluation/frame_diagnostics.py`, `scripts/run_frame_diagnostics.py`, `tests/test_frame_diagnostics.py`, `tests/test_import_hygiene_robust.py`, `docs/RESULTS.md`, `results/summaries/yulian_u01_diag_smoke200_<sha7>.{json,csv}`, `results/plots/yulian_u01_{timeline,signal_vs_error}.png` |
+| **Yulian may create: U-02** | `src/rt_mapping/alignment/anchoring.py`, `configs/robust_fusion.json`, `scripts/run_anchor_gate.py`, `tests/test_anchoring.py`; extend `tests/test_import_hygiene_robust.py` and `docs/RESULTS.md`; `results/summaries/yulian_u02_anchor_gate_smoke200_<sha7>.{json,csv}` |
+| **Yulian may create: U-03** | `src/rt_mapping/runs/robust_fusion_run.py`, `scripts/run_robust_fusion.py`, `tests/test_robust_fusion_run.py`, `docs/RESULTS.md`, `results/summaries/yulian_u03_robust_smoke200_<sha7>.{json,csv}`, `results/plots/yulian_u03_comparison.png` |
+| **Yulian may create: U-04** | `scripts/render_robust_fusion_figures.py`, `docs/RESULTS.md`, `results/plots/yulian_u04_{pointcloud_before_after,failure_cases}.png` |
 | **Yulian's merged files: frozen, import only** | `alignment/{estimators,correspondences,causal}.py`, `fusion/voxel.py`, `runs/{mapping_run,comparison_run,pipeline_run,artifacts,synthetic_mapping}.py`, `evaluation/{map_geometry,trajectory,oracle,synthetic_scene}.py`, `geometry/projection.py`, `configs/{mapping_comparison,offline_mapping,pipeline.tum.example,pipeline.tum.windows-docker}.json`, existing tests. Reason: N-04/N-05/N-06 and the IC3 freeze rely on these being bit-stable |
 | **Reserved for Nazar** | `data/**`, `src/rt_mapping/data/**`, `adapters/**`, `geometry/{adapter,intrinsics}.py`, `runs/geometry_run.py`, `evaluation/{depth,tum_depth,model_selection,prediction_grid,geometry_verification,confidence_ablation}.py`, `contracts/{frame,geometry,run_manifest,_validation}.py`, `evaluation/timing.py`, `scripts/{build_tum_manifest,freeze_tum_split,run_tum_da3_metric,check_wp1_environment,run_da3_metric_smoke,run_geometry_benchmark,compare_geometry_models,verify_geometry_run,analyze_confidence,render_demo}.py`, `requirements/wp1-*`, `configs/{pipeline.nazar.*,mapping_comparison.nazar.*,benchmark_frozen,model_assets,selected_geometry}.json`, `docs/{DATASET_FREEZE,UNIDEPTH,SELECTION_PROTOCOL,WP1_HANDOFF,DEPTH_ABLATIONS,NAZAR_REPRODUCTION,DEVELOPMENT_BENCHMARK,HELDOUT_BENCHMARK,BENCHMARK_PROTOCOL,DEMO,EXPERIMENTS,MODEL_SELECTION,ENVIRONMENT}.md`, `docs/decisions/**`, `results/{summaries,plots}/nazar_*`, `wp1_*` (several of these are themselves planned by the N track) |
 | **Reserved for Yaropolk** | `src/rt_mapping/slam/**`, `contracts/slam.py`, `evaluation/slam_run.py`, `scripts/{run_wp2_pyslam,prepare_wp2_baseline,check_wp2_environment,build_wp2_native,build_wp2_linux_native,visualize_wp2_trajectory,evaluate_wp2_run,measure_wp2_resources}.py`, `configs/wp2_*.json`, `containers/**`, `requirements/wp2-*`, `docs/{WP2_SETUP,WP2_SPARSE_EXPORT,WP2_LINUX_CONTAINER,WP2_TRACKING_EXPORT,WP2_EVALUATION,WP2_BENCHMARK,ARCHITECTURE,INTERIM_REVIEW,CONTRIBUTIONS,PRESENTATION_OUTLINE,SUBMISSION_AUDIT}.md`, `tests/test_{slam_*,wp2_*,pyslam_sparse_native,import_hygiene_wp2}.py`, `results/{summaries,plots}/yaropolk_*` (several of these are themselves planned by the Y track) |
-| **Shared, read-only for everyone** | `README.md`, `CLAUDE.md`, `PLAN.md`, `CONTRIBUTING.md`, `pyproject.toml`, `.gitignore`, `.github/workflows/**`, `tests/test_import_hygiene.py`, `tests/conftest.py`, `docs/{TWO_PERSON_COMPLETION_PLAN,PROJECT_BRIEF,YULIAN_HANDOFF,WP3_WP4_COMPLETION}.md`, this file after merge, all historical `results/summaries/*` and `results/plots/*` |
+| **Shared, read-only for everyone** | `README.md`, `CLAUDE.md`, `README.md`, `CONTRIBUTING.md`, `pyproject.toml`, `.gitignore`, `.github/workflows/**`, `tests/test_import_hygiene.py`, `tests/conftest.py`, `docs/{TWO_PERSON_COMPLETION_PLAN,PROJECT_BRIEF,YULIAN_HANDOFF,WP3_WP4_COMPLETION}.md`, this file after merge, all historical `results/summaries/*` and `results/plots/*` |
 | **Delayed to final integration** | Status rows in `docs/{PROJECT_STATUS,INTEGRATION_STATUS}.md` (Nazar at the next IC or F-N1, copied verbatim from the U PR bodies); a pointer in `docs/EXPERIMENTS.md` and `README.md` (Nazar, F-N1); the extension slide and contribution rows (Yaropolk, F-Y1); dev-split robust runs (§7) |
 | **Read-only interfaces used now** | `load_mapping_inputs`, `build_correspondences`, `Correspondences.coverage_bins`, `prediction_grid`, `estimate_scale`, `AlignmentError`, `run_mapping`, `metric_pose`, `depth_points`, `VoxelFusion`, `write_ply`, `evaluate_map`, `load_oracle_inputs`, `evaluate_depth`, `summarize_timings` (read-only use of a Nazar file), `read_tracking_log` (merged in PR #11), `build_run_manifest`/`write_run_manifest`/`load_run_manifest`, `collect_git_state`, `create_synthetic_inputs`, `create_synthetic_reference`, `run_comparison` |
 
@@ -238,7 +238,7 @@ Rules common to every chunk:
 | Real evidence | `yulian_u01_diag_smoke200_<sha7>_01`: status ok, `dirty_worktree=false`, 22 rows |
 | Acceptance | 22/22 rows with explicit nulls and reasons; GT-free phase before any GT read (tested); correlations and failure table present; two plots inspected; CI green; diff limited to allowed files |
 | Duration | 2.5–3 h |
-| Outputs | Run directory (ignored); summary JSON/CSV; `yulian_u01_timeline.png`, `yulian_u01_signal_vs_error.png`; `docs/ROBUST_FUSION.md` §1–2 |
+| Outputs | Run directory (ignored); summary JSON/CSV; `yulian_u01_timeline.png`, `yulian_u01_signal_vs_error.png`; `docs/RESULTS.md` §1–2 |
 | Stop | Provenance or cross-check failure; a frozen-file edit needed; GT needed in Phase A |
 | PR | Own PR to `develop`, self-merge after green checks |
 | Independent | Yes |
@@ -319,7 +319,7 @@ These start after each person finishes their current track. None of their presen
 |---|---|---|---|
 | **Nazar: dense depth** | Run `run_frame_diagnostics.py`, `run_anchor_gate.py` and `run_robust_fusion.py` (planned) with the **unchanged** committed `configs/robust_fusion.json` on his own N-05 dev573 and sel50 runs, for both DA3 and UniDepth. Development data only, never held-out. These runs are made at `develop` ≥ PR #11, so tracking export and S1 are live. Optional: compare the gate with UniDepth's native confidence | His own ignored N-05 runs | `feature/nazar-robust-fusion-dev`: `results/summaries/nazar_u05_*`, `docs/ROBUST_FUSION_DEVELOPMENT.md` (planned) |
 | **Yaropolk: SLAM** | (1) Independent CPU reproduction of U-01…U-03 on the synthetic fixture from a fresh clone. (2) Review the S1 join semantics against his Y-03 definitions (state names, denominators, initialization frames). (3) The S rows of the final failure table, from his committed Y-03/Y-05 summaries. (4) The extension slide inside his existing F-Y1 | Committed summaries; synthetic fixture | `feature/yaropolk-robust-fusion-review`: `results/summaries/yaropolk_u05_review.json` (planned); F-Y1 slide |
-| **Yulian: alignment and fusion** | Aggregate Nazar's and Yaropolk's committed summaries into the final cross-split table and failure table; give Nazar the status rows (IC/F-N1) and Yaropolk the slide figures | Committed summaries only | `feature/yulian-robust-fusion-final`: final section of `docs/ROBUST_FUSION.md`, `results/summaries/yulian_u05_final.{json,csv}` (planned) |
+| **Yulian: alignment and fusion** | Aggregate Nazar's and Yaropolk's committed summaries into the final cross-split table and failure table; give Nazar the status rows (IC/F-N1) and Yaropolk the slide figures | Committed summaries only | `feature/yulian-robust-fusion-final`: final section of `docs/RESULTS.md`, `results/summaries/yulian_u05_final.{json,csv}` (planned) |
 
 Nobody reads another person's ignored runs; everything is exchanged through committed summaries.
 
@@ -408,7 +408,7 @@ ALLOWED FILES (create only these)
   scripts/run_frame_diagnostics.py                 (thin CLI)
   tests/test_frame_diagnostics.py
   tests/test_import_hygiene_robust.py
-  docs/ROBUST_FUSION.md                            (Ukrainian; sections 1-2 only)
+  docs/RESULTS.md                            (Ukrainian; sections 1-2 only)
   results/summaries/yulian_u01_diag_smoke200_<sha7>.json
   results/summaries/yulian_u01_diag_smoke200_<sha7>.csv
   results/plots/yulian_u01_timeline.png
@@ -416,7 +416,7 @@ ALLOWED FILES (create only these)
 FORBIDDEN: every existing file. In particular alignment/{estimators,correspondences,causal}.py, fusion/*, runs/*,
 evaluation/{map_geometry,trajectory,oracle,depth,tum_depth,timing,synthetic_scene}.py, contracts/*, slam/*, data/*,
 configs/*, adapters/*, geometry/*, existing scripts/tests (incl. tests/test_import_hygiene.py, conftest.py), README,
-CLAUDE, PLAN, all docs except the new ROBUST_FUSION.md, historical results. Reuse by import only. If a defect in a
+CLAUDE, PLAN, all docs except the new docs/RESULTS.md, historical results. Reuse by import only. If a defect in a
 frozen file blocks you: stop, do not fix it here, report it.
 
 DESIGN (thresholds are pre-registered merged defaults; never tune them on GT)
@@ -497,7 +497,7 @@ Commit code + tests + docs skeleton. From the CLEAN commit run:
 Require run.json status ok and dirty_worktree=false. Copy small outputs into results/summaries/yulian_u01_diag_smoke200_
 <sha7>.{json,csv} (source run IDs + sha256, commit, 22 rows, flag counts, correlations, depth cross-check difference,
 tracking availability, limitations: one easy sequence, n=22, final-snapshot anchors are offline/non-causal, GT reference
-approximation, no real-time claim) and the two plots. Inspect plots visually. Write docs/ROBUST_FUSION.md (Ukrainian):
+approximation, no real-time claim) and the two plots. Inspect plots visually. Write docs/RESULTS.md (Ukrainian):
 §1 goal and hypothesis of P1-robust (closing the P1->B1 gap is a hypothesis; negative results are reported), §2 U-01
 method, GT separation, threshold-source table, results, which signals correlate with error, implications for U-02,
 limitations, commands. Commit these as a second commit (code unchanged; the run's git_commit is the first commit).
