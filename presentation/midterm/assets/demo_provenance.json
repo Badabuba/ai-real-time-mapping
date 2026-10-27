@@ -1,0 +1,69 @@
+{
+  "source_run": "yulian_tum_e2e_f200_20261025_01",
+  "source_commit": "4952e37dd773925c4c7aa069c4d6aaf10f489120",
+  "source_status": "ok",
+  "model": "depth-anything/DA3METRIC-LARGE",
+  "process_res": 384,
+  "scale": 1.1920834129618625,
+  "keyframes": [
+    0,
+    2,
+    3,
+    11,
+    15,
+    17,
+    20,
+    22,
+    25,
+    28,
+    31,
+    35,
+    38,
+    72,
+    80,
+    84,
+    177,
+    181,
+    185,
+    189,
+    193,
+    197
+  ],
+  "map_voxels": 72887,
+  "replay_equals_recorded_map_npz": true,
+  "video": {
+    "fps": 30,
+    "frames": 930,
+    "duration_s": 31.0,
+    "size": [
+      1280,
+      720
+    ]
+  },
+  "depth_colour_range_m": [
+    0.5,
+    3.5
+  ],
+  "error_colour_max_m": 0.5,
+  "source_sha256": {
+    "run.json": "56010d9ea38391866f126b78b9f9d11903ec83b567c0143c864d366aeb250ab9",
+    "stages/yulian_tum_e2e_f200_20261025_01.slam/run.json": "dac27aad70e06d7d501ea17e5dc2017b26f1b0ccaed20a6aaf1489c5d45ff08d",
+    "stages/yulian_tum_e2e_f200_20261025_01.geometry/run.json": "c15ad670eab06cc46020d123ebccd2940b3d83bb55aebef455ff985aac0dbf79",
+    "stages/yulian_tum_e2e_f200_20261025_01.comparison/run.json": "83bd22b803adb4645b9c01c0b0ac088ee2661950cfbab88b65cebb500c6936ea",
+    "stages/yulian_tum_e2e_f200_20261025_01.slam/sparse/keyframes.npz": "434e9d66160913fa517ae6c18ed82648ca9c3d957466324b58aab17eaaefa93d",
+    "stages/yulian_tum_e2e_f200_20261025_01.slam/sparse/landmarks.npz": "49a72dace18f34e19caf38010885b960cd3fe4633082db1ff991d31e1f956f1a",
+    "stages/yulian_tum_e2e_f200_20261025_01.comparison/methods/yulian_tum_e2e_f200_20261025_01.comparison.global/alignment.json": "518e3ff94cdb369cca0f6906a5de4c814f93943d4061ac1a6bffbe279241dcd9",
+    "stages/yulian_tum_e2e_f200_20261025_01.comparison/methods/yulian_tum_e2e_f200_20261025_01.comparison.global/map.npz": "806479b5f4438eda11e01a72c2651e3e0e0e02ac242927b3c43139953c873b62",
+    "stages/yulian_tum_e2e_f200_20261025_01.comparison/methods/yulian_tum_e2e_f200_20261025_01.comparison.oracle/map.npz": "d65d64300b960c5aef9b0e54bc3b748dc77ee3ca9ec6e0cb898f9fcf67d42d58"
+  },
+  "outputs_sha256": {
+    "mapping_demo.mp4": "595bde332e977b4b52fbc95aee9855a10dcf70d36b60cb77f21f61b8dd40fd0e",
+    "mapping_demo_thumbnail.png": "18167eb862abe763fede56fe2c6043251d564406c8b0e2d83afa03a3f76b6a5e",
+    "final_dense_map.png": "8a536d67e7c2fd8cd58a4719ed07201d2bc7b1ad13eb056cfac55d24ead4a806",
+    "sparse_dense_oracle.png": "24db69327a7e6ceb23d3139fd1f94ca76999cf36f29ee27252fe336f5c51e811",
+    "depth_comparison.png": "a3432f4e32be5803ff77ff24e8845a80372118160f14e7b494c1a29bcd764d61",
+    "failure_analysis.png": "4e8f4675c042633d7fbdf46ab44fa1eecca8a5efd38cecb87483b3727e6275b2"
+  },
+  "gt_use": "GT depth only in depth_comparison.png and failure_analysis.png panels labelled evaluation only",
+  "scope": "offline rendering of finished artifacts; no model, SLAM or fusion re-execution"
+}
